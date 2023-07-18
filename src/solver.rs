@@ -82,7 +82,11 @@ impl CaptchaSolver {
                         request,
                     ));
                 }
-                CaptchaResponse { request, .. } if request == "CAPTCHA_NOT_READY" => {
+                // I am not checking iff it equals "CAPTCHA_NOT_READY" because
+                // there was (as of writing this comment) a typo in the API's
+                // response, returning "CAPCHA_NOT_READY", which, if fixed, will
+                // break this check
+                CaptchaResponse { request, .. } if request.ends_with("_NOT_READY") => {
                     continue;
                 }
                 CaptchaResponse {
