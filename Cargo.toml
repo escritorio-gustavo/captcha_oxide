@@ -2,6 +2,12 @@
 name = "captcha_oxide"
 version = "0.1.0"
 edition = "2021"
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+homepage = "https://github.com/escritorio-gustavo/captcha_oxide"
+repository = "https://github.com/escritorio-gustavo/captcha_oxide"
+authors = ["gustavo-shigueo"]
+description = "Library for interacting with the 2Captcha API to solve captcha puzzles"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
