@@ -6,4 +6,4 @@ pub mod solver;
 pub mod status;
 
 pub(crate) const TWO_CAPTCHA_URL: &str = "http://2captcha.com";
-pub(crate) const TWO_CAPTCHA_DEVELOPER_ID: &str = "99999999";
+pub(crate) const TWO_CAPTCHA_DEVELOPER_ID: &str = "4143";
