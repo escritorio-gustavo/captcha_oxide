@@ -1,0 +1,12 @@
+pub mod arguments;
+pub mod capy_captcha;
+pub mod character_restrictions;
+pub mod geetest;
+pub mod h_captcha;
+pub mod key_captcha;
+pub mod language;
+pub mod normal_captcha;
+pub mod proxy_type;
+pub mod recaptcha_v2;
+pub mod recaptcha_v3;
+pub mod text_captcha;
