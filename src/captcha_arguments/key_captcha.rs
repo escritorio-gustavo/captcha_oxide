@@ -40,3 +40,77 @@ impl CaptchaArguments for KeyCaptcha {
         15
     }
 }
+
+#[cfg(test)]
+mod test {
+    use dotenv::dotenv;
+    use regex::Regex;
+    use std::env;
+
+    use super::KeyCaptcha;
+    use crate::solver::CaptchaSolver;
+
+    #[tokio::test]
+    #[ignore = "These tests should run all at once, as this will likely cause a 429 block from the 2captcha API"]
+    async fn key_captcha() {
+        dotenv().unwrap();
+
+        // Get dynamic parameters from the web page
+        let url = "https://www.keycaptcha.com/contact-us/";
+        let html = reqwest::get(url).await.unwrap().text().await.unwrap();
+
+        let user_id = Regex::new("var s_s_c_user_id = '([^']*)'")
+            .unwrap()
+            .captures(&html)
+            .unwrap()
+            .get(1)
+            .unwrap()
+            .as_str()
+            .to_string();
+
+        let session_id = Regex::new("var s_s_c_session_id = '([^']*)'")
+            .unwrap()
+            .captures(&html)
+            .unwrap()
+            .get(1)
+            .unwrap()
+            .as_str()
+            .to_string();
+
+        let server_sign = Regex::new("var s_s_c_web_server_sign = '([^']*)'")
+            .unwrap()
+            .captures(&html)
+            .unwrap()
+            .get(1)
+            .unwrap()
+            .as_str()
+            .to_string();
+
+        let server_sign2 = Regex::new("var s_s_c_web_server_sign2 = '([^']*)'")
+            .unwrap()
+            .captures(&html)
+            .unwrap()
+            .get(1)
+            .unwrap()
+            .as_str()
+            .to_string();
+
+        let solver = CaptchaSolver::new(env::var("API_KEY").unwrap());
+
+        let args = KeyCaptcha {
+            page_url: url.into(),
+            user_id,
+            session_id,
+            server_sign,
+            server_sign2,
+            ..Default::default()
+        };
+
+        let solution = solver.solve(args).await;
+
+        assert!(solution.is_ok());
+
+        let solution = solution.unwrap().solution.request_as_string();
+        assert_ne!(solution, "");
+    }
+}

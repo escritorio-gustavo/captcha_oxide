@@ -10,7 +10,7 @@ pub enum Error {
         error_description: Option<String>,
     },
 
-    #[error("{0}")]
+    #[error("UrlParseError: {0}")]
     /// Failed to parse an URL
     UrlParseError(#[from] url::ParseError),
 

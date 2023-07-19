@@ -59,3 +59,32 @@ impl CaptchaArguments for HCaptcha {
         Ok(request_body)
     }
 }
+
+#[cfg(test)]
+mod test {
+    use dotenv::dotenv;
+    use std::env;
+
+    use super::HCaptcha;
+    use crate::solver::CaptchaSolver;
+
+    #[tokio::test]
+    #[ignore = "These tests should run all at once, as this will likely cause a 429 block from the 2captcha API"]
+    async fn h_captcha() {
+        dotenv().unwrap();
+        let solver = CaptchaSolver::new(env::var("API_KEY").unwrap());
+
+        let args = HCaptcha {
+            site_key: "13257c82-e129-4f09-a733-2a7cb3102832".into(),
+            page_url: "https://dashboard.hcaptcha.com/signup".into(),
+            ..Default::default()
+        };
+
+        let solution = solver.solve(args).await;
+
+        assert!(solution.is_ok());
+
+        let solution = solution.unwrap().solution.request_as_string();
+        assert_ne!(solution, "");
+    }
+}

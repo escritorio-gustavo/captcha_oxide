@@ -1,6 +1,6 @@
 [package]
 name = "captcha_oxide"
-version = "0.1.1"
+version = "0.2.1"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 readme = "README.md"
@@ -18,3 +18,7 @@ serde_json = "1.0.96"
 thiserror = "1.0.40"
 tokio = { version = "1", features = ["full"] }
 url = "2.3.1"
+
+[dev-dependencies]
+dotenv = "0.15.0"
+regex = "1.9.1"

@@ -73,3 +73,37 @@ impl CaptchaArguments for RecaptchaV2 {
         15
     }
 }
+
+#[cfg(test)]
+mod test {
+    use dotenv::dotenv;
+    use std::env;
+
+    use super::RecaptchaV2;
+    use crate::{response::RequestContent, solver::CaptchaSolver};
+
+    #[tokio::test]
+    #[ignore = "These tests should run all at once, as this will likely cause a 429 block from the 2captcha API"]
+    async fn recaptcha_v2() {
+        dotenv().unwrap();
+        let solver = CaptchaSolver::new(env::var("API_KEY").unwrap());
+
+        let args = RecaptchaV2 {
+            site_key: "6Ld2sf4SAAAAAKSgzs0Q13IZhY02Pyo31S2jgOB5".into(),
+            page_url: "https://patrickhlauke.github.io/recaptcha/".into(),
+            ..Default::default()
+        };
+
+        let solution = solver.solve(args).await;
+
+        assert!(solution.is_ok());
+
+        let solution = solution.unwrap().solution;
+        match solution {
+            RequestContent::String(solution) => {
+                assert_ne!(solution, "");
+            }
+            _ => unreachable!("Wrong enum variant"),
+        }
+    }
+}

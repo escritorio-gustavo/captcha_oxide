@@ -47,3 +47,36 @@ impl CaptchaArguments for TextCaptcha {
         Ok(request_body)
     }
 }
+
+#[cfg(test)]
+mod test {
+    use dotenv::dotenv;
+    use std::env;
+
+    use super::TextCaptcha;
+    use crate::{response::RequestContent, solver::CaptchaSolver};
+
+    #[tokio::test]
+    #[ignore = "These tests should run all at once, as this will likely cause a 429 block from the 2captcha API"]
+    async fn text_captcha() {
+        dotenv().unwrap();
+        let solver = CaptchaSolver::new(env::var("API_KEY").unwrap());
+
+        let args = TextCaptcha {
+            text_captcha: "What is 2 + 2?".into(),
+            ..Default::default()
+        };
+
+        let solution = solver.solve(args).await;
+
+        assert!(solution.is_ok());
+
+        let solution = solution.unwrap().solution;
+        match solution {
+            RequestContent::String(solution) => {
+                assert_eq!(solution, "4");
+            }
+            _ => unreachable!("Wrong enum variant"),
+        }
+    }
+}

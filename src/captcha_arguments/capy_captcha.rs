@@ -58,4 +58,42 @@ impl CaptchaArguments for CapyCaptcha {
 
         Ok(request_body)
     }
+
+    fn get_initial_timeout_secs(&self) -> u64 {
+        15
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use dotenv::dotenv;
+    use std::env;
+
+    use super::CapyCaptcha;
+    use crate::{response::RequestContent, solver::CaptchaSolver};
+
+    #[tokio::test]
+    #[ignore = "These tests should run all at once, as this will likely cause a 429 block from the 2captcha API"]
+    async fn capy_captcha() {
+        dotenv().unwrap();
+        let solver = CaptchaSolver::new(env::var("API_KEY").unwrap());
+
+        let args = CapyCaptcha {
+            captcha_key: "PUZZLE_Cme4hZLjuZRMYC3uh14C52D3uNms5w".into(),
+            page_url: "https://www.capy.me/account/signin".into(),
+            ..Default::default()
+        };
+
+        let solution = solver.solve(args).await;
+
+        assert!(solution.is_ok());
+
+        let solution = solution.unwrap().solution;
+        match solution {
+            RequestContent::CapyResponse { answer, .. } => {
+                assert_ne!(answer, "");
+            }
+            _ => unreachable!("Wrong enum variant"),
+        }
+    }
 }

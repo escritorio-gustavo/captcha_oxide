@@ -60,4 +60,68 @@ impl CaptchaArguments for Geetest {
 
         Ok(request_body)
     }
+
+    fn get_initial_timeout_secs(&self) -> u64 {
+        15
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use dotenv::dotenv;
+    use serde::{Deserialize, Serialize};
+    use std::{
+        env,
+        time::{SystemTime, UNIX_EPOCH},
+    };
+
+    use super::Geetest;
+    use crate::{response::RequestContent, solver::CaptchaSolver};
+
+    #[derive(Serialize, Deserialize, Clone)]
+    struct GeetestJson {
+        success: u8,
+        challenge: String,
+        gt: String,
+        new_captcha: bool,
+    }
+
+    #[tokio::test]
+    #[ignore = "These tests should run all at once, as this will likely cause a 429 block from the 2captcha API"]
+    async fn geetest() {
+        dotenv().unwrap();
+
+        let timestamp = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_millis();
+
+        // Get dynamic parameters from the web page
+        let url =
+            format!("https://www.geetest.com/demo/gt/register-enFullpage-official?t={timestamp}");
+        let json = reqwest::get(&url).await.unwrap().text().await.unwrap();
+        let data: GeetestJson = serde_json::from_str(&json).unwrap();
+
+        let args = Geetest {
+            page_url: url,
+            gt: data.gt,
+            challenge: data.challenge,
+            new_captcha: Some(data.new_captcha),
+            ..Default::default()
+        };
+
+        let solver = CaptchaSolver::new(env::var("API_KEY").unwrap());
+
+        let solution = solver.solve(args).await;
+
+        assert!(solution.is_ok());
+
+        let solution = solution.unwrap().solution;
+        match solution {
+            RequestContent::GeetestResponse { challenge, .. } => {
+                assert_ne!(challenge, "");
+            }
+            _ => unreachable!("Wrong enum variant"),
+        }
+    }
 }

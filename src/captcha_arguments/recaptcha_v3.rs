@@ -55,3 +55,38 @@ impl CaptchaArguments for RecaptchaV3 {
         15
     }
 }
+
+#[cfg(test)]
+mod test {
+    use dotenv::dotenv;
+    use std::env;
+
+    use super::RecaptchaV3;
+    use crate::{response::RequestContent, solver::CaptchaSolver};
+
+    #[tokio::test]
+    #[ignore = "These tests should run all at once, as this will likely cause a 429 block from the 2captcha API"]
+    async fn recaptcha_v3() {
+        dotenv().unwrap();
+        let solver = CaptchaSolver::new(env::var("API_KEY").unwrap());
+
+        let args = RecaptchaV3 {
+            site_key: "6LcFcoAUAAAAAN7Um8IRZOtbzgsV5ei2meTmRi6m".into(),
+            page_url: "https://contactform7.com/contact/".into(),
+            min_score: Some(0.3),
+            ..Default::default()
+        };
+
+        let solution = solver.solve(args).await;
+
+        assert!(solution.is_ok());
+
+        let solution = solution.unwrap().solution;
+        match solution {
+            RequestContent::String(solution) => {
+                assert_ne!(solution, "");
+            }
+            _ => unreachable!("Wrong enum variant"),
+        }
+    }
+}

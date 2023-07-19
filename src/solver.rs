@@ -5,8 +5,11 @@ use serde::{Deserialize, Serialize};
 use url::Url;
 
 use crate::{
-    captcha_arguments::arguments::CaptchaArguments, error::Error, response::CaptchaResponse,
-    solution::CaptchaSolution, TWO_CAPTCHA_URL,
+    captcha_arguments::arguments::CaptchaArguments,
+    error::Error,
+    response::{CaptchaResponse, RequestContent},
+    solution::CaptchaSolution,
+    TWO_CAPTCHA_URL,
 };
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -39,12 +42,12 @@ impl CaptchaSolver {
 
         if response.status != 1 {
             return Err(Error::TwoCaptchaError {
-                error_code: response.request,
+                error_code: response.request.request_as_string(),
                 error_description: response.error_text,
             });
         }
 
-        let task_id = response.request;
+        let task_id = response.request.request_as_string();
         tokio::time::sleep(Duration::from_secs(params.get_initial_timeout_secs())).await;
 
         let result_params: Vec<(&str, &str)> = vec![
@@ -60,6 +63,8 @@ impl CaptchaSolver {
             .as_str()
             .to_owned();
         let url = Url::parse_with_params(&url, &result_params)?;
+
+        println!("{}", url.as_str());
 
         loop {
             let response = client
@@ -82,11 +87,15 @@ impl CaptchaSolver {
                         request,
                     ));
                 }
-                // I am not checking iff it equals "CAPTCHA_NOT_READY" because
+                // I am not checking if it equals "CAPTCHA_NOT_READY" because
                 // there was (as of writing this comment) a typo in the API's
                 // response, returning "CAPCHA_NOT_READY", which, if fixed, will
                 // break this check
-                CaptchaResponse { request, .. } if request.ends_with("_NOT_READY") => {
+                CaptchaResponse {
+                    request: RequestContent::String(request),
+                    ..
+                } if request.ends_with("NOT_READY") => {
+                    tokio::time::sleep(Duration::from_secs(5)).await;
                     continue;
                 }
                 CaptchaResponse {
@@ -95,7 +104,7 @@ impl CaptchaSolver {
                     ..
                 } => {
                     return Err(Error::TwoCaptchaError {
-                        error_code: request,
+                        error_code: request.request_as_string(),
                         error_description: error_text,
                     });
                 }

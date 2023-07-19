@@ -1,6 +1,6 @@
 use std::time::{Duration, Instant};
 
-use crate::{error::Error, status::SolutionStatus, TWO_CAPTCHA_URL};
+use crate::{error::Error, response::RequestContent, status::SolutionStatus, TWO_CAPTCHA_URL};
 
 /// This struct is returned by the `CaptchaSolver.colve()` method
 /// and represents the solution to the captcha you submitted with
@@ -12,25 +12,11 @@ pub struct CaptchaSolution {
     timestamp: Instant,
 
     /// The actual solution to the captcha challenge
-    pub solution: String,
-}
-
-impl std::fmt::Display for CaptchaSolution {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(
-            f,
-            "
-                Token: {}
-                Created {} seconds ago
-            ",
-            self.solution,
-            self.timestamp.elapsed().as_secs(),
-        )
-    }
+    pub solution: RequestContent,
 }
 
 impl CaptchaSolution {
-    pub(crate) fn new(api_key: String, id: String, solution: String) -> Self {
+    pub(crate) fn new(api_key: String, id: String, solution: RequestContent) -> Self {
         Self {
             api_key,
             id,
