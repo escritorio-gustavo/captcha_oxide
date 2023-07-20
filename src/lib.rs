@@ -1,6 +1,3 @@
-pub use crate::error::Error;
-pub use crate::response::RequestContent;
-pub use crate::solution::CaptchaSolution;
 /// A high level async library that allows you to use the 2captcha API
 /// to solve various types of captcha puzzles
 ///
@@ -39,6 +36,9 @@ pub use crate::solution::CaptchaSolution;
 ///     };
 /// }
 /// ```
+pub use crate::error::Error;
+pub use crate::response::RequestContent;
+pub use crate::solution::CaptchaSolution;
 pub use crate::solver::CaptchaSolver;
 pub use crate::status::SolutionStatus;
 
