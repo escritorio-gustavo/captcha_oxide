@@ -12,6 +12,52 @@ use crate::{
     TWO_CAPTCHA_URL,
 };
 
+/// This struct is responsible for sending 2captcha the request for
+/// solving your captcha puzzles.
+///
+/// You must instantiate it with your API key and use the `solve` method
+/// to get the solution to your puzzle
+///
+/// # Example
+/// ```
+/// use dotenv::dotenv;
+/// use std::env;
+/// use captcha_oxide::{
+///     solver::CaptchaSolver,
+///     captcha_arguments::recaptcha_v3::RecaptchaV3,
+///     response::RequestContent,
+/// };
+///
+/// #[tokio::main]
+/// async fn main() {
+///     dotenv().unwrap();
+///     let solver = CaptchaSolver::new(env::var("API_KEY").unwrap());
+///     
+///     let args = RecaptchaV3 {
+///         site_key: "6LcFcoAUAAAAAN7Um8IRZOtbzgsV5ei2meTmRi6m".into(),
+///         page_url: "https://contactform7.com/contact/".into(),
+///         min_score: Some(0.3),
+///         ..Default::default()
+///     };
+///     
+///     match solver.solve(args).await {
+///         Ok(solution) => {
+///             // If there isn't a variant named after your captcha type,
+///             // it's because it only returns a token, so you should use
+///             // ths String variant
+///             match solution.solution {
+///                 RequestContent::String(plain_text_solution) => {
+///                     assert_ne!(plain_text_solution, "");
+///                 },
+///                 _ => unreachable!()
+///             }
+///         },
+///         Err(e) => {
+///             todo!("Handle your error");
+///         },
+///     };
+/// }
+/// ```
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct CaptchaSolver {
     api_key: String,

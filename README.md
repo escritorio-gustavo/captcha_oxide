@@ -11,8 +11,8 @@ This is a rust library for solving captcha puzzles with the 2Captcha API
 ```rust
 use captcha_oxide::{
   solver::CaptchaSolver,
-  captcha_arguments::RecaptchaV3,
-  response::RequestContent
+  captcha_arguments::recaptcha_v3::RecaptchaV3,
+  response::RequestContent,
 };
 
 
