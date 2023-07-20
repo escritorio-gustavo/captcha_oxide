@@ -1,13 +1,20 @@
 # captcha_oxide
 
+![Build](https://github.com/escritorio-gustavo/captcha_oxide/workflows/Continuous%20integration/badge.svg)
+[![Crates.io](https://img.shields.io/crates/v/captcha_oxide.svg)](https://crates.io/crates/captcha_oxide)
+[![Documentation](https://docs.rs/captcha_oxide/badge.svg)](https://docs.rs/captcha_oxide)
+
 This is a rust library for solving captcha puzzles with the 2Captcha API
 
 ## Usage
 
 ```rust
-use captcha_oxide::solver::CaptchaSolver;
-use captcha_oxide::captcha_arguments::RecaptchaV3;
-use captcha_oxide::response::RequestContent;
+use captcha_oxide::{
+  solver::CaptchaSolver,
+  captcha_arguments::RecaptchaV3,
+  response::RequestContent
+};
+
 
 #[tokio::main]
 async fn main() {

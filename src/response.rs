@@ -7,6 +7,8 @@ pub(crate) struct CaptchaResponse {
     pub(crate) error_text: Option<String>,
 }
 
+/// Represents the possible data contained by the `request` field
+/// that 2captcha returns
 #[derive(Deserialize, Serialize, Debug, Clone)]
 #[serde(untagged)]
 pub enum RequestContent {
