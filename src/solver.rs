@@ -64,8 +64,6 @@ impl CaptchaSolver {
             .to_owned();
         let url = Url::parse_with_params(&url, &result_params)?;
 
-        println!("{}", url.as_str());
-
         loop {
             let response = client
                 .get(url.as_str())
