@@ -5,7 +5,7 @@ use crate::{error::Error, TWO_CAPTCHA_DEVELOPER_ID};
 
 use super::arguments::CaptchaArguments;
 
-#[derive(Serialize, Deserialize, Clone, Debug, Default)]
+#[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
 pub struct KeyCaptcha {
     pub user_id: String,
     pub session_id: String,
@@ -15,7 +15,7 @@ pub struct KeyCaptcha {
     pub pingback: Option<String>,
 }
 
-impl CaptchaArguments for KeyCaptcha {
+impl CaptchaArguments<'_> for KeyCaptcha {
     fn to_request_params(&self, api_key: String) -> Result<Form, Error> {
         let mut request_body = Form::new()
             .text("key", api_key)

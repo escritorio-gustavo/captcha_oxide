@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use super::{arguments::CaptchaArguments, proxy_type::ProxyType};
 use crate::{error::Error, TWO_CAPTCHA_DEVELOPER_ID};
 
-#[derive(Serialize, Deserialize, Clone, Default)]
+#[derive(Serialize, Deserialize, Clone, Default, PartialEq)]
 pub struct Geetest {
     pub gt: String,
     pub page_url: String,
@@ -18,7 +18,7 @@ pub struct Geetest {
     pub user_agent: Option<String>,
 }
 
-impl CaptchaArguments for Geetest {
+impl CaptchaArguments<'_> for Geetest {
     fn to_request_params(&self, api_key: String) -> Result<Form, Error> {
         let mut request_body = Form::new()
             .text("key", api_key)

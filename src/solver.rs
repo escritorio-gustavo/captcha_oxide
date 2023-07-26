@@ -70,7 +70,10 @@ impl CaptchaSolver {
         }
     }
 
-    pub async fn solve<T: CaptchaArguments>(&self, params: T) -> Result<CaptchaSolution, Error> {
+    pub async fn solve<'a, T: CaptchaArguments<'a>>(
+        &self,
+        params: T,
+    ) -> Result<CaptchaSolution, Error> {
         let client = Client::new();
 
         let url = Url::parse(TWO_CAPTCHA_URL)?.join("in.php")?;

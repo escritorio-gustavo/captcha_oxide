@@ -5,7 +5,7 @@ use crate::{error::Error, TWO_CAPTCHA_DEVELOPER_ID};
 
 use super::arguments::CaptchaArguments;
 
-#[derive(Serialize, Deserialize, Clone, Default)]
+#[derive(Serialize, Deserialize, Clone, Default, PartialEq)]
 pub struct RecaptchaV3 {
     pub page_url: String,
     pub site_key: String,
@@ -16,7 +16,7 @@ pub struct RecaptchaV3 {
     pub pingback: Option<String>,
 }
 
-impl CaptchaArguments for RecaptchaV3 {
+impl CaptchaArguments<'_> for RecaptchaV3 {
     fn to_request_params(&self, api_key: String) -> Result<Form, Error> {
         let mut request_body = Form::new()
             .text("key", api_key)

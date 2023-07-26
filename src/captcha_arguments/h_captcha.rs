@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use super::{arguments::CaptchaArguments, proxy_type::ProxyType};
 use crate::{error::Error, TWO_CAPTCHA_DEVELOPER_ID};
 
-#[derive(Serialize, Deserialize, Clone, Default)]
+#[derive(Serialize, Deserialize, Clone, Default, PartialEq)]
 pub struct HCaptcha {
     pub site_key: String,
     pub page_url: String,
@@ -17,7 +17,7 @@ pub struct HCaptcha {
     pub proxy_type: Option<ProxyType>,
 }
 
-impl CaptchaArguments for HCaptcha {
+impl CaptchaArguments<'_> for HCaptcha {
     fn to_request_params(&self, api_key: String) -> Result<Form, Error> {
         let mut request_body = Form::new()
             .text("key", api_key)

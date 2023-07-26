@@ -5,7 +5,7 @@ use crate::{error::Error, TWO_CAPTCHA_DEVELOPER_ID};
 
 use super::{arguments::CaptchaArguments, language::Language};
 
-#[derive(Serialize, Deserialize, Clone, Default)]
+#[derive(Serialize, Deserialize, Clone, Default, PartialEq)]
 pub struct TextCaptcha {
     pub language: Option<Language>,
     /// Language code
@@ -16,7 +16,7 @@ pub struct TextCaptcha {
     pub pingback: Option<String>,
 }
 
-impl CaptchaArguments for TextCaptcha {
+impl CaptchaArguments<'_> for TextCaptcha {
     fn to_request_params(&self, api_key: String) -> Result<Form, Error> {
         let mut request_body = Form::new()
             .text("key", api_key)

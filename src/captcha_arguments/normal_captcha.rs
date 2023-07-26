@@ -7,7 +7,7 @@ use super::{
     arguments::CaptchaArguments, character_restrictions::CharacterRestrictions, language::Language,
 };
 
-#[derive(Serialize, Deserialize, Clone, Debug, Default)]
+#[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
 pub struct NormalCaptcha {
     pub method: NormalCaptchaMethods,
     pub numeric: Option<CharacterRestrictions>,
@@ -38,7 +38,7 @@ pub struct NormalCaptcha {
     pub language_code: Option<String>,
 }
 
-impl CaptchaArguments for NormalCaptcha {
+impl CaptchaArguments<'_> for NormalCaptcha {
     fn to_request_params(&self, api_key: String) -> Result<Form, Error> {
         let mut request_body = Form::new()
             .text("key", api_key)
@@ -131,7 +131,7 @@ impl CaptchaArguments for NormalCaptcha {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub enum NormalCaptchaMethods {
     Post {
         bytes: Vec<u8>,

@@ -1,6 +1,6 @@
 use thiserror;
 
-#[derive(Debug, thiserror::Error)]
+#[derive(Debug, thiserror::Error, Clone, serde::Serialize)]
 /// Represents the types of errors that can occur when solving a captcha
 pub enum Error {
     #[error("2captcha's API returned an error: {error_code} {error_description:?}")]
@@ -12,16 +12,37 @@ pub enum Error {
 
     #[error("UrlParseError: {0}")]
     /// Failed to parse an URL
-    UrlParseError(#[from] url::ParseError),
+    UrlParseError(String),
 
-    #[error("{0}")]
+    #[error("JSON parse error: {0}")]
     /// Failed to parse the API's JSON response
-    JsonParseError(#[from] serde_json::Error),
+    JsonParseError(String),
 
-    #[error("{0}")]
+    #[error("Unknown network error: {0}")]
     /// Unknown network error
-    ResquestFailError(#[from] reqwest::Error),
+    ResquestFailError(String),
 
     #[error("Failed to set the file mimetype")]
     FileParseError,
+}
+
+#[doc(hidden)]
+impl From<serde_json::Error> for Error {
+    fn from(value: serde_json::Error) -> Self {
+        Self::JsonParseError(value.to_string())
+    }
+}
+
+#[doc(hidden)]
+impl From<url::ParseError> for Error {
+    fn from(value: url::ParseError) -> Self {
+        Self::UrlParseError(value.to_string())
+    }
+}
+
+#[doc(hidden)]
+impl From<reqwest::Error> for Error {
+    fn from(value: reqwest::Error) -> Self {
+        Self::ResquestFailError(value.to_string())
+    }
 }

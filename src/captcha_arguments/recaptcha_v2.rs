@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use super::{arguments::CaptchaArguments, proxy_type::ProxyType};
 use crate::{error::Error, TWO_CAPTCHA_DEVELOPER_ID};
 
-#[derive(Serialize, Deserialize, Clone, Default)]
+#[derive(Serialize, Deserialize, Clone, Default, PartialEq)]
 pub struct RecaptchaV2 {
     pub page_url: String,
     pub site_key: String,
@@ -19,7 +19,7 @@ pub struct RecaptchaV2 {
     pub invisible: Option<bool>,
 }
 
-impl CaptchaArguments for RecaptchaV2 {
+impl CaptchaArguments<'_> for RecaptchaV2 {
     fn to_request_params(&self, api_key: String) -> Result<Form, Error> {
         let mut request_body = Form::new()
             .text("key", api_key)

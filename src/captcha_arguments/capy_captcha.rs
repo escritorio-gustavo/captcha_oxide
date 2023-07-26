@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use super::{arguments::CaptchaArguments, proxy_type::ProxyType};
 use crate::{error::Error, TWO_CAPTCHA_DEVELOPER_ID};
 
-#[derive(Serialize, Deserialize, Clone, Default)]
+#[derive(Serialize, Deserialize, Clone, Default, PartialEq)]
 pub struct CapyCaptcha {
     pub captcha_key: String,
     pub api_server: Option<String>,
@@ -15,7 +15,7 @@ pub struct CapyCaptcha {
     pub proxy_type: Option<ProxyType>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Default)]
+#[derive(Serialize, Deserialize, Clone, Default, PartialEq)]
 pub enum CapyVersion {
     #[default]
     Puzzle,
@@ -32,7 +32,7 @@ impl ToString for CapyVersion {
     }
 }
 
-impl CaptchaArguments for CapyCaptcha {
+impl CaptchaArguments<'_> for CapyCaptcha {
     fn to_request_params(&self, api_key: String) -> Result<Form, Error> {
         let mut request_body = Form::new()
             .text("method", "capy")

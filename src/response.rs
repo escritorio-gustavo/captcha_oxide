@@ -9,9 +9,15 @@ pub(crate) struct CaptchaResponse {
 
 /// Represents the possible data contained by the `request` field
 /// that 2captcha returns
-#[derive(Deserialize, Serialize, Debug, Clone)]
+///
+/// It's usually a string (denoted by the `String` variant), but some
+/// captcha types return objects instead. Those are denoted as (CaptchaType)Response,
+/// e.g.: `GeetestResponse`, `CapyResponse`
+#[derive(Deserialize, Serialize, Debug, Clone, PartialEq, Hash)]
 #[serde(untagged)]
 pub enum RequestContent {
+    /// Represents a captcha answer that is composed only of a token,
+    /// such as reCAPTCHA and hCaptcha
     String(String),
     GeetestResponse {
         #[serde(rename = "geetest_challenge")]
@@ -33,6 +39,13 @@ pub enum RequestContent {
 }
 
 impl RequestContent {
+    /// Convinence method to be used only internally
+    /// in cases where you are absolutely sure you are
+    /// dealing with a `String` variant and don't want
+    /// to add unecessary pattern matching
+    ///
+    /// # Panics
+    /// If called on any variant other than `String`
     pub(crate) fn request_as_string(&self) -> String {
         if let RequestContent::String(data) = self {
             data.to_owned()

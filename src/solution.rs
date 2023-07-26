@@ -5,14 +5,24 @@ use crate::{error::Error, response::RequestContent, status::SolutionStatus, TWO_
 /// This struct is returned by the `CaptchaSolver.colve()` method
 /// and represents the solution to the captcha you submitted with
 /// your `CaptchaArguments`
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize)]
 pub struct CaptchaSolution {
+    #[serde(skip)]
     api_key: String,
+
     id: String,
+
+    #[serde(skip)]
     timestamp: Instant,
 
     /// The actual solution to the captcha challenge
     pub solution: RequestContent,
+}
+
+impl PartialEq for CaptchaSolution {
+    fn eq(&self, other: &Self) -> bool {
+        self.api_key == other.api_key && self.id == other.id && self.solution == other.solution
+    }
 }
 
 impl CaptchaSolution {
