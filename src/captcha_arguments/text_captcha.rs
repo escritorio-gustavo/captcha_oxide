@@ -7,12 +7,19 @@ use super::{arguments::CaptchaArguments, language::Language};
 
 #[derive(Serialize, Deserialize, Clone, Default, PartialEq)]
 pub struct TextCaptcha {
-    pub language: Option<Language>,
-    /// Language code
-    pub lang: Option<String>,
     /// Text will be shown to worker to help him to solve the captcha correctly.
     /// For example: type red symbols only.
+    ///
+    /// This field is required.
     pub text_captcha: String,
+
+    /// Language code, such as `pt`, `en`, `es`
+    pub lang: Option<String>,
+
+    /// The alphabet to be used
+    pub language: Option<Language>,
+
+    /// Callback URL where you wish to receive the response
     pub pingback: Option<String>,
 }
 

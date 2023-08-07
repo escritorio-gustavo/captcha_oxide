@@ -6,16 +6,51 @@ use crate::{error::Error, TWO_CAPTCHA_DEVELOPER_ID};
 
 #[derive(Serialize, Deserialize, Clone, Default, PartialEq)]
 pub struct RecaptchaV2 {
+    /// Full URL of the page where you see the captcha
+    ///
+    /// This field is required
     pub page_url: String,
+
+    /// Value of the sitekey parameter you found on the page
+    ///
+    /// This field is required
     pub site_key: String,
-    pub proxy: Option<String>,
+
+    /// Domain used to load the captcha, e.g.: google.com or recaptcha.net
     pub domain: Option<String>,
+
+    /// Your cookies that will be passed to the worker who will solve the captha.
+    /// This causes the worker's cookies to be returned in the response.
+    /// Format: KEY:Value, separator: semicolon, example: `KEY1:Value1;KEY2:Value2;`
+    ///
+    /// # Warning
+    /// Upon reading 2captcha docs again, I realized this changes the
+    /// response format, which will break the JSON deserialization.
+    /// Using this is highly discouraged as it has not been tested and will
+    /// most likely fail.
     pub cookies: Option<String>,
+
+    /// Value of the data-s parameter you found on the page.
+    /// Curenttly applicable for Google Search and other Google services.
     pub data_s: Option<String>,
+
+    /// Your userAgent that will be used to solve the captcha
     pub user_agent: Option<String>,
+
+    /// Callback URL where you wish to receive the response
     pub pingback: Option<String>,
+
+    /// The URL to your proxy server
+    /// Format: login:password@ip_address:port
+    pub proxy: Option<String>,
+
+    /// The type of proxy
     pub proxy_type: Option<ProxyType>,
+
+    /// Whether or not the page uses Enterprise reCAPTCHA
     pub enterprise: Option<bool>,
+
+    /// Whether or not the page uses Invisible reCAPTCHA
     pub invisible: Option<bool>,
 }
 

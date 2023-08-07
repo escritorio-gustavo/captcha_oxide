@@ -7,12 +7,29 @@ use super::arguments::CaptchaArguments;
 
 #[derive(Serialize, Deserialize, Clone, Default, PartialEq)]
 pub struct RecaptchaV3 {
+    /// Full URL of the page where you see the captcha
+    ///
+    /// This field is required
     pub page_url: String,
+
+    /// Value of the sitekey parameter you found on the page
+    ///
+    /// This field is required
     pub site_key: String,
+
+    /// Whether or not the page uses Enterprise reCAPTCHA
     pub enterprise: Option<bool>,
+
+    /// Domain used to load the captcha, e.g.: google.com or recaptcha.net
     pub domain: Option<String>,
+
+    /// Value of the action parameter you found on the page
     pub action: Option<String>,
+
+    /// The score needed for resolution
     pub min_score: Option<f32>,
+
+    /// Callback URL where you wish to receive the response
     pub pingback: Option<String>,
 }
 

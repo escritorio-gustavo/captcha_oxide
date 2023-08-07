@@ -5,16 +5,61 @@ use super::{arguments::CaptchaArguments, proxy_type::ProxyType};
 use crate::{error::Error, TWO_CAPTCHA_DEVELOPER_ID};
 
 #[derive(Serialize, Deserialize, Clone, Default, PartialEq)]
+/// Represents the data needed to solve a Geetest puzzle
+///
+/// # Example
+/// ```
+/// use std::time::{SystemTime, UNIX_EPOCH},
+///
+/// let timestamp = SystemTime::now()
+///     .duration_since(UNIX_EPOCH)
+///     .unwrap()
+///     .as_millis();
+///
+/// Geetest {
+///     page_url: format!("https://www.geetest.com/demo/gt/register-enFullpage-official?t={timestamp}"),
+///     gt: String::from("DYNAMICALLY GENERATED"),
+///     challenge: String::from("DYNAMICALLY GENERATED"),
+///     ..Default::default()
+/// }
+/// ```
 pub struct Geetest {
+    /// Public website key. You should be able to find it in the page's HTML
+    ///
+    /// This field is required
     pub gt: String,
+
+    /// Full URL of the page where you see the captcha
+    ///
+    /// This field is required
     pub page_url: String,
+
+    /// Challenge key. Warning, this field is dynamically generated, so you will
+    /// need to get its value at runtime
+    ///
+    /// This field is required
     pub challenge: String,
+
+    /// API domain
     pub api_server: Option<String>,
+
+    /// In rare cases initGeetest can be called with offline paramete
     pub offline: Option<bool>,
+
+    /// In rare cases initGeetest can be called with new_captcha parameter
     pub new_captcha: Option<bool>,
+
+    /// Callback URL where you wish to receive the response
     pub pingback: Option<String>,
+
+    /// The URL to your proxy server
+    /// Format: login:password@ip_address:port
     pub proxy: Option<String>,
+
+    /// The type of proxy
     pub proxy_type: Option<ProxyType>,
+
+    /// Your userAgent that will be used to solve the captcha
     pub user_agent: Option<String>,
 }
 

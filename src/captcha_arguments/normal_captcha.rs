@@ -9,8 +9,15 @@ use super::{
 
 #[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
 pub struct NormalCaptcha {
+    /// The way you intend on sending the captcha image:
+    /// * As multipart/form-data
+    /// * Or as a base64 string
     pub method: NormalCaptchaMethods,
+
+    /// What types of characters are accepted in the answer
     pub numeric: Option<CharacterRestrictions>,
+
+    /// Callback URL where you wish to receive the response
     pub pingback: Option<String>,
 
     /// Whether or not the captcha is case-sensitive
@@ -32,6 +39,7 @@ pub struct NormalCaptcha {
     /// Must be in range (1..=20)
     pub max_len: Option<u8>,
 
+    /// The alphabet to be used
     pub language: Option<Language>,
 
     /// Language code such as `pt-BR`

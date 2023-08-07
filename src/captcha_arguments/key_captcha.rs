@@ -7,11 +7,32 @@ use super::arguments::CaptchaArguments;
 
 #[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
 pub struct KeyCaptcha {
-    pub user_id: String,
-    pub session_id: String,
-    pub server_sign: String,
-    pub server_sign2: String,
+    /// Full URL of the page where you see the captcha
+    ///
+    /// This field is required
     pub page_url: String,
+
+    /// Value of the s_s_c_user_id parameter you found on the page's source code
+    ///
+    /// This field is required
+    pub user_id: String,
+
+    /// Value of the s_s_c_session_id parameter you found on the page's source code
+    ///
+    /// This field is required
+    pub session_id: String,
+
+    /// Value of the s_s_c_web_server_sign parameter you found on the page's source code
+    ///
+    /// This field is required
+    pub server_sign: String,
+
+    /// Value of the s_s_c_web_server_sign2 parameter you found on the page's source code
+    ///
+    /// This field is required
+    pub server_sign2: String,
+
+    /// Callback URL where you wish to receive the response
     pub pingback: Option<String>,
 }
 

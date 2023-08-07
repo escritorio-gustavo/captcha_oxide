@@ -5,13 +5,45 @@ use super::{arguments::CaptchaArguments, proxy_type::ProxyType};
 use crate::{error::Error, TWO_CAPTCHA_DEVELOPER_ID};
 
 #[derive(Serialize, Deserialize, Clone, Default, PartialEq)]
+/// Represents the data needed to solve a Capy Captcha puzzle
+///
+/// # Example
+/// ```
+/// CapyCaptcha {
+///     captcha_key: "PUZZLE_Cme4hZLjuZRMYC3uh14C52D3uNms5w".into(),
+///     page_url: "https://www.capy.me/account/signin".into(),
+///     version: CapyVersion::Puzzle
+///     ..Default::default()
+/// };
+/// ```
 pub struct CapyCaptcha {
+    /// The website's captcha key. You should be able to find this
+    /// informatino in the site's HTML.
+    ///
+    /// This field is required
     pub captcha_key: String,
-    pub api_server: Option<String>,
-    pub version: CapyVersion,
+
+    /// Full URL of the page where you see the captcha
+    ///
+    /// This field is required
     pub page_url: String,
+
+    /// The kind of puzzle to be solved
+    ///
+    /// This field is required
+    pub version: CapyVersion,
+
+    /// The domain of the script's source URL
+    pub api_server: Option<String>,
+
+    /// Callback URL where you wish to receive the response
     pub pingback: Option<String>,
+
+    /// The URL to your proxy server
+    /// Format: login:password@ip_address:port
     pub proxy: Option<String>,
+
+    /// The type of proxy
     pub proxy_type: Option<ProxyType>,
 }
 
@@ -69,7 +101,7 @@ mod test {
     use dotenv::dotenv;
     use std::env;
 
-    use super::CapyCaptcha;
+    use super::*;
     use crate::{response::RequestContent, solver::CaptchaSolver};
 
     #[tokio::test]
@@ -81,6 +113,7 @@ mod test {
         let args = CapyCaptcha {
             captcha_key: "PUZZLE_Cme4hZLjuZRMYC3uh14C52D3uNms5w".into(),
             page_url: "https://www.capy.me/account/signin".into(),
+            version: CapyVersion::Puzzle,
             ..Default::default()
         };
 

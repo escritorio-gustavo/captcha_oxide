@@ -6,14 +6,43 @@ use crate::{error::Error, TWO_CAPTCHA_DEVELOPER_ID};
 
 #[derive(Serialize, Deserialize, Clone, Default, PartialEq)]
 pub struct HCaptcha {
+    /// Value of the data-sitekey attribute found in the page's HTML
+    ///
+    /// This field is required
     pub site_key: String,
+
+    /// Full URL of the page where you see the captcha
+    ///
+    /// This field is required
     pub page_url: String,
+
+    /// Whether or not the captcha you are dealing with the invisible
+    /// version of hCaptcha. This is pretty rare as of mid 2023
     pub invisible: Option<bool>,
+
+    /// Domain used to load the captcha, e.g.: hcaptcha.com or js.hcaptcha.com
     pub domain: Option<String>,
+
+    /// Custom data that is used in some implementations of hCaptcha,
+    /// mostly with invisible hCaptcha. In most cases you see it as rqdata
+    /// inside the page's network requests.
+    ///
+    /// Important: you MUST provide a `userAgent` if you submit a captcha
+    /// with the data paramater. The value should match the User-Agent
+    /// you use when interacting with the target website.
     pub data: Option<String>,
+
+    /// Your userAgent that will be used to solve the captcha
     pub user_agent: Option<String>,
+
+    /// Callback URL where you wish to receive the response
     pub pingback: Option<String>,
+
+    /// The URL to your proxy server
+    /// Format: login:password@ip_address:port
     pub proxy: Option<String>,
+
+    /// The type of proxy
     pub proxy_type: Option<ProxyType>,
 }
 
