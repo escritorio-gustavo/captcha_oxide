@@ -1,10 +1,10 @@
 use std::time::{Duration, Instant};
 
-use crate::{error::Error, response::RequestContent, status::SolutionStatus, TWO_CAPTCHA_URL};
+use crate::{prelude::*, response::RequestContent, status::SolutionStatus, TWO_CAPTCHA_URL};
 
-/// This struct is returned by the `CaptchaSolver.colve()` method
+/// This struct is returned by the [CaptchaSolver](crate::CaptchaSolver)'s `solve` method
 /// and represents the solution to the captcha you submitted with
-/// your `CaptchaArguments`
+/// your [CaptchaArguments](crate::arguments::CaptchaArguments)
 #[derive(Clone, Debug, serde::Serialize)]
 pub struct CaptchaSolution {
     #[serde(skip)]
@@ -44,7 +44,7 @@ impl CaptchaSolution {
     /// Use this method to report wether or not a captcha solution was valid.
     /// This helps increase the service's accuracy and refunds you for wrong
     /// solutions
-    pub async fn report(&self, status: SolutionStatus) -> Result<(), Error> {
+    pub async fn report(&self, status: SolutionStatus) -> Result<()> {
         let action = match status {
             SolutionStatus::Good => "reportgood",
             SolutionStatus::Bad => "reportbad",

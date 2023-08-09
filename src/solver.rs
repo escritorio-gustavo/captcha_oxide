@@ -5,8 +5,8 @@ use serde::{Deserialize, Serialize};
 use url::Url;
 
 use crate::{
-    captcha_arguments::arguments::CaptchaArguments,
-    error::Error,
+    arguments::captcha_arguments::CaptchaArguments,
+    prelude::*,
     response::{CaptchaResponse, RequestContent},
     solution::CaptchaSolution,
     TWO_CAPTCHA_URL,
@@ -23,40 +23,36 @@ use crate::{
 /// use dotenv::dotenv;
 /// use std::env;
 /// use captcha_oxide::{
-///     solver::CaptchaSolver,
-///     captcha_arguments::recaptcha_v3::RecaptchaV3,
+///     CaptchaSolver,
+///     captcha_arguments::{CaptchaArguments, RecaptchaV3},
 ///     response::RequestContent,
 /// };
 ///
-/// #[tokio::main]
-/// async fn main() {
-///     dotenv().unwrap();
-///     let solver = CaptchaSolver::new(env::var("API_KEY").unwrap());
+/// # #[tokio::main]
+/// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
+/// dotenv();
+/// let solver = CaptchaSolver::new(env::var("API_KEY")?);
 ///     
-///     let args = RecaptchaV3 {
-///         site_key: "6LcFcoAUAAAAAN7Um8IRZOtbzgsV5ei2meTmRi6m".into(),
-///         page_url: "https://contactform7.com/contact/".into(),
-///         min_score: Some(0.3),
-///         ..Default::default()
-///     };
+/// let args = RecaptchaV3::builder()
+///     .site_key("6LcFcoAUAAAAAN7Um8IRZOtbzgsV5ei2meTmRi6m")
+///     .page_url("https://contactform7.com/contact/")
+///     .min_score(0.3)
+///     .build();
 ///     
-///     match solver.solve(args).await {
-///         Ok(solution) => {
-///             // If there isn't a variant named after your captcha type,
-///             // it's because it only returns a token, so you should use
-///             // ths String variant
-///             match solution.solution {
-///                 RequestContent::String(plain_text_solution) => {
-///                     assert_ne!(plain_text_solution, "");
-///                 },
-///                 _ => unreachable!()
-///             }
-///         },
-///         Err(e) => {
-///             todo!("Handle your error");
-///         },
-///     };
-/// }
+/// let solution = solver.solve(args).await?;
+///
+/// match solution.solution {
+///     // If there isn't a variant named after your captcha type,
+///     // it's because it only returns a token, so you should use
+///     // the String variant
+///     RequestContent::String(plain_text_solution) => {
+///         assert_ne!(plain_text_solution, "");
+///     },
+///     _ => unreachable!()
+/// };
+///
+/// # Ok(())
+/// # }
 /// ```
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct CaptchaSolver {
@@ -70,10 +66,10 @@ impl CaptchaSolver {
         }
     }
 
-    pub async fn solve<'a, T: CaptchaArguments<'a>>(
+    pub async fn solve<'a, T>(
         &self,
-        params: T,
-    ) -> Result<CaptchaSolution, Error> {
+        params: impl CaptchaArguments<'a, T>,
+    ) -> Result<CaptchaSolution> {
         let client = Client::new();
 
         let url = Url::parse(TWO_CAPTCHA_URL)?.join("in.php")?;
@@ -97,7 +93,7 @@ impl CaptchaSolver {
         }
 
         let task_id = response.request.request_as_string();
-        tokio::time::sleep(Duration::from_secs(params.get_initial_timeout_secs())).await;
+        tokio::time::sleep(params.get_initial_timeout_secs()).await;
 
         let result_params: Vec<(&str, &str)> = vec![
             ("id", task_id.as_str()),

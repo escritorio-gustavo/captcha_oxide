@@ -1,27 +1,66 @@
+mod builder;
+mod type_state;
+
 use reqwest::multipart::Form;
 use serde::{Deserialize, Serialize};
 
-use super::{arguments::CaptchaArguments, proxy_type::ProxyType};
-use crate::{error::Error, TWO_CAPTCHA_DEVELOPER_ID};
+use builder::{DataNotProvided, UserAgentNotProvided};
 
-#[derive(Serialize, Deserialize, Clone, Default, PartialEq)]
+use crate::{
+    arguments::{
+        proxy::Proxy,
+        type_state::{page_url::PageUrlNotProvided, site_key::SiteKeyNotProvided},
+        CaptchaArguments,
+    },
+    prelude::*,
+    TWO_CAPTCHA_DEVELOPER_ID,
+};
+
+pub use builder::HCaptchaBuilder;
+
+#[derive(Serialize, Deserialize, Clone, PartialEq)]
+/// ```
+/// use captcha_oxide::{
+///     arguments::{CaptchaArguments, HCaptcha},
+///     CaptchaSolver,
+///     RequestContent
+/// };
+/// # use std::env;
+///
+/// # #[tokio::main]
+/// # async fn main() -> -> Result<(), Box<dyn std::error::Error>> {
+/// let solver = CaptchaSolver::new("YOUR_API_KEY");
+/// # dotenv::dotenv();
+/// # let solver = CaptchaSolver::new(env::var("API_KEY").unwrap());
+///
+/// let args = HCaptcha::builder()
+///     .site_key("SITE_KEY")
+/// #   .site_key("13257c82-e129-4f09-a733-2a7cb3102832")
+///     .page_url("SOME_URL")
+/// #   .page_url("https://dashboard.hcaptcha.com/signup")
+///     .build();
+///
+/// let solution = solver.solve(args).await?.solution;
+/// let RequestContent::String(solution) = solution else {
+///     unreachable!();
+/// };
+///
+/// assert_ne!(solution, "");
+/// # }
+/// ```
 pub struct HCaptcha {
     /// Value of the data-sitekey attribute found in the page's HTML
-    ///
-    /// This field is required
-    pub site_key: String,
+    site_key: String,
 
     /// Full URL of the page where you see the captcha
-    ///
-    /// This field is required
-    pub page_url: String,
+    page_url: String,
 
     /// Whether or not the captcha you are dealing with the invisible
     /// version of hCaptcha. This is pretty rare as of mid 2023
-    pub invisible: Option<bool>,
+    invisible: Option<bool>,
 
     /// Domain used to load the captcha, e.g.: hcaptcha.com or js.hcaptcha.com
-    pub domain: Option<String>,
+    domain: Option<String>,
 
     /// Custom data that is used in some implementations of hCaptcha,
     /// mostly with invisible hCaptcha. In most cases you see it as rqdata
@@ -30,24 +69,39 @@ pub struct HCaptcha {
     /// Important: you MUST provide a `userAgent` if you submit a captcha
     /// with the data paramater. The value should match the User-Agent
     /// you use when interacting with the target website.
-    pub data: Option<String>,
+    data: Option<String>,
 
     /// Your userAgent that will be used to solve the captcha
-    pub user_agent: Option<String>,
+    user_agent: Option<String>,
 
     /// Callback URL where you wish to receive the response
-    pub pingback: Option<String>,
+    pingback: Option<String>,
 
     /// The URL to your proxy server
-    /// Format: login:password@ip_address:port
-    pub proxy: Option<String>,
-
-    /// The type of proxy
-    pub proxy_type: Option<ProxyType>,
+    proxy: Option<Proxy>,
 }
 
-impl CaptchaArguments<'_> for HCaptcha {
-    fn to_request_params(&self, api_key: String) -> Result<Form, Error> {
+impl
+    CaptchaArguments<
+        '_,
+        HCaptchaBuilder<
+            PageUrlNotProvided,
+            SiteKeyNotProvided,
+            DataNotProvided,
+            UserAgentNotProvided,
+        >,
+    > for HCaptcha
+{
+    fn builder() -> HCaptchaBuilder<
+        PageUrlNotProvided,
+        SiteKeyNotProvided,
+        DataNotProvided,
+        UserAgentNotProvided,
+    > {
+        HCaptchaBuilder::new()
+    }
+
+    fn to_request_params(&self, api_key: String) -> Result<Form> {
         let mut request_body = Form::new()
             .text("key", api_key)
             .text("json", "1")
@@ -78,11 +132,9 @@ impl CaptchaArguments<'_> for HCaptcha {
         }
 
         if let Some(proxy) = &self.proxy {
-            request_body = request_body.text("proxy", proxy.clone());
-        }
-
-        if let Some(proxy_type) = &self.proxy_type {
-            request_body = request_body.text("proxytype", proxy_type.to_string());
+            request_body = request_body
+                .text("proxy", proxy.to_string())
+                .text("proxytype", proxy.proxy_type.to_string());
         }
 
         Ok(request_body)
@@ -95,7 +147,7 @@ mod test {
     use std::env;
 
     use super::HCaptcha;
-    use crate::solver::CaptchaSolver;
+    use crate::{arguments::CaptchaArguments, solver::CaptchaSolver};
 
     #[tokio::test]
     #[ignore = "These tests should run all at once, as this will likely cause a 429 block from the 2captcha API"]
@@ -103,11 +155,10 @@ mod test {
         dotenv().unwrap();
         let solver = CaptchaSolver::new(env::var("API_KEY").unwrap());
 
-        let args = HCaptcha {
-            site_key: "13257c82-e129-4f09-a733-2a7cb3102832".into(),
-            page_url: "https://dashboard.hcaptcha.com/signup".into(),
-            ..Default::default()
-        };
+        let args = HCaptcha::builder()
+            .site_key("13257c82-e129-4f09-a733-2a7cb3102832")
+            .page_url("https://dashboard.hcaptcha.com/signup")
+            .build();
 
         let solution = solver.solve(args).await;
 

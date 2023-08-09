@@ -10,37 +10,32 @@ This is a rust library for solving captcha puzzles with the 2Captcha API
 
 ```rust
 use captcha_oxide::{
-  solver::CaptchaSolver,
-  captcha_arguments::recaptcha_v3::RecaptchaV3,
-  response::RequestContent,
+  CaptchaSolver,
+  RequestContent,
+  Error,
+  arguments::{CaptchaArguments, RecaptchaV3},
 };
 
-
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), Error> {
   let solver = CaptchaSolver::new("YOUR TWOCAPTCHA API KEY");
 
-  let args = RecaptchaV3 {
-    page_url: String::from("https://someurl.com"),
-    site_key: String::from("SITE_KEY"),
-    ..Default.default()
+  let args = RecaptchaV3::builder()
+    .page_url("https://someurl.com")
+    .site_key("SITE_KEY")
+    .build();
+
+  let solution = solver.solve(args).await?.solution;
+
+  // If there isn't a variant named after your captcha type,
+  // it's because it only returns a token, so you should use
+  // the String variant
+  let RequestContent::String(solution) = solution else {
+    unreachable!()
   };
 
-  match solver.solve(args).await {
-    Ok(solution) => {
-      // If there isn't a variant named after your captcha type,
-      // it's because it only returns a token, so you should use
-      // ths String variant
-      match solution.solution {
-        RequestContent::String(plain_text_solution) => {
-          todo!("Use the solution");
-        },
-        _ => unreachable!()
-      }
-    },
-    Err(e) => {
-      todo!("Handle your error");
-    }
-  };
+  assert_ne!(solution, "");
+
+  Ok(())
 }
 ```

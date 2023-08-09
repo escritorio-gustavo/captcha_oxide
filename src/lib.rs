@@ -3,52 +3,48 @@
 //!
 //! # Example
 //!
-//! ```no_run
+//! ```
 //! use captcha_oxide::{
-//!     solver::CaptchaSolver,
-//!     captcha_arguments::recaptcha_v3::RecaptchaV3,
-//!     response::RequestContent,
+//!     CaptchaSolver,
+//!     arguments::{RecaptchaV3, CaptchaArguments},
+//!     RequestContent,
 //! };
 //!
-//! #[tokio::main]
-//! async fn main() {
-//!     let solver = CaptchaSolver::new("YOUR_API_KEY");
+//! # #[tokio::main]
+//! # async fn main() -> Result<(), Box<dyn std::error::Error>> {
+//! let solver = CaptchaSolver::new("YOUR_API_KEY");
 //!     
-//!     let args = RecaptchaV3 {
-//!         site_key: "SOME_SITE_KEY".into(),
-//!         page_url: "https://some.url/".into(),
-//!         min_score: Some(0.3),
-//!         ..Default::default()
-//!     };
-//!     
-//!     match solver.solve(args).await {
-//!         Ok(solution) => {
-//!             // If there isn't a variant named after your captcha type,
-//!             // it's because it only returns a token, so you should use
-//!             // ths String variant
-//!             match solution.solution {
-//!                 RequestContent::String(plain_text_solution) => {
-//!                     assert_ne!(plain_text_solution, "");
-//!                 },
-//!                 _ => unreachable!()
-//!             }
-//!         },
-//!         Err(e) => {
-//!             todo!("Handle your error");
-//!         },
-//!     };
-//! }
+//! let args = RecaptchaV3::builder()
+//!     .site_key("SOME_SITE_KEY")
+//!     .page_url("https://some.url/")
+//!     .min_score(0.3)
+//!     .build();
+//!
+//! let solution = solver.solve(args).await?.solution;
+//!
+//! // If there isn't a variant named after your captcha type,
+//! // it's because it only returns a token, so you should use
+//! // the String variant
+//! let RequestContent::String(solution) = solution else {
+//!     unreachable!()
+//! };
+//!
+//! assert_ne!(solution, "");
+//! # Ok(())
+//! # }
 //! ```
+
+pub use crate::arguments::CaptchaArguments;
 pub use crate::error::Error;
 pub use crate::response::RequestContent;
 pub use crate::solution::CaptchaSolution;
 pub use crate::solver::CaptchaSolver;
-pub use crate::status::SolutionStatus;
 
 pub(crate) const TWO_CAPTCHA_URL: &str = "http://2captcha.com";
 pub(crate) const TWO_CAPTCHA_DEVELOPER_ID: &str = "4143";
+pub(crate) mod prelude;
 
-pub mod captcha_arguments;
+pub mod arguments;
 pub mod error;
 pub mod response;
 pub mod solution;

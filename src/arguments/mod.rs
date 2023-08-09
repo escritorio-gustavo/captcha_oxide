@@ -3,18 +3,20 @@
 //!
 //! # Usage notes:
 //!
-//! * All implementers of the [`arguments::CaptchaArguments`] trait
-//! are re-exported by the top level of this module.
-//! * All fields not typed as [`Option::<T>`] are required by the 2captcha
-//! API and should not be filled by the [`Default`] trait
-//! * Special parameter types like [`proxy_type::ProxyType`] are not re-exported
+//! * All implementers of the [`CaptchaArguments`] trait
+//! (and the trait itself) are re-exported by the top level of this module.
+//! * All implementers of the [`CaptchaArguments`] trait
+//! have a `builder` method that gives you a builder using the typestate
+//! pattern to avoid inconsistent data
+//! * Special parameter types like [`proxy::Proxy`] are not re-exported
 //! here
 
 pub mod character_restrictions;
 pub mod language;
+pub mod proxy;
 pub mod proxy_type;
 
-pub mod arguments;
+pub mod captcha_arguments;
 pub mod capy_captcha;
 pub mod geetest;
 pub mod h_captcha;
@@ -23,7 +25,9 @@ pub mod normal_captcha;
 pub mod recaptcha_v2;
 pub mod recaptcha_v3;
 pub mod text_captcha;
+pub mod type_state;
 
+pub use captcha_arguments::CaptchaArguments;
 pub use capy_captcha::CapyCaptcha;
 pub use geetest::Geetest;
 pub use h_captcha::HCaptcha;

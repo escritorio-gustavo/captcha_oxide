@@ -23,6 +23,7 @@ pub enum Error {
     ResquestFailError(String),
 
     #[error("Failed to set the file mimetype")]
+    /// Failed to set `mime_type` when sending a file
     FileParseError,
 }
 

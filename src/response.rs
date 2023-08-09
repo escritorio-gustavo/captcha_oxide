@@ -1,3 +1,5 @@
+//! Represents the JSON data returned by the 2captcha API
+
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -10,9 +12,10 @@ pub(crate) struct CaptchaResponse {
 /// Represents the possible data contained by the `request` field
 /// that 2captcha returns
 ///
-/// It's usually a string (denoted by the `String` variant), but some
-/// captcha types return objects instead. Those are denoted as (CaptchaType)Response,
-/// e.g.: `GeetestResponse`, `CapyResponse`
+/// It's usually a string (denoted by the [`String`](RequestContent::String) variant),
+/// but some captcha types return objects instead. Those are denoted as
+/// (CaptchaType)Response, e.g.: [`GeetestResponse`](RequestContent::GeetestResponse),
+/// [`CapyResponse`](RequestContent::CapyResponse)
 #[derive(Deserialize, Serialize, Debug, Clone, PartialEq, Hash)]
 #[serde(untagged)]
 pub enum RequestContent {
@@ -41,11 +44,12 @@ pub enum RequestContent {
 impl RequestContent {
     /// Convinence method to be used only internally
     /// in cases where you are absolutely sure you are
-    /// dealing with a `String` variant and don't want
-    /// to add unecessary pattern matching
+    /// dealing with a [`String`](RequestContent::String)
+    /// variant and don't want to add unecessary pattern
+    /// matching
     ///
     /// # Panics
-    /// If called on any variant other than `String`
+    /// If called on any variant other than [`String`](RequestContent::String)
     pub(crate) fn request_as_string(&self) -> String {
         if let RequestContent::String(data) = self {
             data.to_owned()
