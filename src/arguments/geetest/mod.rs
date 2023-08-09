@@ -32,7 +32,7 @@ pub use builder::GeetestBuilder;
 /// use captcha_oxide::{
 ///     CaptchaSolver,
 ///     RequestContent,
-///     arguments::{CaptchaArguments, Geetest}
+///     arguments::Geetest
 /// };
 ///
 /// # #[derive(Serialize, Deserialize)]
@@ -73,6 +73,7 @@ pub use builder::GeetestBuilder;
 /// };
 ///
 /// assert_ne!(challenge, "");
+/// # Ok(())
 /// # }
 /// ```
 pub struct Geetest {
@@ -105,13 +106,13 @@ pub struct Geetest {
     user_agent: Option<String>,
 }
 
-impl CaptchaArguments<'_, GeetestBuilder<GtNotProvided, PageUrlNotProvided, ChallengeNotProvided>>
-    for Geetest
-{
-    fn builder() -> GeetestBuilder<GtNotProvided, PageUrlNotProvided, ChallengeNotProvided> {
+impl Geetest {
+    pub fn builder() -> GeetestBuilder<GtNotProvided, PageUrlNotProvided, ChallengeNotProvided> {
         GeetestBuilder::new()
     }
+}
 
+impl CaptchaArguments<'_> for Geetest {
     fn to_request_params(&self, api_key: String) -> Result<Form> {
         let mut request_body = Form::new()
             .text("key", api_key)
@@ -167,7 +168,7 @@ mod test {
     };
 
     use super::Geetest;
-    use crate::{arguments::CaptchaArguments, CaptchaSolver, RequestContent};
+    use crate::{CaptchaSolver, RequestContent};
 
     #[derive(Serialize, Deserialize)]
     struct GeetestJson {

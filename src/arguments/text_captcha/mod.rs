@@ -20,8 +20,9 @@ pub use builder::TextCaptchaBuilder;
 /// ```
 /// # use std::env;
 /// use captcha_oxide::{
-///     arguments::{CaptchaArguments, TextCaptcha},
-///     CaptchaSolver, RequestContent,
+///     arguments::TextCaptcha,
+///     CaptchaSolver,
+///     RequestContent,
 /// };
 ///
 /// # #[tokio::main]
@@ -59,11 +60,13 @@ pub struct TextCaptcha {
     pingback: Option<String>,
 }
 
-impl CaptchaArguments<'_, TextCaptchaBuilder<CaptchaTextNotProvided>> for TextCaptcha {
-    fn builder() -> TextCaptchaBuilder<CaptchaTextNotProvided> {
+impl TextCaptcha {
+    pub fn builder() -> TextCaptchaBuilder<CaptchaTextNotProvided> {
         TextCaptchaBuilder::new()
     }
+}
 
+impl CaptchaArguments<'_> for TextCaptcha {
     fn to_request_params(&self, api_key: String) -> Result<Form> {
         let mut request_body = Form::new()
             .text("key", api_key)
@@ -100,10 +103,7 @@ mod test {
     use dotenv::dotenv;
     use std::env;
 
-    use crate::{
-        arguments::{CaptchaArguments, TextCaptcha},
-        CaptchaSolver, RequestContent,
-    };
+    use crate::{arguments::TextCaptcha, CaptchaSolver, RequestContent};
 
     #[tokio::test]
     #[ignore = "These tests should run all at once, as this will likely cause a 429 block from the 2captcha API"]

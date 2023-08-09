@@ -24,7 +24,7 @@ use crate::{
 /// use std::env;
 /// use captcha_oxide::{
 ///     CaptchaSolver,
-///     captcha_arguments::{CaptchaArguments, RecaptchaV3},
+///     captcha_arguments::RecaptchaV3,
 ///     response::RequestContent,
 /// };
 ///
@@ -66,10 +66,7 @@ impl CaptchaSolver {
         }
     }
 
-    pub async fn solve<'a, T>(
-        &self,
-        params: impl CaptchaArguments<'a, T>,
-    ) -> Result<CaptchaSolution> {
+    pub async fn solve<'a>(&self, params: impl CaptchaArguments<'a>) -> Result<CaptchaSolution> {
         let client = Client::new();
 
         let url = Url::parse(TWO_CAPTCHA_URL)?.join("in.php")?;

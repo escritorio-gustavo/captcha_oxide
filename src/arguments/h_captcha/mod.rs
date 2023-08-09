@@ -19,16 +19,19 @@ use crate::{
 pub use builder::HCaptchaBuilder;
 
 #[derive(Serialize, Deserialize, Clone, PartialEq)]
+/// Represents the data needed to solve a hCaptcha puzzle
+///
+/// # Example
 /// ```
 /// use captcha_oxide::{
-///     arguments::{CaptchaArguments, HCaptcha},
+///     arguments::HCaptcha,
 ///     CaptchaSolver,
 ///     RequestContent
 /// };
 /// # use std::env;
 ///
 /// # #[tokio::main]
-/// # async fn main() -> -> Result<(), Box<dyn std::error::Error>> {
+/// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
 /// let solver = CaptchaSolver::new("YOUR_API_KEY");
 /// # dotenv::dotenv();
 /// # let solver = CaptchaSolver::new(env::var("API_KEY").unwrap());
@@ -46,6 +49,7 @@ pub use builder::HCaptchaBuilder;
 /// };
 ///
 /// assert_ne!(solution, "");
+/// # Ok(())
 /// # }
 /// ```
 pub struct HCaptcha {
@@ -81,18 +85,8 @@ pub struct HCaptcha {
     proxy: Option<Proxy>,
 }
 
-impl
-    CaptchaArguments<
-        '_,
-        HCaptchaBuilder<
-            PageUrlNotProvided,
-            SiteKeyNotProvided,
-            DataNotProvided,
-            UserAgentNotProvided,
-        >,
-    > for HCaptcha
-{
-    fn builder() -> HCaptchaBuilder<
+impl HCaptcha {
+    pub fn builder() -> HCaptchaBuilder<
         PageUrlNotProvided,
         SiteKeyNotProvided,
         DataNotProvided,
@@ -100,7 +94,9 @@ impl
     > {
         HCaptchaBuilder::new()
     }
+}
 
+impl CaptchaArguments<'_> for HCaptcha {
     fn to_request_params(&self, api_key: String) -> Result<Form> {
         let mut request_body = Form::new()
             .text("key", api_key)
@@ -147,7 +143,7 @@ mod test {
     use std::env;
 
     use super::HCaptcha;
-    use crate::{arguments::CaptchaArguments, solver::CaptchaSolver};
+    use crate::solver::CaptchaSolver;
 
     #[tokio::test]
     #[ignore = "These tests should run all at once, as this will likely cause a 429 block from the 2captcha API"]

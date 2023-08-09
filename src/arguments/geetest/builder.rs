@@ -16,7 +16,7 @@ use crate::arguments::{
 ///
 /// # Example
 /// ```
-/// use captcha_oxide::{CaptchaArguments, arguments::Geetest};
+/// use captcha_oxide::arguments::Geetest;
 ///
 /// let geetest_args = Geetest::builder()
 ///     .page_url("SOME URL")

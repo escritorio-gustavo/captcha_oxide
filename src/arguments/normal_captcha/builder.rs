@@ -17,7 +17,7 @@ use crate::arguments::{
 ///
 /// # Example
 /// ```
-/// use captcha_oxide::arguments::{CaptchaArguments, NormalCaptcha};
+/// use captcha_oxide::arguments::NormalCaptcha;
 ///
 /// let args = NormalCaptcha::builder()
 ///     .method(NormalCaptchaMethods::Base64("BASE_64_IMAGE".into()))

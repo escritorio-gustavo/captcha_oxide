@@ -17,7 +17,6 @@ use crate::arguments::{
 /// # Example
 /// ```
 /// use captcha_oxide::arguments::{
-///     CaptchaArguments,
 ///     CapyCaptcha,
 ///     capy_captcha::CapyVersion
 /// };

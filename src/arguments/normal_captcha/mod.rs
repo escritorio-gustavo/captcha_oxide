@@ -27,11 +27,12 @@ pub use methods::NormalCaptchaMethods;
 /// ```
 /// # use std::env;
 /// use captcha_oxide::{
-///     arguments::{
-///         normal_captcha::{NormalCaptcha, NormalCaptchaMethods},
-///         CaptchaArguments,
+///     arguments::normal_captcha::{
+///         NormalCaptcha,
+///         NormalCaptchaMethods
 ///     },
-///     CaptchaSolver, RequestContent,
+///     CaptchaSolver,
+///     RequestContent,
 /// };
 ///
 /// # #[tokio::main]
@@ -103,24 +104,17 @@ pub struct NormalCaptcha {
     language_code: Option<String>,
 }
 
-impl
-    CaptchaArguments<
-        '_,
-        NormalCaptchaBuilder<
-            MethodNotProvided,
-            TextInstructionsNotProvided,
-            ImgInstructionsNotProvided,
-        >,
-    > for NormalCaptcha
-{
-    fn builder() -> NormalCaptchaBuilder<
+impl NormalCaptcha {
+    pub fn builder() -> NormalCaptchaBuilder<
         MethodNotProvided,
         TextInstructionsNotProvided,
         ImgInstructionsNotProvided,
     > {
-        NormalCaptchaBuilder::default()
+        NormalCaptchaBuilder::new()
     }
+}
 
+impl CaptchaArguments<'_> for NormalCaptcha {
     fn to_request_params(&self, api_key: String) -> Result<Form> {
         let mut request_body = Form::new()
             .text("key", api_key)
@@ -234,10 +228,7 @@ mod test {
     use std::env;
 
     use crate::{
-        arguments::{
-            normal_captcha::{NormalCaptcha, NormalCaptchaMethods},
-            CaptchaArguments,
-        },
+        arguments::normal_captcha::{NormalCaptcha, NormalCaptchaMethods},
         CaptchaSolver, RequestContent,
     };
 

@@ -29,7 +29,6 @@ pub use capy_version::CapyVersion;
 /// ```
 /// use captcha_oxide::{
 ///     arguments::{
-///         CaptchaArguments,
 ///         CapyCaptcha,
 ///         capy_captcha::CapyVersion
 ///     },
@@ -82,16 +81,14 @@ pub struct CapyCaptcha {
     proxy: Option<Proxy>,
 }
 
-impl
-    CaptchaArguments<
-        '_,
-        CapyCaptchaBuilder<PageUrlNotProvided, SiteKeyNotProvided, VersionNotProvided>,
-    > for CapyCaptcha
-{
-    fn builder() -> CapyCaptchaBuilder<PageUrlNotProvided, SiteKeyNotProvided, VersionNotProvided> {
+impl CapyCaptcha {
+    pub fn builder(
+    ) -> CapyCaptchaBuilder<PageUrlNotProvided, SiteKeyNotProvided, VersionNotProvided> {
         CapyCaptchaBuilder::new()
     }
+}
 
+impl CaptchaArguments<'_> for CapyCaptcha {
     fn to_request_params(&self, api_key: String) -> Result<Form> {
         let mut request_body = Form::new()
             .text("method", "capy")

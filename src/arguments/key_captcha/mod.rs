@@ -26,7 +26,7 @@ pub use builder::KeyCaptchaBuilder;
 /// use captcha_oxide::{
 ///     RequestContent,
 ///     CaptchaSolver,
-///     arguments::{CaptchaArguments, KeyCaptcha}
+///     arguments::KeyCaptcha
 /// };
 /// #
 /// # #[tokio::main]
@@ -93,6 +93,7 @@ pub use builder::KeyCaptchaBuilder;
 /// };
 ///
 /// assert_ne!(solution, "");
+/// # Ok(())
 /// # }
 /// ```
 pub struct KeyCaptcha {
@@ -115,19 +116,8 @@ pub struct KeyCaptcha {
     pingback: Option<String>,
 }
 
-impl
-    CaptchaArguments<
-        '_,
-        KeyCaptchaBuilder<
-            PageUrlNotProvided,
-            UserIdNotProvided,
-            SessionIdNotProvided,
-            ServerSignNotProvided,
-            ServerSign2NotProvided,
-        >,
-    > for KeyCaptcha
-{
-    fn builder() -> KeyCaptchaBuilder<
+impl KeyCaptcha {
+    pub fn builder() -> KeyCaptchaBuilder<
         PageUrlNotProvided,
         UserIdNotProvided,
         SessionIdNotProvided,
@@ -136,7 +126,9 @@ impl
     > {
         KeyCaptchaBuilder::new()
     }
+}
 
+impl CaptchaArguments<'_> for KeyCaptcha {
     fn to_request_params(&self, api_key: String) -> Result<Form> {
         let mut request_body = Form::new()
             .text("key", api_key)
@@ -169,7 +161,7 @@ mod test {
     use std::env;
 
     use super::KeyCaptcha;
-    use crate::{arguments::CaptchaArguments, solver::CaptchaSolver};
+    use crate::solver::CaptchaSolver;
 
     #[tokio::test]
     #[ignore = "These tests should run all at once, as this will likely cause a 429 block from the 2captcha API"]

@@ -22,7 +22,7 @@ pub use builder::RecaptchaV3Builder;
 /// ```
 /// # use std::env;
 /// use captcha_oxide::{
-///     arguments::{CaptchaArguments, RecaptchaV3},
+///     arguments::RecaptchaV3,
 ///     CaptchaSolver, RequestContent,
 /// };
 ///
@@ -72,13 +72,13 @@ pub struct RecaptchaV3 {
     pingback: Option<String>,
 }
 
-impl CaptchaArguments<'_, RecaptchaV3Builder<PageUrlNotProvided, SiteKeyNotProvided>>
-    for RecaptchaV3
-{
-    fn builder() -> RecaptchaV3Builder<PageUrlNotProvided, SiteKeyNotProvided> {
+impl RecaptchaV3 {
+    pub fn builder() -> RecaptchaV3Builder<PageUrlNotProvided, SiteKeyNotProvided> {
         RecaptchaV3Builder::new()
     }
+}
 
+impl CaptchaArguments<'_> for RecaptchaV3 {
     fn to_request_params(&self, api_key: String) -> Result<Form> {
         let mut request_body = Form::new()
             .text("key", api_key)
@@ -123,7 +123,7 @@ mod test {
     use dotenv::dotenv;
     use std::env;
 
-    use crate::{arguments::RecaptchaV3, CaptchaArguments, CaptchaSolver, RequestContent};
+    use crate::{arguments::RecaptchaV3, CaptchaSolver, RequestContent};
 
     #[tokio::test]
     #[ignore = "These tests should run all at once, as this will likely cause a 429 block from the 2captcha API"]

@@ -14,7 +14,7 @@ use crate::arguments::{
 ///
 /// # Example
 /// ```
-/// use captcha_oxide::arguments::{CaptchaArguments, RecaptchaV2};
+/// use captcha_oxide::arguments::RecaptchaV2;
 ///
 /// let args = RecaptchaV2::builder()
 ///     .site_key("SOME_SITE_KEY")

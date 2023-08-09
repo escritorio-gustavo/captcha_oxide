@@ -3,13 +3,13 @@
 //!
 //! # Usage notes:
 //!
-//! * All implementers of the [`CaptchaArguments`] trait
-//! (and the trait itself) are re-exported by the top level of this module.
-//! * All implementers of the [`CaptchaArguments`] trait
-//! have a `builder` method that gives you a builder using the typestate
-//! pattern to avoid inconsistent data
+//! * All implementers of the [`CaptchaArguments`] trait (and the trait
+//!   itself) are re-exported by the top level of this module.
+//! * All implementers of the [`CaptchaArguments`] trait have a `builder`
+//!   method that gives you a builder using the typestate pattern to
+//!   avoid inconsistent data
 //! * Special parameter types like [`proxy::Proxy`] are not re-exported
-//! here
+//!   here
 
 pub mod character_restrictions;
 pub mod language;

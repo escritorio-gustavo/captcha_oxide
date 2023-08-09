@@ -13,7 +13,7 @@ use captcha_oxide::{
   CaptchaSolver,
   RequestContent,
   Error,
-  arguments::{CaptchaArguments, RecaptchaV3},
+  arguments::RecaptchaV3,
 };
 
 #[tokio::main]

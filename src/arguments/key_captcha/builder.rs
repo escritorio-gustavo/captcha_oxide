@@ -17,7 +17,7 @@ pub use super::type_state::{
 ///
 /// # Example
 /// ```
-/// use captcha_oxide::arguments::{CaptchaArguments, KeyCaptcha};
+/// use captcha_oxide::arguments::KeyCaptcha;
 ///
 /// let args = KeyCaptcha::builder()
 ///     .page_url("SOME_URL")

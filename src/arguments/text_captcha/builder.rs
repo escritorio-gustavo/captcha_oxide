@@ -9,7 +9,7 @@ pub use super::type_state::{CaptchaText, CaptchaTextNotProvided};
 ///
 /// # Example
 /// ```
-/// use captcha_oxide::arguments::{CaptchaArguments, TextCaptcha};
+/// use captcha_oxide::arguments::TextCaptcha;
 ///
 /// let args = TextCaptcha::builder()
 ///     .text_captcha("What is 2 + 2?")

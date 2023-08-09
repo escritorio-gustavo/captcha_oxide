@@ -13,7 +13,7 @@ use crate::arguments::{
 ///
 /// # Example
 /// ```
-/// use captcha_oxide::arguments::{CaptchaArguments, RecaptchaV3};
+/// use captcha_oxide::arguments::RecaptchaV3;
 ///
 /// let args = RecaptchaV3::builder()
 ///     .site_key("SOME_SITE_KEY")

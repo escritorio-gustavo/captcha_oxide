@@ -19,6 +19,8 @@ use crate::arguments::{
 ///
 /// # Example
 /// ```
+/// use captcha_oxide::arguments::HCaptcha;
+///
 /// let args = HCaptcha::builder()
 ///     .site_key("SITE_KEY")
 ///     .page_url("SOME_URL")
