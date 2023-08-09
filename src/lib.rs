@@ -13,7 +13,7 @@
 //! # #[tokio::main]
 //! # async fn main() -> Result<(), Box<dyn std::error::Error>> {
 //! let solver = CaptchaSolver::new("YOUR_API_KEY");
-//!     
+//!
 //! let args = RecaptchaV3::builder()
 //!     .site_key("SOME_SITE_KEY")
 //!     .page_url("https://some.url/")

@@ -20,7 +20,6 @@ use crate::{
 ///
 /// # Example
 /// ```
-/// use dotenv::dotenv;
 /// use std::env;
 /// use captcha_oxide::{
 ///     CaptchaSolver,
@@ -30,27 +29,22 @@ use crate::{
 ///
 /// # #[tokio::main]
 /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
-/// dotenv();
-/// let solver = CaptchaSolver::new(env::var("API_KEY")?);
-///     
+/// # dotenv::dotenv();
+/// let solver = CaptchaSolver::new("YOUR_API_KEY");
+/// # let solver = CaptchaSolver::new(env::var("API_KEY")?);
+///
 /// let args = RecaptchaV3::builder()
 ///     .site_key("6LcFcoAUAAAAAN7Um8IRZOtbzgsV5ei2meTmRi6m")
 ///     .page_url("https://contactform7.com/contact/")
 ///     .min_score(0.3)
 ///     .build();
-///     
-/// let solution = solver.solve(args).await?;
 ///
-/// match solution.solution {
-///     // If there isn't a variant named after your captcha type,
-///     // it's because it only returns a token, so you should use
-///     // the String variant
-///     RequestContent::String(plain_text_solution) => {
-///         assert_ne!(plain_text_solution, "");
-///     },
-///     _ => unreachable!()
-/// };
+/// let solution = solver.solve(args).await?.solution;
+/// let RequestContent::String(solution) = solution else {
+///     unreachable!()
+/// }
 ///
+/// assert_ne!(solution, "");
 /// # Ok(())
 /// # }
 /// ```
