@@ -3,8 +3,6 @@ mod image_instructions;
 mod methods;
 mod type_state;
 
-
-
 use reqwest::multipart::{Form, Part};
 use serde::{Deserialize, Serialize};
 

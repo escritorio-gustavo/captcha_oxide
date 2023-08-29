@@ -2,7 +2,7 @@ mod builder;
 mod capy_version;
 mod type_state;
 
-use std::{time::Duration};
+use std::time::Duration;
 
 use reqwest::multipart::Form;
 use serde::{Deserialize, Serialize};
