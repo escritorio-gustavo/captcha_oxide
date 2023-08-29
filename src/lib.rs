@@ -5,9 +5,9 @@
 //!
 //! ```
 //! use captcha_oxide::{
-//!     CaptchaSolver,
+//!     Solution,
 //!     arguments::{RecaptchaV3, CaptchaArguments},
-//!     RequestContent,
+//!     CaptchaSolver,
 //! };
 //!
 //! # #[tokio::main]
@@ -20,12 +20,16 @@
 //!     .min_score(0.3)
 //!     .build();
 //!
-//! let solution = solver.solve(args).await?.solution;
+//! let solution = solver
+//!     .solve(args)
+//!     .await?
+//!     .expect("Only None if pingback is set")
+//!     .solution;
 //!
 //! // If there isn't a variant named after your captcha type,
 //! // it's because it only returns a token, so you should use
-//! // the String variant
-//! let RequestContent::String(solution) = solution else {
+//! // the Token variant
+//! let Solution::Token(solution) = solution else {
 //!     unreachable!()
 //! };
 //!

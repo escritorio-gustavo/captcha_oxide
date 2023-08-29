@@ -11,7 +11,7 @@ This is a rust library for solving captcha puzzles with the 2Captcha API
 ```rust
 use captcha_oxide::{
   CaptchaSolver,
-  RequestContent,
+  Solution,
   Error,
   arguments::RecaptchaV3,
 };
@@ -25,12 +25,12 @@ async fn main() -> Result<(), Error> {
     .site_key("SITE_KEY")
     .build();
 
-  let solution = solver.solve(args).await?.solution;
+  let solution = solver.solve(args).await?.unwrap().solution;
 
   // If there isn't a variant named after your captcha type,
   // it's because it only returns a token, so you should use
-  // the String variant
-  let RequestContent::String(solution) = solution else {
+  // the Token variant
+  let Solution::Token(solution) = solution else {
     unreachable!()
   };
 
