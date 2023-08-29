@@ -1,7 +1,7 @@
 mod builder;
 mod type_state;
 
-use std::time::Duration;
+use std::{sync::Arc, time::Duration};
 
 use reqwest::multipart::Form;
 use serde::{Deserialize, Serialize};
@@ -31,7 +31,7 @@ pub use builder::GeetestBuilder;
 /// };
 /// use captcha_oxide::{
 ///     CaptchaSolver,
-///     RequestContent,
+///     Solution,
 ///     arguments::Geetest
 /// };
 ///
@@ -67,8 +67,8 @@ pub use builder::GeetestBuilder;
 /// #   .new_captcha(data.new_captcha)
 ///     .build();
 ///
-/// let solution = solver.solve(geetest_args).await?.solution;
-/// let RequestContent::GeetestResponse { challenge, .. } = solution else {
+/// let solution = solver.solve(geetest_args).await?.expect("Only None if pingback is set").solution;
+/// let Solution::Geetest { challenge, .. } = solution else {
 ///     unreachable!()
 /// };
 ///
@@ -156,6 +156,8 @@ impl CaptchaArguments<'_> for Geetest {
     fn get_initial_timeout(&self) -> Duration {
         Duration::from_secs(15)
     }
+
+    crate::arguments::captcha_arguments::impl_methods!(Geetest);
 }
 
 #[cfg(test)]
@@ -168,7 +170,7 @@ mod test {
     };
 
     use super::Geetest;
-    use crate::{CaptchaSolver, RequestContent};
+    use crate::{CaptchaSolver, Solution};
 
     #[derive(Serialize, Deserialize)]
     struct GeetestJson {
@@ -207,8 +209,8 @@ mod test {
 
         assert!(solution.is_ok());
 
-        let solution = solution.unwrap().solution;
-        let RequestContent::GeetestResponse { challenge, .. } = solution else {
+        let solution = solution.unwrap().unwrap().solution;
+        let Solution::Geetest { challenge, .. } = solution else {
             unreachable!()
         };
 

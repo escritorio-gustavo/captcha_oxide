@@ -1,10 +1,9 @@
 mod builder;
-mod type_state;
+
+use std::sync::Arc;
 
 use reqwest::multipart::Form;
 use serde::{Deserialize, Serialize};
-
-use builder::{DataNotProvided, UserAgentNotProvided};
 
 use crate::{
     arguments::{
@@ -26,7 +25,7 @@ pub use builder::HCaptchaBuilder;
 /// use captcha_oxide::{
 ///     arguments::HCaptcha,
 ///     CaptchaSolver,
-///     RequestContent
+///     Solution
 /// };
 /// # use std::env;
 ///
@@ -43,12 +42,12 @@ pub use builder::HCaptchaBuilder;
 /// #   .page_url("https://dashboard.hcaptcha.com/signup")
 ///     .build();
 ///
-/// let solution = solver.solve(args).await?.solution;
-/// let RequestContent::String(solution) = solution else {
+/// let solution = solver.solve(args).await?.expect("Only None if pingback is set").solution;
+/// let Solution::HCaptcha { token, .. } = solution else {
 ///     unreachable!();
 /// };
 ///
-/// assert_ne!(solution, "");
+/// assert_ne!(token, "");
 /// # Ok(())
 /// # }
 /// ```
@@ -69,14 +68,7 @@ pub struct HCaptcha {
     /// Custom data that is used in some implementations of hCaptcha,
     /// mostly with invisible hCaptcha. In most cases you see it as rqdata
     /// inside the page's network requests.
-    ///
-    /// Important: you MUST provide a `userAgent` if you submit a captcha
-    /// with the data paramater. The value should match the User-Agent
-    /// you use when interacting with the target website.
     data: Option<String>,
-
-    /// Your userAgent that will be used to solve the captcha
-    user_agent: Option<String>,
 
     /// Callback URL where you wish to receive the response
     pingback: Option<String>,
@@ -86,12 +78,7 @@ pub struct HCaptcha {
 }
 
 impl HCaptcha {
-    pub fn builder() -> HCaptchaBuilder<
-        PageUrlNotProvided,
-        SiteKeyNotProvided,
-        DataNotProvided,
-        UserAgentNotProvided,
-    > {
+    pub fn builder() -> HCaptchaBuilder<PageUrlNotProvided, SiteKeyNotProvided> {
         HCaptchaBuilder::new()
     }
 }
@@ -119,10 +106,6 @@ impl CaptchaArguments<'_> for HCaptcha {
             request_body = request_body.text("data", data.clone());
         }
 
-        if let Some(user_agent) = &self.user_agent {
-            request_body = request_body.text("userAgent", user_agent.clone());
-        }
-
         if let Some(pingback) = &self.pingback {
             request_body = request_body.text("pingback", pingback.clone());
         }
@@ -135,6 +118,8 @@ impl CaptchaArguments<'_> for HCaptcha {
 
         Ok(request_body)
     }
+
+    crate::arguments::captcha_arguments::impl_methods!(HCaptcha);
 }
 
 #[cfg(test)]
@@ -142,8 +127,7 @@ mod test {
     use dotenv::dotenv;
     use std::env;
 
-    use super::HCaptcha;
-    use crate::solver::CaptchaSolver;
+    use crate::{arguments::HCaptcha, CaptchaSolver, Solution};
 
     #[tokio::test]
     #[ignore = "These tests should run all at once, as this will likely cause a 429 block from the 2captcha API"]
@@ -160,7 +144,11 @@ mod test {
 
         assert!(solution.is_ok());
 
-        let solution = solution.unwrap().solution.request_as_string();
-        assert_ne!(solution, "");
+        let solution = solution.unwrap().unwrap().solution;
+        let Solution::HCaptcha { token, .. } = solution else {
+            unreachable!()
+        };
+
+        assert_ne!(token, "");
     }
 }

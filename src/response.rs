@@ -6,7 +6,10 @@ use serde::{Deserialize, Serialize};
 pub(crate) struct CaptchaResponse {
     pub(crate) status: u8,
     pub(crate) request: RequestContent,
+    #[serde(rename = "useragent")]
+    pub(crate) user_agent: Option<String>,
     pub(crate) error_text: Option<String>,
+    pub(crate) cookies: Option<String>,
 }
 
 /// Represents the possible data contained by the `request` field
@@ -18,7 +21,7 @@ pub(crate) struct CaptchaResponse {
 /// [`CapyResponse`](RequestContent::CapyResponse)
 #[derive(Deserialize, Serialize, Debug, Clone, PartialEq, Hash)]
 #[serde(untagged)]
-pub enum RequestContent {
+pub(crate) enum RequestContent {
     /// Represents a captcha answer that is composed only of a token,
     /// such as reCAPTCHA and hCaptcha
     String(String),

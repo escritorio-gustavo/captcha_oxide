@@ -1,6 +1,6 @@
 use crate::arguments::{
     proxy::Proxy,
-    recaptcha_v2::RecaptchaV2,
+    recaptcha_v2::{Cookie, RecaptchaV2},
     type_state::{
         page_url::{PageUrl, PageUrlNotProvided},
         site_key::{SiteKey, SiteKeyNotProvided},
@@ -31,6 +31,7 @@ pub struct RecaptchaV2Builder<T, U> {
     proxy: Option<Proxy>,
     enterprise: Option<bool>,
     invisible: Option<bool>,
+    cookies: Vec<Cookie>,
 }
 
 impl RecaptchaV2Builder<PageUrlNotProvided, SiteKeyNotProvided> {
@@ -51,6 +52,7 @@ impl RecaptchaV2Builder<PageUrl, SiteKey> {
             proxy: self.proxy,
             enterprise: self.enterprise,
             invisible: self.invisible,
+            cookies: self.cookies,
         }
     }
 }
@@ -68,6 +70,7 @@ impl<T, U> RecaptchaV2Builder<T, U> {
             proxy: self.proxy,
             enterprise: self.enterprise,
             invisible: self.invisible,
+            cookies: self.cookies,
         }
     }
 
@@ -83,6 +86,7 @@ impl<T, U> RecaptchaV2Builder<T, U> {
             proxy: self.proxy,
             enterprise: self.enterprise,
             invisible: self.invisible,
+            cookies: self.cookies,
         }
     }
 
@@ -126,6 +130,11 @@ impl<T, U> RecaptchaV2Builder<T, U> {
     /// Whether or not the page uses Invisible reCAPTCHA
     pub fn invisible(mut self, invisible: bool) -> Self {
         self.invisible = Some(invisible);
+        self
+    }
+
+    pub fn cookies(mut self, cookies: impl IntoIterator<Item = Cookie>) -> Self {
+        self.cookies = cookies.into_iter().collect();
         self
     }
 }

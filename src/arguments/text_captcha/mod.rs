@@ -22,7 +22,7 @@ pub use builder::TextCaptchaBuilder;
 /// use captcha_oxide::{
 ///     arguments::TextCaptcha,
 ///     CaptchaSolver,
-///     RequestContent,
+///     Solution,
 /// };
 ///
 /// # #[tokio::main]
@@ -35,9 +35,9 @@ pub use builder::TextCaptchaBuilder;
 ///     .text_captcha("What is 2 + 2?")
 ///     .build();
 ///
-/// let solution = solver.solve(args).await?.solution;
+/// let solution = solver.solve(args).await?.expect("Only None if pingback is set").solution;
 ///
-/// let RequestContent::String(solution) = solution else {
+/// let Solution::Token(solution) = solution else {
 ///     unreachable!()
 /// };
 ///
@@ -96,6 +96,8 @@ impl CaptchaArguments<'_> for TextCaptcha {
 
         Ok(request_body)
     }
+
+    crate::arguments::captcha_arguments::impl_methods!(TextCaptcha);
 }
 
 #[cfg(test)]
@@ -103,7 +105,7 @@ mod test {
     use dotenv::dotenv;
     use std::env;
 
-    use crate::{arguments::TextCaptcha, CaptchaSolver, RequestContent};
+    use crate::{arguments::TextCaptcha, CaptchaSolver, Solution};
 
     #[tokio::test]
     #[ignore = "These tests should run all at once, as this will likely cause a 429 block from the 2captcha API"]
@@ -119,8 +121,8 @@ mod test {
 
         assert!(solution.is_ok());
 
-        let solution = solution.unwrap().solution;
-        let RequestContent::String(solution) = solution else {
+        let solution = solution.unwrap().unwrap().solution;
+        let Solution::Token(solution) = solution else {
             unreachable!()
         };
 

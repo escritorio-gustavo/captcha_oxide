@@ -1,6 +1,6 @@
 [package]
 name = "captcha_oxide"
-version = "1.1.0"
+version = "2.0.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 readme = "README.md"
@@ -12,6 +12,7 @@ description = "Library for interacting with the 2Captcha API to solve captcha pu
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+itertools = "0.11.0"
 reqwest = { version = "0.11.17", features = ["multipart"] }
 serde = { version = "1.0.162", features = ["std", "derive"] }
 serde_json = "1.0.96"

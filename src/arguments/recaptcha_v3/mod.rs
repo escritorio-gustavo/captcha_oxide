@@ -2,7 +2,7 @@ mod builder;
 
 use reqwest::multipart::Form;
 use serde::{Deserialize, Serialize};
-use std::time::Duration;
+use std::{sync::Arc, time::Duration};
 
 use crate::{
     arguments::{
@@ -23,7 +23,7 @@ pub use builder::RecaptchaV3Builder;
 /// # use std::env;
 /// use captcha_oxide::{
 ///     arguments::RecaptchaV3,
-///     CaptchaSolver, RequestContent,
+///     CaptchaSolver, Solution,
 /// };
 ///
 /// # #[tokio::main]
@@ -40,8 +40,8 @@ pub use builder::RecaptchaV3Builder;
 ///     .min_score(0.3)
 ///     .build();
 ///
-/// let solution = solver.solve(args).await?.solution;
-/// let RequestContent::String(solution) = solution else {
+/// let solution = solver.solve(args).await?.expect("Only None if pingback is set").solution;
+/// let Solution::Token(solution) = solution else {
 ///     unreachable!()
 /// };
 ///
@@ -116,6 +116,8 @@ impl CaptchaArguments<'_> for RecaptchaV3 {
     fn get_initial_timeout(&self) -> Duration {
         Duration::from_secs(15)
     }
+
+    crate::arguments::captcha_arguments::impl_methods!(RecaptchaV3);
 }
 
 #[cfg(test)]
@@ -123,7 +125,7 @@ mod test {
     use dotenv::dotenv;
     use std::env;
 
-    use crate::{arguments::RecaptchaV3, CaptchaSolver, RequestContent};
+    use crate::{arguments::RecaptchaV3, CaptchaSolver, Solution};
 
     #[tokio::test]
     #[ignore = "These tests should run all at once, as this will likely cause a 429 block from the 2captcha API"]
@@ -141,8 +143,8 @@ mod test {
 
         assert!(solution.is_ok());
 
-        let solution = solution.unwrap().solution;
-        let RequestContent::String(solution) = solution else {
+        let solution = solution.unwrap().unwrap().solution;
+        let Solution::Token(solution) = solution else {
             unreachable!()
         };
 

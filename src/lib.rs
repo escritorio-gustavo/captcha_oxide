@@ -36,8 +36,7 @@
 
 pub use crate::arguments::CaptchaArguments;
 pub use crate::error::Error;
-pub use crate::response::RequestContent;
-pub use crate::solution::CaptchaSolution;
+pub use crate::solution::{CaptchaSolution, Solution};
 pub use crate::solver::CaptchaSolver;
 
 pub(crate) const TWO_CAPTCHA_URL: &str = "http://2captcha.com";

@@ -1,5 +1,7 @@
 mod builder;
 
+use std::sync::Arc;
+
 use reqwest::multipart::Form;
 use serde::{Deserialize, Serialize};
 
@@ -17,7 +19,7 @@ use super::type_state::{page_url::PageUrlNotProvided, site_key::SiteKeyNotProvid
 /// # use std::env;
 /// use captcha_oxide::{
 ///     CaptchaSolver,
-///     RequestContent,
+///     Solution,
 ///     arguments::GeetestV4
 /// };
 /// # #[tokio::main]
@@ -33,8 +35,8 @@ use super::type_state::{page_url::PageUrlNotProvided, site_key::SiteKeyNotProvid
 /// #   .page_url("https://auth.geetest.com/login/")
 ///     .build();
 ///
-/// let solution = solver.solve(args).await?.solution;
-/// let RequestContent::GeetestV4Response { captcha_output, .. } = solution else {
+/// let solution = solver.solve(args).await?.expect("Only None if pingback is set").solution;
+/// let Solution::GeetestV4 { captcha_output, .. } = solution else {
 ///     unreachable!()
 /// };
 ///
@@ -89,11 +91,13 @@ impl CaptchaArguments<'_> for GeetestV4 {
     fn get_initial_timeout(&self) -> std::time::Duration {
         std::time::Duration::from_secs(15)
     }
+
+    crate::arguments::captcha_arguments::impl_methods!(GeetestV4);
 }
 
 #[cfg(test)]
 mod test {
-    use crate::{arguments::GeetestV4, CaptchaSolver, RequestContent};
+    use crate::{arguments::GeetestV4, CaptchaSolver, Solution};
     use std::env;
 
     #[tokio::test]
@@ -107,8 +111,8 @@ mod test {
             .page_url("https://auth.geetest.com/login/")
             .build();
 
-        let solution = solver.solve(args).await.unwrap().solution;
-        let RequestContent::GeetestV4Response { captcha_output, .. } = solution else {
+        let solution = solver.solve(args).await.unwrap().unwrap().solution;
+        let Solution::GeetestV4 { captcha_output, .. } = solution else {
             unreachable!()
         };
 

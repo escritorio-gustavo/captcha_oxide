@@ -3,6 +3,8 @@ mod image_instructions;
 mod methods;
 mod type_state;
 
+use std::sync::Arc;
+
 use reqwest::multipart::{Form, Part};
 use serde::{Deserialize, Serialize};
 
@@ -32,7 +34,7 @@ pub use methods::NormalCaptchaMethods;
 ///         NormalCaptchaMethods
 ///     },
 ///     CaptchaSolver,
-///     RequestContent,
+///     Solution,
 /// };
 ///
 /// # #[tokio::main]
@@ -49,8 +51,8 @@ pub use methods::NormalCaptchaMethods;
 /// #   .case_sensitive(true)
 ///     .build();
 ///
-/// let solution = solver.solve(args).await?.solution;
-/// let RequestContent::String(solution) = solution else {
+/// let solution = solver.solve(args).await?.expect("Only None if pingback is set").solution;
+/// let Solution::Token(solution) = solution else {
 ///     unreachable!();
 /// };
 ///
@@ -220,6 +222,8 @@ impl CaptchaArguments<'_> for NormalCaptcha {
 
         Ok(request_body)
     }
+
+    crate::arguments::captcha_arguments::impl_methods!(NormalCaptcha);
 }
 
 #[cfg(test)]
@@ -229,7 +233,7 @@ mod test {
 
     use crate::{
         arguments::normal_captcha::{NormalCaptcha, NormalCaptchaMethods},
-        CaptchaSolver, RequestContent,
+        CaptchaSolver, Solution,
     };
 
     #[tokio::test]
@@ -249,8 +253,8 @@ mod test {
 
         assert!(solution.is_ok());
 
-        let solution = solution.unwrap().solution;
-        let RequestContent::String(solution) = solution else {
+        let solution = solution.unwrap().unwrap().solution;
+        let Solution::Token(solution) = solution else {
             unreachable!()
         };
 

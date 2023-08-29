@@ -1,8 +1,10 @@
 mod builder;
+mod cookie;
 
+use itertools::Itertools;
 use reqwest::multipart::Form;
 use serde::{Deserialize, Serialize};
-use std::time::Duration;
+use std::{sync::Arc, time::Duration};
 
 use crate::{
     arguments::{
@@ -15,6 +17,7 @@ use crate::{
 };
 
 pub use builder::RecaptchaV2Builder;
+pub use cookie::Cookie;
 
 #[derive(Serialize, Deserialize, Clone, PartialEq)]
 /// Represents the data needed to solve a reCaptcha V2 puzzle
@@ -25,7 +28,7 @@ pub use builder::RecaptchaV2Builder;
 /// use captcha_oxide::{
 ///     arguments::RecaptchaV2,
 ///     CaptchaSolver,
-///     RequestContent,
+///     Solution,
 /// };
 ///
 /// # #[tokio::main]
@@ -41,12 +44,12 @@ pub use builder::RecaptchaV2Builder;
 /// #   .page_url("https://patrickhlauke.github.io/recaptcha/")
 ///     .build();
 ///
-/// let solution = solver.solve(args).await?.solution;
-/// let RequestContent::String(solution) = solution else {
+/// let solution = solver.solve(args).await?.expect("Only None if pingback is set").solution;
+/// let Solution::RecaptchaV2 { token, .. } = solution else {
 ///     unreachable!()
 /// };
 ///
-/// assert_ne!(solution, "");
+/// assert_ne!(token, "");
 /// # Ok(())
 /// # }
 /// ```
@@ -78,6 +81,9 @@ pub struct RecaptchaV2 {
 
     /// Whether or not the page uses Invisible reCAPTCHA
     invisible: Option<bool>,
+
+    /// Cookies to be sent with your request
+    cookies: Vec<Cookie>,
 }
 
 impl RecaptchaV2 {
@@ -127,12 +133,24 @@ impl CaptchaArguments<'_> for RecaptchaV2 {
             request_body = request_body.text("invisible", if invisible { "1" } else { "0" });
         }
 
+        if !self.cookies.is_empty() {
+            let cookies = self
+                .cookies
+                .iter()
+                .map(|x| format!("{}:{}", x.0, x.1))
+                .join(";");
+
+            request_body = request_body.text("cookies", cookies);
+        }
+
         Ok(request_body)
     }
 
     fn get_initial_timeout(&self) -> Duration {
         Duration::from_secs(15)
     }
+
+    crate::arguments::captcha_arguments::impl_methods!(RecaptchaV2);
 }
 
 #[cfg(test)]
@@ -140,7 +158,7 @@ mod test {
     use dotenv::dotenv;
     use std::env;
 
-    use crate::{arguments::RecaptchaV2, CaptchaSolver, RequestContent};
+    use crate::{arguments::RecaptchaV2, CaptchaSolver, Solution};
 
     #[tokio::test]
     #[ignore = "These tests should run all at once, as this will likely cause a 429 block from the 2captcha API"]
@@ -157,11 +175,11 @@ mod test {
 
         assert!(solution.is_ok());
 
-        let solution = solution.unwrap().solution;
-        let RequestContent::String(solution) = solution else {
+        let solution = solution.unwrap().unwrap().solution;
+        let Solution::RecaptchaV2 { token, .. } = solution else {
             unreachable!("Wrong enum variant")
         };
 
-        assert_ne!(solution, "");
+        assert_ne!(token, "");
     }
 }

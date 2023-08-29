@@ -1,7 +1,7 @@
 mod builder;
 mod type_state;
 
-use std::time::Duration;
+use std::{sync::Arc, time::Duration};
 
 use reqwest::multipart::Form;
 use serde::{Deserialize, Serialize};
@@ -24,7 +24,7 @@ pub use builder::KeyCaptchaBuilder;
 /// # use std::env;
 /// # use regex::Regex;
 /// use captcha_oxide::{
-///     RequestContent,
+///     Solution,
 ///     CaptchaSolver,
 ///     arguments::KeyCaptcha
 /// };
@@ -87,8 +87,8 @@ pub use builder::KeyCaptchaBuilder;
 /// #   .server_sign2(server_sign2)
 ///     .build();
 ///
-/// let solution = solver.solve(args).await?.solution;
-/// let RequestContent::String(solution) = solution else {
+/// let solution = solver.solve(args).await?.expect("Only None if pingback is set").solution;
+/// let Solution::Token(solution) = solution else {
 ///     unreachable!();
 /// };
 ///
@@ -152,6 +152,8 @@ impl CaptchaArguments<'_> for KeyCaptcha {
     fn get_initial_timeout(&self) -> Duration {
         Duration::from_secs(15)
     }
+
+    crate::arguments::captcha_arguments::impl_methods!(KeyCaptcha);
 }
 
 #[cfg(test)]
@@ -161,7 +163,7 @@ mod test {
     use std::env;
 
     use super::KeyCaptcha;
-    use crate::solver::CaptchaSolver;
+    use crate::{CaptchaSolver, Solution};
 
     #[tokio::test]
     #[ignore = "These tests should run all at once, as this will likely cause a 429 block from the 2captcha API"]
@@ -222,7 +224,10 @@ mod test {
 
         assert!(solution.is_ok());
 
-        let solution = solution.unwrap().solution.request_as_string();
+        let solution = solution.unwrap().unwrap().solution;
+        let Solution::Token(solution) = solution else {
+            unreachable!();
+        };
         assert_ne!(solution, "");
     }
 }

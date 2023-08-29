@@ -2,7 +2,7 @@ mod builder;
 mod capy_version;
 mod type_state;
 
-use std::time::Duration;
+use std::{sync::Arc, time::Duration};
 
 use reqwest::multipart::Form;
 use serde::{Deserialize, Serialize};
@@ -33,7 +33,7 @@ pub use capy_version::CapyVersion;
 ///         capy_captcha::CapyVersion
 ///     },
 ///     CaptchaSolver,
-///     RequestContent
+///     Solution
 /// };
 ///
 /// # use std::env;
@@ -51,8 +51,8 @@ pub use capy_version::CapyVersion;
 ///     .version(CapyVersion::Puzzle)
 ///     .build();
 ///
-/// let solution = solver.solve(capy_args).await?.solution;
-/// let RequestContent::CapyResponse { answer, .. } = solution else {
+/// let solution = solver.solve(capy_args).await?.expect("Only None if pingback is set").solution;
+/// let Solution::CapyCaptcha { answer, .. } = solution else {
 ///     unreachable!();
 /// };
 ///
@@ -116,6 +116,8 @@ impl CaptchaArguments<'_> for CapyCaptcha {
     fn get_initial_timeout(&self) -> Duration {
         Duration::from_secs(15)
     }
+
+    crate::arguments::captcha_arguments::impl_methods!(CapyCaptcha);
 }
 
 #[cfg(test)]
@@ -124,7 +126,7 @@ mod test {
     use std::env;
 
     use super::*;
-    use crate::{response::RequestContent, solver::CaptchaSolver};
+    use crate::{CaptchaSolver, Solution};
 
     #[tokio::test]
     #[ignore = "These tests should run all at once, as this will likely cause a 429 block from the 2captcha API"]
@@ -142,8 +144,8 @@ mod test {
 
         assert!(solution.is_ok());
 
-        let solution = solution.unwrap().solution;
-        let RequestContent::CapyResponse { answer, .. } = solution else {
+        let solution = solution.unwrap().unwrap().solution;
+        let Solution::CapyCaptcha { answer, .. } = solution else {
             unreachable!()
         };
 

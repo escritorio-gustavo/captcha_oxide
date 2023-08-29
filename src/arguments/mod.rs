@@ -17,6 +17,7 @@ pub mod proxy;
 pub mod proxy_type;
 
 pub mod captcha_arguments;
+pub mod captcha_type;
 pub mod capy_captcha;
 pub mod geetest;
 pub mod geetest_v4;
