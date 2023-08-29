@@ -1,4 +1,4 @@
-use std::{sync::Arc, time::Duration};
+use std::{time::Duration};
 
 use reqwest::multipart::Form;
 use serde::{Deserialize, Serialize};

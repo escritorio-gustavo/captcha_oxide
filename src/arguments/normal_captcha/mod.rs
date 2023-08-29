@@ -3,7 +3,7 @@ mod image_instructions;
 mod methods;
 mod type_state;
 
-use std::sync::Arc;
+
 
 use reqwest::multipart::{Form, Part};
 use serde::{Deserialize, Serialize};
