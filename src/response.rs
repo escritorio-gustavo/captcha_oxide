@@ -32,6 +32,13 @@ pub enum RequestContent {
         #[serde(rename = "geetest_seccode")]
         seccode: String,
     },
+    GeetestV4Response {
+        captcha_id: String,
+        lot_number: String,
+        pass_token: String,
+        gen_time: String,
+        captcha_output: String,
+    },
     CapyResponse {
         #[serde(rename = "captchakey")]
         captcha_key: String,
