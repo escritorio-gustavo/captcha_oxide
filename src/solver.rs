@@ -84,7 +84,7 @@ impl CaptchaSolver {
         }
 
         let task_id = response.request.request_as_string();
-        tokio::time::sleep(params.get_initial_timeout_secs()).await;
+        tokio::time::sleep(params.get_initial_timeout()).await;
 
         let result_params: Vec<(&str, &str)> = vec![
             ("id", task_id.as_str()),

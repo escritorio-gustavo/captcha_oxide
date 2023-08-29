@@ -149,7 +149,7 @@ impl CaptchaArguments<'_> for KeyCaptcha {
         Ok(request_body)
     }
 
-    fn get_initial_timeout_secs(&self) -> Duration {
+    fn get_initial_timeout(&self) -> Duration {
         Duration::from_secs(15)
     }
 }
