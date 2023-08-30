@@ -15,7 +15,7 @@ use crate::{
 
 pub use builder::RecaptchaV3Builder;
 
-#[derive(Serialize, Deserialize, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
 /// Represents the data needed to solve a reCaptcha V3 puzzle
 ///
 /// # Example

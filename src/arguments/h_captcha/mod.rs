@@ -15,7 +15,7 @@ use crate::{
 
 pub use builder::HCaptchaBuilder;
 
-#[derive(Serialize, Deserialize, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
 /// Represents the data needed to solve a hCaptcha puzzle
 ///
 /// # Example

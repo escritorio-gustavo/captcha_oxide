@@ -13,7 +13,7 @@ use crate::{
 use builder::CaptchaTextNotProvided;
 pub use builder::TextCaptchaBuilder;
 
-#[derive(Serialize, Deserialize, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
 /// Represents the data needed to solve a text Captcha puzzle
 ///
 /// # Example

@@ -19,7 +19,7 @@ use crate::{
 pub use builder::RecaptchaV2Builder;
 pub use cookie::Cookie;
 
-#[derive(Serialize, Deserialize, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
 /// Represents the data needed to solve a reCaptcha V2 puzzle
 ///
 /// # Example

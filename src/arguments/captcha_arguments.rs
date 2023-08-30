@@ -11,7 +11,9 @@ use super::captcha_type::CaptchaType;
 /// The methods in this trait are for internal use in the [`CaptchaSolver`](crate::CaptchaSolver)'s
 /// `solve` method. You shold not use them or expect changes to them to be
 /// considered a breaking change
-pub trait CaptchaArguments<'a>: Clone + Serialize + Deserialize<'a> + PartialEq {
+pub trait CaptchaArguments<'a>:
+    std::fmt::Debug + Clone + Serialize + Deserialize<'a> + PartialEq
+{
     fn get_captcha_type(&self) -> CaptchaType;
 
     /// Converts the data stored in the implementer into `multipart/form-data` to be sent

@@ -22,7 +22,7 @@ use crate::{
 pub use builder::CapyCaptchaBuilder;
 pub use capy_version::CapyVersion;
 
-#[derive(Serialize, Deserialize, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
 /// Represents the data needed to solve a Capy Captcha puzzle
 ///
 /// # Example

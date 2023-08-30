@@ -9,7 +9,7 @@ pub use builder::GeetestV4Builder;
 
 use super::type_state::{page_url::PageUrlNotProvided, site_key::SiteKeyNotProvided};
 
-#[derive(Serialize, Deserialize, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
 /// Represents the data needed to solve a Geetest V4 puzzle
 ///
 /// # Example

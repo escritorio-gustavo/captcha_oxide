@@ -18,7 +18,7 @@ use crate::{
 
 pub use builder::GeetestBuilder;
 
-#[derive(Serialize, Deserialize, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
 /// Represents the data needed to solve a Geetest puzzle
 ///
 /// # Example
