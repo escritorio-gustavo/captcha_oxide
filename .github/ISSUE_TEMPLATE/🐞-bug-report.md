@@ -1,8 +1,8 @@
 ---
-name: Bug report
+name: "\U0001F41E Bug report"
 about: Create a report to help us improve
 title: "[BUG]"
-labels: bug
+labels: 'bug: unconfirmed'
 assignees: ''
 
 ---
@@ -20,3 +20,7 @@ A clear and concise description of what you expected to happen.
 
 **Additional context**
 Add any other context about the problem here.
+
+**Contributing**
+Are you willing to submit a PR to close this issue (this is NOT required)?
+- [ ] 🙋‍♂️ Yes, i'm willing to submit a PR to close this issue
