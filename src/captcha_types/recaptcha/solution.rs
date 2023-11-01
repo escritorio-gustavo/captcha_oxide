@@ -1,4 +1,3 @@
-use catptcha_oxide_derive::Solution;
 use std::borrow::Cow;
 
 use crate::captcha_types::Solution;
