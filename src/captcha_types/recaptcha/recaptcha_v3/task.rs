@@ -2,8 +2,8 @@ use std::borrow::Cow;
 use url::Url;
 
 use crate::{
-    captcha_types::recaptcha::{
-        solution::ReCaptchaSolution,
+    captcha_types::{
+        recaptcha::solution::ReCaptchaSolution,
         type_state::{NoMinScoreProvided, NoUrlProvided, NoWebsiteKeyProvided},
     },
     CaptchaTask,

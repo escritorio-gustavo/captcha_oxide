@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-use crate::captcha_types::recaptcha::type_state::{
+use crate::captcha_types::type_state::{
     MinScore, NoMinScoreProvided, NoUrlProvided, NoWebsiteKeyProvided, Url, WebsiteKey,
 };
 

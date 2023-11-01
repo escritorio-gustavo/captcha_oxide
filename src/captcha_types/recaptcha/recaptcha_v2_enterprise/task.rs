@@ -3,10 +3,8 @@ use url::Url;
 
 use crate::{
     captcha_types::{
-        recaptcha::{
-            solution::ReCaptchaSolution,
-            type_state::{NoUrlProvided, NoWebsiteKeyProvided},
-        },
+        recaptcha::solution::ReCaptchaSolution,
+        type_state::{NoUrlProvided, NoWebsiteKeyProvided},
         CaptchaTask,
     },
     proxy::Proxy,

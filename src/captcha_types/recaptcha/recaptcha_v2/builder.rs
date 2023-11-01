@@ -3,7 +3,7 @@ use std::borrow::Cow;
 use itertools::Itertools;
 
 use crate::{
-    captcha_types::recaptcha::type_state::{NoUrlProvided, NoWebsiteKeyProvided, Url, WebsiteKey},
+    captcha_types::type_state::{NoUrlProvided, NoWebsiteKeyProvided, Url, WebsiteKey},
     proxy::Proxy,
 };
 
