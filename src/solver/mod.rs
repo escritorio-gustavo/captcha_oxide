@@ -9,8 +9,8 @@ use reqwest::Client;
 use url::Url;
 
 use crate::{
+    captcha_types::{CaptchaTask, Solution},
     prelude::*,
-    task::{CaptchaTask, Solution},
     SOFT_ID,
 };
 

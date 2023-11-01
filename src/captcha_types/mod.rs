@@ -1,4 +1,6 @@
-pub mod recaptcha_v2;
+pub mod recaptcha;
+
+pub use recaptcha::*;
 
 pub trait CaptchaTask: serde::Serialize {
     type Solution: for<'de> serde::Deserialize<'de> + Solution;
@@ -6,7 +8,9 @@ pub trait CaptchaTask: serde::Serialize {
 
     /// Allows for building the request data for the 2captcha API
     /// while checking at compile time if all required fields were provided
-    fn builder() -> Self::Builder;
+    fn builder() -> Self::Builder {
+        Self::Builder::default()
+    }
 
     /// The amount of time that should be waited after creating a task to check
     /// if it is ready

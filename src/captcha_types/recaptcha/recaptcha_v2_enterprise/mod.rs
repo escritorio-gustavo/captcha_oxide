@@ -1,10 +1,8 @@
 mod builder;
-mod solution;
 mod task;
 
-pub use builder::RecaptchaV2Builder;
-pub use solution::ReCaptchaV2Solution;
-pub use task::RecaptchaV2;
+pub use builder::RecaptchaV2EnterpriseBuilder;
+pub use task::RecaptchaV2Enterprise;
 
 #[cfg(test)]
 mod test {
@@ -12,8 +10,7 @@ mod test {
     use std::env;
     use std::str::FromStr;
 
-    use super::RecaptchaV2;
-    use crate::{solver::Solver, task::CaptchaTask, Error};
+    use crate::{captcha_types::RecaptchaV2, CaptchaTask, Error, Solver};
 
     #[tokio::test]
     async fn recaptcha_v2() -> Result<(), Error> {

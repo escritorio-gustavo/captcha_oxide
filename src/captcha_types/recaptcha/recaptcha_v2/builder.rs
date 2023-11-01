@@ -2,15 +2,12 @@ use std::borrow::Cow;
 
 use itertools::Itertools;
 
-use crate::proxy::Proxy;
+use crate::{
+    captcha_types::recaptcha::type_state::{NoUrlProvided, NoWebsiteKeyProvided, Url, WebsiteKey},
+    proxy::Proxy,
+};
 
 use super::task::{RecaptchaV2, RecaptchaV2Types};
-
-pub struct NoUrlProvided;
-pub struct Url(url::Url);
-
-pub struct NoWebsiteKeyProvided;
-pub struct WebsiteKey<'a>(Cow<'a, str>);
 
 /// This struct allows you to create a [`RecaptchaV2`] struct
 /// while checking at compile time that all required fields were
