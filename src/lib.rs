@@ -41,6 +41,6 @@ pub mod error;
 pub mod proxy;
 pub mod solver;
 
-pub use captcha_types::*;
+pub use captcha_types::CaptchaTask;
 pub use error::Error;
 pub use solver::Solver;

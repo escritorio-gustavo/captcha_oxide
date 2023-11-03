@@ -1,8 +1,6 @@
 use std::borrow::Cow;
 
-use crate::NormalCaptcha;
-
-use super::AnswerType;
+use super::{AnswerType, NormalCaptcha};
 
 pub struct NoBodyProvided;
 pub struct Body<'a>(Cow<'a, str>);

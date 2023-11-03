@@ -16,7 +16,7 @@ use crate::{
 ///
 /// # Example
 /// ```
-/// use captcha_oxide::{CaptchaTask, Error, RecaptchaV3};
+/// use captcha_oxide::{Error, captcha_types::{CaptchaTask, RecaptchaV3}};
 /// use url::Url;
 ///
 /// # fn main() -> Result<(), Error> {
