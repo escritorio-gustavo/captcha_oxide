@@ -2,7 +2,7 @@ mod builder;
 mod solution;
 mod task;
 
-pub use task::HCaptcha;
+pub use task::*;
 
 #[cfg(test)]
 mod test {
