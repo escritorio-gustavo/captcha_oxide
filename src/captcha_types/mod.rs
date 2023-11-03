@@ -2,10 +2,12 @@ mod empty_data;
 mod type_state;
 
 pub mod h_captcha;
+pub mod normal_captcha;
 pub mod recaptcha;
 
 pub use catptcha_oxide_derive::Solution;
 pub use h_captcha::HCaptcha;
+pub use normal_captcha::NormalCaptcha;
 pub use recaptcha::*;
 
 pub trait CaptchaTask: serde::Serialize {
