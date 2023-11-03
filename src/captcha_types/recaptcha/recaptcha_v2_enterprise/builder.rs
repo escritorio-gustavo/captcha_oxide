@@ -137,7 +137,7 @@ where
     /// Pass `true` for the invisible version of reCAPTCHA - a case
     /// when you don't see the checkbox, but the challenge appears.
     /// Mostly used with a callback function
-    pub fn is_invisible(mut self, is_invisible: bool) -> Self {
+    pub fn invisible(mut self, is_invisible: bool) -> Self {
         self.is_invisible = is_invisible;
         self
     }
