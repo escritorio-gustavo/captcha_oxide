@@ -3,8 +3,8 @@ use std::borrow::Cow;
 use itertools::Itertools;
 
 use crate::{
-    captcha_types::type_state::{NoUrlProvided, NoWebsiteKeyProvided, Url, WebsiteKey},
     proxy::Proxy,
+    type_state::{NoUrlProvided, NoWebsiteKeyProvided, Url, WebsiteKey},
 };
 
 use super::task::{RecaptchaV2Enterprise, RecaptchaV2EnterpriseTypes};

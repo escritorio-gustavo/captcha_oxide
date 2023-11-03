@@ -8,10 +8,10 @@ use crate::{
             recaptcha_v2_enterprise::builder::RecaptchaV2EnterpriseBuilder,
             solution::ReCaptchaSolution,
         },
-        type_state::{NoUrlProvided, NoWebsiteKeyProvided},
         CaptchaTask,
     },
     proxy::Proxy,
+    type_state::{NoUrlProvided, NoWebsiteKeyProvided},
 };
 
 #[derive(serde::Serialize)]

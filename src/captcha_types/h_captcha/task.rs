@@ -5,10 +5,10 @@ use crate::{
     captcha_types::{
         empty_data::Empty,
         h_captcha::{builder::HCaptchaBuilder, solution::HCaptchaSolution},
-        type_state::{NoUrlProvided, NoWebsiteKeyProvided},
         CaptchaTask,
     },
     proxy::Proxy,
+    type_state::{NoUrlProvided, NoWebsiteKeyProvided},
 };
 
 #[derive(serde::Serialize)]

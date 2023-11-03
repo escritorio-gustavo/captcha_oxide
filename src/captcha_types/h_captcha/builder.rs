@@ -1,8 +1,8 @@
 use std::borrow::Cow;
 
 use crate::{
-    captcha_types::type_state::{NoUrlProvided, NoWebsiteKeyProvided, Url, WebsiteKey},
     proxy::Proxy,
+    type_state::{NoUrlProvided, NoWebsiteKeyProvided, Url, WebsiteKey},
 };
 
 use super::task::{HCaptcha, HCaptchaTypes};

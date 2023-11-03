@@ -4,10 +4,10 @@ use url::Url;
 use crate::{
     captcha_types::{
         recaptcha::{recaptcha_v2::builder::RecaptchaV2Builder, solution::ReCaptchaSolution},
-        type_state::{NoUrlProvided, NoWebsiteKeyProvided},
         CaptchaTask,
     },
     proxy::Proxy,
+    type_state::{NoUrlProvided, NoWebsiteKeyProvided},
 };
 
 #[derive(serde::Serialize)]

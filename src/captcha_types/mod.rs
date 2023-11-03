@@ -1,5 +1,4 @@
 mod empty_data;
-mod type_state;
 
 pub mod h_captcha;
 pub mod normal_captcha;

@@ -2,10 +2,10 @@ use std::borrow::Cow;
 use url::Url;
 
 use crate::{
-    captcha_types::{
-        recaptcha::{recaptcha_v3::builder::RecaptchaV3Builder, solution::ReCaptchaSolution},
-        type_state::{NoMinScoreProvided, NoUrlProvided, NoWebsiteKeyProvided},
+    captcha_types::recaptcha::{
+        recaptcha_v3::builder::RecaptchaV3Builder, solution::ReCaptchaSolution,
     },
+    type_state::{NoMinScoreProvided, NoUrlProvided, NoWebsiteKeyProvided},
     CaptchaTask,
 };
 

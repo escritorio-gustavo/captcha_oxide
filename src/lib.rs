@@ -33,6 +33,7 @@
 //! ```
 
 mod prelude;
+mod type_state;
 pub(crate) const SOFT_ID: u16 = 4143;
 
 pub mod captcha_types;
