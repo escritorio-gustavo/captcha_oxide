@@ -5,7 +5,7 @@ use std::borrow::Cow;
 #[serde(rename_all = "camelCase")]
 pub struct HCaptchaSolution<'a> {
     #[serde(default = "Default::default")]
-    pub(crate) task_id: u64,
+    task_id: u64,
     pub token: Cow<'a, str>,
     pub resp_key: Cow<'a, str>,
     pub user_agent: Cow<'a, str>,
