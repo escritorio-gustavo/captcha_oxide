@@ -1,9 +1,11 @@
+mod empty_data;
+mod type_state;
+
 pub mod h_captcha;
 pub mod recaptcha;
 
-mod type_state;
-
 pub use catptcha_oxide_derive::Solution;
+pub use h_captcha::HCaptcha;
 pub use recaptcha::*;
 
 pub trait CaptchaTask: serde::Serialize {

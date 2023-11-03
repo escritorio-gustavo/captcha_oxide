@@ -108,7 +108,7 @@ impl<'a, T, U, V> RecaptchaV3Builder<'a, T, U, V> {
     /// it by the enterprise.js script used instead of api.js or by
     /// the `grecaptcha.enterprise.execute` call used instead of
     /// `grecaptcha.execute`
-    pub fn is_enterprise(mut self, is_enterprise: bool) -> Self {
+    pub fn enterprise(mut self, is_enterprise: bool) -> Self {
         self.is_enterprise = is_enterprise;
         self
     }

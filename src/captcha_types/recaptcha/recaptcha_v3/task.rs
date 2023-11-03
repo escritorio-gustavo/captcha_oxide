@@ -3,16 +3,31 @@ use url::Url;
 
 use crate::{
     captcha_types::{
-        recaptcha::solution::ReCaptchaSolution,
+        recaptcha::{recaptcha_v3::builder::RecaptchaV3Builder, solution::ReCaptchaSolution},
         type_state::{NoMinScoreProvided, NoUrlProvided, NoWebsiteKeyProvided},
     },
     CaptchaTask,
 };
 
-use super::RecaptchaV3Builder;
-
 #[derive(serde::Serialize)]
 #[serde(rename_all = "camelCase")]
+/// Represents the data required by the 2captcha API to solve a reCaptcha V3
+/// challenge
+///
+/// # Example
+/// ```
+/// use captcha_oxide::{CaptchaTask, Error, RecaptchaV3};
+/// use url::Url;
+///
+/// # fn main() -> Result<(), Error> {
+/// let captcha = RecaptchaV3::builder()
+///     .website_url(Url::parse("http://someurl.com")?)
+///     .website_key("SOME_KEY")
+///     .min_score(0.3)
+///     .build();
+/// # Ok(())
+/// # }
+/// ```
 pub struct RecaptchaV3<'a> {
     #[serde(rename = "websiteURL")]
     pub(super) website_url: Url,

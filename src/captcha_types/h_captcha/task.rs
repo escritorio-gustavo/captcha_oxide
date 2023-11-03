@@ -3,17 +3,39 @@ use url::Url;
 
 use crate::{
     captcha_types::{
+        empty_data::Empty,
+        h_captcha::{builder::HCaptchaBuilder, solution::HCaptchaSolution},
         type_state::{NoUrlProvided, NoWebsiteKeyProvided},
         CaptchaTask,
     },
     proxy::Proxy,
 };
 
-use super::{solution::HCaptchaSolution, HCaptchaBuilder};
-
 #[derive(serde::Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct HCaptcha<'a, T>
+/// Represents the data required by the 2captcha API to solve a
+/// HCaptcha challenge
+///
+/// # Note
+/// If you need to use this struct but there is no `enterprise_payload`
+/// to be sent, you should invoke the builder using the following syntax:
+/// ```
+/// use captcha_oxide::captcha_types::{CaptchaTask, HCaptcha};
+/// use url::Url;
+///
+/// # fn main() -> Result<(), captcha_oxide::Error> {
+/// let captcha = <HCaptcha>::builder()
+///     .website_url(Url::parse("http://someurl.com")?)
+///     .website_key("SOME_KEY")
+///     .build();
+/// # Ok(())
+/// # }
+/// ```
+///
+/// The angle brackets (`<>`) around [`HCaptcha`] allow the use of the
+/// default type provided to the generic argument, so you don't need to
+/// create a serializable unit struct
+pub struct HCaptcha<'a, T = Empty>
 where
     T: serde::Serialize,
 {

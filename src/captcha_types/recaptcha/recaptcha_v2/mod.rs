@@ -1,7 +1,6 @@
 mod builder;
 mod task;
 
-pub use builder::RecaptchaV2Builder;
 pub use task::RecaptchaV2;
 
 #[cfg(test)]

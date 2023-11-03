@@ -3,17 +3,31 @@ use url::Url;
 
 use crate::{
     captcha_types::{
-        recaptcha::solution::ReCaptchaSolution,
+        recaptcha::{recaptcha_v2::builder::RecaptchaV2Builder, solution::ReCaptchaSolution},
         type_state::{NoUrlProvided, NoWebsiteKeyProvided},
         CaptchaTask,
     },
     proxy::Proxy,
 };
 
-use super::RecaptchaV2Builder;
-
 #[derive(serde::Serialize)]
 #[serde(rename_all = "camelCase")]
+/// Represents the data required by the 2captcha API to solve a reCaptcha V2
+/// challenge
+///
+/// # Example
+/// ```
+/// use captcha_oxide::{CaptchaTask, Error, RecaptchaV2};
+/// use url::Url;
+///
+/// # fn main() -> Result<(), Error> {
+/// let captcha = RecaptchaV2::builder()
+///     .website_url(Url::parse("http://someurl.com")?)
+///     .website_key("SOME_KEY")
+///     .build();
+/// # Ok(())
+/// # }
+/// ```
 pub struct RecaptchaV2<'a> {
     #[serde(flatten)]
     pub(super) task_type: RecaptchaV2Types<'a>,
