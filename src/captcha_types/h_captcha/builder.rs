@@ -7,7 +7,7 @@ use crate::{
 
 use super::task::{HCaptcha, HCaptchaTypes};
 
-/// This struct allows you to create a [`RecaptchaV2Enterprise`] struct
+/// This struct allows you to create a [`HCaptcha`] struct
 /// while checking at compile time that all required fields were
 /// provided
 pub struct HCaptchaBuilder<'a, T, U, V>
@@ -110,7 +110,7 @@ where
     /// Pass `true` for the invisible version of reCAPTCHA - a case
     /// when you don't see the checkbox, but the challenge appears.
     /// Mostly used with a callback function
-    pub fn is_invisible(mut self, is_invisible: bool) -> Self {
+    pub fn invisible(mut self, is_invisible: bool) -> Self {
         self.is_invisible = is_invisible;
         self
     }
