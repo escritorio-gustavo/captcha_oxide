@@ -120,4 +120,29 @@ impl Solver {
             tokio::time::sleep(std::time::Duration::from_secs(5)).await;
         }
     }
+
+    /// Allows you to report to 2captcha on wether or not the solution was valid
+    pub async fn report(&self, solution: &impl Solution, status: SolutionStatus) -> Result<()> {
+        let task_id = solution.get_task_id();
+        let json = TaskRequest {
+            client_key: &self.api_key,
+            task_id,
+        };
+
+        CLIENT
+            .post(API_URL.join(match status {
+                SolutionStatus::Good => "/reportCorrect",
+                SolutionStatus::Bad => "/reportIncorrect",
+            })?)
+            .json(&json)
+            .send()
+            .await?;
+
+        Ok(())
+    }
+}
+
+pub enum SolutionStatus {
+    Good,
+    Bad,
 }
