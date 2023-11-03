@@ -10,31 +10,30 @@ This is a rust library for solving captcha puzzles with the 2Captcha API
 
 ```rust
 use captcha_oxide::{
-  CaptchaSolver,
-  Solution,
+  Solver,
+  RecaptchaV3,
   Error,
-  arguments::RecaptchaV3,
+  CaptchaTask
 };
+
+use url::Url;
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
-  let solver = CaptchaSolver::new("YOUR TWOCAPTCHA API KEY");
+  let solver = Solver::new("YOUR TWOCAPTCHA API KEY");
 
   let args = RecaptchaV3::builder()
-    .page_url("https://someurl.com")
-    .site_key("SITE_KEY")
+    .website_url(Url::parse("https://someurl.com")?)
+    .website_key("SITE_KEY")
     .build();
 
-  let solution = solver.solve(args).await?.unwrap().solution;
+  let solution = solver
+    .solve(args)
+    .await?
+    .unwrap()
+    .g_recaptcha_response;
 
-  // If there isn't a variant named after your captcha type,
-  // it's because it only returns a token, so you should use
-  // the Token variant
-  let Solution::Token(solution) = solution else {
-    unreachable!()
-  };
-
-  assert_ne!(solution, "");
+  assert!(!solution.is_empty());
 
   Ok(())
 }
