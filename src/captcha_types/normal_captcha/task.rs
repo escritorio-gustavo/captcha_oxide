@@ -8,7 +8,7 @@ use super::{
 };
 
 #[derive(serde::Serialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", tag = "type", rename = "ImageToTextTask")]
 pub struct NormalCaptcha<'a> {
     pub(super) body: Cow<'a, str>,
     pub(super) phrase: bool,
