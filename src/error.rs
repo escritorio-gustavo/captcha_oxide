@@ -8,6 +8,10 @@ pub enum Error {
 
     #[error(transparent)]
     #[serde(serialize_with = "serialize_error")]
+    SerializeError(#[from] serde_json::Error),
+
+    #[error(transparent)]
+    #[serde(serialize_with = "serialize_error")]
     HttpError(#[from] reqwest::Error),
 
     #[error(transparent)]
