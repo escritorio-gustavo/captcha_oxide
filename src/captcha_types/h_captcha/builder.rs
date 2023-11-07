@@ -1,6 +1,7 @@
 use std::borrow::Cow;
 
 use crate::{
+    prelude::*,
     proxy::Proxy,
     type_state::{NoUrlProvided, NoWebsiteKeyProvided, Url, WebsiteKey},
 };
@@ -74,14 +75,17 @@ where
     }
 
     /// The full URL of target web page where the captcha is loaded
-    pub fn website_url(self, website_url: url::Url) -> HCaptchaBuilder<'a, Url, U, V> {
-        HCaptchaBuilder {
+    ///
+    /// # Errors
+    /// This function will error if the provided url is invalid
+    pub fn website_url(self, website_url: &str) -> Result<HCaptchaBuilder<'a, Url, U, V>> {
+        Ok(HCaptchaBuilder {
             proxy: self.proxy,
-            website_url: Url(website_url),
+            website_url: Url(url::Url::parse(website_url)?),
             website_key: self.website_key,
             is_invisible: self.is_invisible,
             enterprise_payload: self.enterprise_payload,
-        }
+        })
     }
 
     /// Can be found inside hte data-sitekey property of the reCAPTCHA

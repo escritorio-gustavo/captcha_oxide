@@ -1,7 +1,10 @@
 use std::borrow::Cow;
 
-use crate::type_state::{
-    MinScore, NoMinScoreProvided, NoUrlProvided, NoWebsiteKeyProvided, Url, WebsiteKey,
+use crate::{
+    prelude::*,
+    type_state::{
+        MinScore, NoMinScoreProvided, NoUrlProvided, NoWebsiteKeyProvided, Url, WebsiteKey,
+    },
 };
 
 use super::task::RecaptchaV3;
@@ -54,15 +57,18 @@ impl<'a> Default
 
 impl<'a, T, U, V> RecaptchaV3Builder<'a, T, U, V> {
     /// The full URL of target web page where the captcha is loaded
-    pub fn website_url(self, website_url: url::Url) -> RecaptchaV3Builder<'a, Url, U, V> {
-        RecaptchaV3Builder {
-            website_url: Url(website_url),
+    ///
+    /// # Errors
+    /// This function will error if the provided url is invalid
+    pub fn website_url(self, website_url: &str) -> Result<RecaptchaV3Builder<'a, Url, U, V>> {
+        Ok(RecaptchaV3Builder {
+            website_url: Url(url::Url::parse(website_url)?),
             website_key: self.website_key,
             min_score: self.min_score,
             page_action: self.page_action,
             is_enterprise: self.is_enterprise,
             api_domain: self.api_domain,
-        }
+        })
     }
 
     /// Can be found inside hte data-sitekey property of the reCAPTCHA

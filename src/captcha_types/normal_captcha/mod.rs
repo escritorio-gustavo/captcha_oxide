@@ -8,7 +8,7 @@ pub use task::*;
 mod test {
     use std::env;
 
-    use crate::{captcha_types::NormalCaptcha, CaptchaTask, Error, Solver};
+    use crate::{captcha_types::normal_captcha::NormalCaptcha, CaptchaTask, Error, Solver};
 
     #[tokio::test]
     async fn normal_captcha() -> Result<(), Error> {

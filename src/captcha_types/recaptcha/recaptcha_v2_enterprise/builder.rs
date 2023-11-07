@@ -3,6 +3,7 @@ use std::borrow::Cow;
 use itertools::Itertools;
 
 use crate::{
+    prelude::*,
     proxy::Proxy,
     type_state::{NoUrlProvided, NoWebsiteKeyProvided, Url, WebsiteKey},
 };
@@ -95,17 +96,23 @@ where
     }
 
     /// The full URL of target web page where the captcha is loaded
-    pub fn website_url(self, website_url: url::Url) -> RecaptchaV2EnterpriseBuilder<'a, Url, U, V> {
-        RecaptchaV2EnterpriseBuilder {
+    ///
+    /// # Errors
+    /// This function will error if the provided url is invalid
+    pub fn website_url(
+        self,
+        website_url: &str,
+    ) -> Result<RecaptchaV2EnterpriseBuilder<'a, Url, U, V>> {
+        Ok(RecaptchaV2EnterpriseBuilder {
             proxy: self.proxy,
-            website_url: Url(website_url),
+            website_url: Url(url::Url::parse(website_url)?),
             website_key: self.website_key,
             enterprise_payload: self.enterprise_payload,
             is_invisible: self.is_invisible,
             user_agent: self.user_agent,
             cookies: self.cookies,
             api_domain: self.api_domain,
-        }
+        })
     }
 
     /// Can be found inside hte data-sitekey property of the reCAPTCHA
