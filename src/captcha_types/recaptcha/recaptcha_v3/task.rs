@@ -10,7 +10,11 @@ use crate::{
 };
 
 #[derive(serde::Serialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(
+    rename_all = "camelCase",
+    tag = "type",
+    rename = "RecaptchaV3TaskProxyless"
+)]
 /// Represents the data required by the 2captcha API to solve a reCaptcha V3
 /// challenge
 ///

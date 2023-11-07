@@ -22,6 +22,7 @@ pub struct GeeTestV4<'a, T = Empty>
 where
     T: serde::Serialize,
 {
+    #[serde(flatten)]
     pub(super) task_type: GeetestTypes<'a>,
 
     #[serde(rename = "websiteURL")]

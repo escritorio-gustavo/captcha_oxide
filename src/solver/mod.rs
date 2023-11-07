@@ -130,10 +130,7 @@ impl Solver {
         };
 
         CLIENT
-            .post(API_URL.join(match status {
-                SolutionStatus::Good => "/reportCorrect",
-                SolutionStatus::Bad => "/reportIncorrect",
-            })?)
+            .post(API_URL.join(status.report_endpoint())?)
             .json(&json)
             .send()
             .await?;
@@ -145,4 +142,13 @@ impl Solver {
 pub enum SolutionStatus {
     Good,
     Bad,
+}
+
+impl SolutionStatus {
+    pub const fn report_endpoint(&self) -> &str {
+        match self {
+            SolutionStatus::Good => "/reportCorrect",
+            SolutionStatus::Bad => "/reportIncorrect",
+        }
+    }
 }

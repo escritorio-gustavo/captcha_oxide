@@ -16,6 +16,7 @@ use super::{builder::GeeTestV3Builder, solution::GeeTestV3Solution};
 #[derive(serde::Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GeeTestV3<'a> {
+    #[serde(flatten)]
     pub(super) task_type: GeetestTypes<'a>,
 
     #[serde(rename = "websiteURL")]
