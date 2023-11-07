@@ -6,7 +6,7 @@ use crate::{
     type_state::{UrlMissing, UrlProvided, WebsiteKeyMissing, WebsiteKeyProvided},
 };
 
-use super::task::{HCaptcha, HCaptchaTypes};
+use super::task::HCaptcha;
 
 /// This struct allows you to create a [`HCaptcha`] struct
 /// while checking at compile time that all required fields were
@@ -28,10 +28,7 @@ where
 {
     pub fn build(self) -> HCaptcha<'a, T> {
         HCaptcha {
-            task_type: match self.proxy {
-                Some(proxy) => HCaptchaTypes::WithProxy(proxy),
-                None => HCaptchaTypes::ProxyLess,
-            },
+            task_type: self.proxy.into(),
             website_url: self.website_url.0,
             website_key: self.website_key.0,
             is_invisible: self.is_invisible,

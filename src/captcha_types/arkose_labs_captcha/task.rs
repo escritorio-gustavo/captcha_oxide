@@ -39,6 +39,7 @@ where
 
 #[derive(serde::Serialize)]
 #[serde(tag = "type")]
+#[catptcha_oxide_derive::from_option]
 pub enum ArkoseLabsCaptchaTypes<'a> {
     #[serde(rename = "FunCaptchaTaskProxyless")]
     ProxyLess,

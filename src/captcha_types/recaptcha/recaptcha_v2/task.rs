@@ -53,6 +53,7 @@ pub struct RecaptchaV2<'a> {
 
 #[derive(serde::Serialize)]
 #[serde(tag = "type")]
+#[catptcha_oxide_derive::from_option]
 pub enum RecaptchaV2Types<'a> {
     #[serde(rename = "RecaptchaV2TaskProxyless")]
     ProxyLess,

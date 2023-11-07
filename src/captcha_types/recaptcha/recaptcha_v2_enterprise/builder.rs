@@ -8,7 +8,7 @@ use crate::{
     type_state::{UrlMissing, UrlProvided, WebsiteKeyMissing, WebsiteKeyProvided},
 };
 
-use super::task::{RecaptchaV2Enterprise, RecaptchaV2EnterpriseTypes};
+use super::task::RecaptchaV2Enterprise;
 
 /// This struct allows you to create a [`RecaptchaV2Enterprise`] struct
 /// while checking at compile time that all required fields were
@@ -39,10 +39,7 @@ where
             .join(";");
 
         RecaptchaV2Enterprise {
-            task_type: match self.proxy {
-                Some(proxy) => RecaptchaV2EnterpriseTypes::WithProxy(proxy),
-                None => RecaptchaV2EnterpriseTypes::ProxyLess,
-            },
+            task_type: self.proxy.into(),
             website_url: self.website_url.0,
             website_key: self.website_key.0,
             enterprise_payload: self.enterprise_payload,

@@ -55,10 +55,7 @@ where
     pub fn build(self) -> Result<ArkoseLabsCaptcha<'a, T>> {
         Ok(ArkoseLabsCaptcha {
             _x: std::marker::PhantomData,
-            task_type: match self.proxy {
-                Some(proxy) => super::ArkoseLabsCaptchaTypes::WithProxy(proxy),
-                None => super::ArkoseLabsCaptchaTypes::ProxyLess,
-            },
+            task_type: self.proxy.into(),
             website_url: self.website_url.0,
             website_public_key: self.website_public_key.0,
             funcaptcha_api_jssubdomain: self.funcaptcha_api_jssubdomain,

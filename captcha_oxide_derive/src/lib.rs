@@ -1,7 +1,28 @@
 extern crate proc_macro;
 
 use quote::quote;
-use syn::{parse_macro_input, DeriveInput};
+use syn::{parse_macro_input, DeriveInput, ItemEnum};
+
+#[proc_macro_attribute]
+pub fn from_option(
+    _: proc_macro::TokenStream,
+    item: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    let ast = parse_macro_input!(item as ItemEnum);
+
+    let ident = &ast.ident;
+
+    quote! {
+        #ast
+
+        impl<'a> From<Option<crate::proxy::Proxy<'a>>> for #ident<'a> {
+            fn from(value: Option<crate::proxy::Proxy<'a>>) -> Self {
+                value.map_or(Self::ProxyLess, Self::WithProxy)
+            }
+        }
+    }
+    .into()
+}
 
 #[proc_macro_derive(Solution)]
 pub fn derive_solution(input: proc_macro::TokenStream) -> proc_macro::TokenStream {

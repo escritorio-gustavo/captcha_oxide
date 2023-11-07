@@ -60,6 +60,7 @@ where
 
 #[derive(serde::Serialize)]
 #[serde(tag = "type")]
+#[catptcha_oxide_derive::from_option]
 pub enum RecaptchaV2EnterpriseTypes<'a> {
     #[serde(rename = "RecaptchaV2EnterpriseTaskProxyless")]
     ProxyLess,

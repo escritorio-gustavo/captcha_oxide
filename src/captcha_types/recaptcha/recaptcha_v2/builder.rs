@@ -8,7 +8,7 @@ use crate::{
     type_state::{UrlMissing, UrlProvided, WebsiteKeyMissing, WebsiteKeyProvided},
 };
 
-use super::task::{RecaptchaV2, RecaptchaV2Types};
+use super::task::RecaptchaV2;
 
 /// This struct allows you to create a [`RecaptchaV2`] struct
 /// while checking at compile time that all required fields were
@@ -32,10 +32,7 @@ impl<'a> RecaptchaV2Builder<'a, UrlProvided, WebsiteKeyProvided<'a>> {
             .map(|x| format!("{}={}", x.0, x.1))
             .join(";");
         RecaptchaV2 {
-            task_type: match self.proxy {
-                Some(proxy) => RecaptchaV2Types::WithProxy(proxy),
-                None => RecaptchaV2Types::ProxyLess,
-            },
+            task_type: self.proxy.into(),
             website_url: self.website_url.0,
             website_key: self.website_key.0,
             recaptcha_data_s_value: self.recaptcha_data_s_value,

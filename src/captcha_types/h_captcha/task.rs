@@ -53,6 +53,7 @@ where
 
 #[derive(serde::Serialize)]
 #[serde(tag = "type")]
+#[catptcha_oxide_derive::from_option]
 pub enum HCaptchaTypes<'a> {
     #[serde(rename = "HCaptchaTaskProxyless")]
     ProxyLess,
