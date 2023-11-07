@@ -3,7 +3,8 @@ use std::borrow::Cow;
 use crate::{
     prelude::*,
     type_state::{
-        MinScore, NoMinScoreProvided, NoUrlProvided, NoWebsiteKeyProvided, Url, WebsiteKey,
+        MinScoreMissing, MinScoreProvided, UrlMissing, UrlProvided, WebsiteKeyMissing,
+        WebsiteKeyProvided,
     },
 };
 
@@ -21,7 +22,7 @@ pub struct RecaptchaV3Builder<'a, T, U, V> {
     api_domain: Option<Cow<'a, str>>,
 }
 
-impl<'a> RecaptchaV3Builder<'a, Url, WebsiteKey<'a>, MinScore> {
+impl<'a> RecaptchaV3Builder<'a, UrlProvided, WebsiteKeyProvided<'a>, MinScoreProvided> {
     pub fn build(self) -> RecaptchaV3<'a> {
         RecaptchaV3 {
             website_url: self.website_url.0,
@@ -34,12 +35,12 @@ impl<'a> RecaptchaV3Builder<'a, Url, WebsiteKey<'a>, MinScore> {
     }
 }
 
-impl<'a> RecaptchaV3Builder<'a, NoUrlProvided, NoWebsiteKeyProvided, NoMinScoreProvided> {
+impl<'a> RecaptchaV3Builder<'a, UrlMissing, WebsiteKeyMissing, MinScoreMissing> {
     pub const fn new() -> Self {
         Self {
-            website_url: NoUrlProvided,
-            website_key: NoWebsiteKeyProvided,
-            min_score: NoMinScoreProvided,
+            website_url: UrlMissing,
+            website_key: WebsiteKeyMissing,
+            min_score: MinScoreMissing,
             page_action: None,
             is_enterprise: false,
             api_domain: None,
@@ -47,9 +48,7 @@ impl<'a> RecaptchaV3Builder<'a, NoUrlProvided, NoWebsiteKeyProvided, NoMinScoreP
     }
 }
 
-impl<'a> Default
-    for RecaptchaV3Builder<'a, NoUrlProvided, NoWebsiteKeyProvided, NoMinScoreProvided>
-{
+impl<'a> Default for RecaptchaV3Builder<'a, UrlMissing, WebsiteKeyMissing, MinScoreMissing> {
     fn default() -> Self {
         Self::new()
     }
@@ -60,9 +59,12 @@ impl<'a, T, U, V> RecaptchaV3Builder<'a, T, U, V> {
     ///
     /// # Errors
     /// This function will error if the provided url is invalid
-    pub fn website_url(self, website_url: &str) -> Result<RecaptchaV3Builder<'a, Url, U, V>> {
+    pub fn website_url(
+        self,
+        website_url: &str,
+    ) -> Result<RecaptchaV3Builder<'a, UrlProvided, U, V>> {
         Ok(RecaptchaV3Builder {
-            website_url: Url(url::Url::parse(website_url)?),
+            website_url: UrlProvided(url::Url::parse(website_url)?),
             website_key: self.website_key,
             min_score: self.min_score,
             page_action: self.page_action,
@@ -77,10 +79,10 @@ impl<'a, T, U, V> RecaptchaV3Builder<'a, T, U, V> {
     pub fn website_key(
         self,
         website_key: impl Into<Cow<'a, str>>,
-    ) -> RecaptchaV3Builder<'a, T, WebsiteKey<'a>, V> {
+    ) -> RecaptchaV3Builder<'a, T, WebsiteKeyProvided<'a>, V> {
         RecaptchaV3Builder {
             website_url: self.website_url,
-            website_key: WebsiteKey(website_key.into()),
+            website_key: WebsiteKeyProvided(website_key.into()),
             min_score: self.min_score,
             page_action: self.page_action,
             is_enterprise: self.is_enterprise,
@@ -90,11 +92,11 @@ impl<'a, T, U, V> RecaptchaV3Builder<'a, T, U, V> {
 
     /// Required score value. The provided value will be clamped between 0 and 1.
     /// The 2captcha API docs recommend using either 0.3, 0.7 or 0.9
-    pub fn min_score(self, min_score: f32) -> RecaptchaV3Builder<'a, T, U, MinScore> {
+    pub fn min_score(self, min_score: f32) -> RecaptchaV3Builder<'a, T, U, MinScoreProvided> {
         RecaptchaV3Builder {
             website_url: self.website_url,
             website_key: self.website_key,
-            min_score: MinScore(min_score.min(1.0f32).max(0.0f32)),
+            min_score: MinScoreProvided(min_score.min(1.0f32).max(0.0f32)),
             page_action: self.page_action,
             is_enterprise: self.is_enterprise,
             api_domain: self.api_domain,

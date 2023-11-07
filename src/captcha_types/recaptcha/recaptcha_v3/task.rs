@@ -5,7 +5,7 @@ use crate::{
     captcha_types::recaptcha::{
         recaptcha_v3::builder::RecaptchaV3Builder, solution::ReCaptchaSolution,
     },
-    type_state::{NoMinScoreProvided, NoUrlProvided, NoWebsiteKeyProvided},
+    type_state::{MinScoreMissing, UrlMissing, WebsiteKeyMissing},
     CaptchaTask,
 };
 
@@ -44,7 +44,7 @@ pub struct RecaptchaV3<'a> {
 
 impl<'a> CaptchaTask for RecaptchaV3<'a> {
     type Solution = ReCaptchaSolution<'a>;
-    type Builder = RecaptchaV3Builder<'a, NoUrlProvided, NoWebsiteKeyProvided, NoMinScoreProvided>;
+    type Builder = RecaptchaV3Builder<'a, UrlMissing, WebsiteKeyMissing, MinScoreMissing>;
 
     fn get_timeout(&self) -> std::time::Duration {
         std::time::Duration::from_secs(20)

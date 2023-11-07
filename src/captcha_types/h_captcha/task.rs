@@ -8,7 +8,7 @@ use crate::{
         CaptchaTask,
     },
     proxy::Proxy,
-    type_state::{NoUrlProvided, NoWebsiteKeyProvided},
+    type_state::{UrlMissing, WebsiteKeyMissing},
 };
 
 #[derive(serde::Serialize)]
@@ -66,7 +66,7 @@ where
     T: serde::Serialize,
 {
     type Solution = HCaptchaSolution<'a>;
-    type Builder = HCaptchaBuilder<'a, NoUrlProvided, NoWebsiteKeyProvided, T>;
+    type Builder = HCaptchaBuilder<'a, UrlMissing, WebsiteKeyMissing, T>;
 
     fn get_timeout(&self) -> std::time::Duration {
         std::time::Duration::from_secs(20)

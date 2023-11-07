@@ -5,7 +5,7 @@ use itertools::Itertools;
 use crate::{
     prelude::*,
     proxy::Proxy,
-    type_state::{NoUrlProvided, NoWebsiteKeyProvided, Url, WebsiteKey},
+    type_state::{UrlMissing, UrlProvided, WebsiteKeyMissing, WebsiteKeyProvided},
 };
 
 use super::task::{RecaptchaV2Enterprise, RecaptchaV2EnterpriseTypes};
@@ -27,7 +27,7 @@ where
     api_domain: Option<Cow<'a, str>>,
 }
 
-impl<'a, T> RecaptchaV2EnterpriseBuilder<'a, Url, WebsiteKey<'a>, T>
+impl<'a, T> RecaptchaV2EnterpriseBuilder<'a, UrlProvided, WebsiteKeyProvided<'a>, T>
 where
     T: serde::Serialize,
 {
@@ -58,15 +58,15 @@ where
     }
 }
 
-impl<T> RecaptchaV2EnterpriseBuilder<'_, NoUrlProvided, NoWebsiteKeyProvided, T>
+impl<T> RecaptchaV2EnterpriseBuilder<'_, UrlMissing, WebsiteKeyMissing, T>
 where
     T: serde::Serialize,
 {
     pub const fn new() -> Self {
         RecaptchaV2EnterpriseBuilder {
             proxy: None,
-            website_url: NoUrlProvided,
-            website_key: NoWebsiteKeyProvided,
+            website_url: UrlMissing,
+            website_key: WebsiteKeyMissing,
             enterprise_payload: None,
             is_invisible: false,
             user_agent: None,
@@ -76,7 +76,7 @@ where
     }
 }
 
-impl<T> Default for RecaptchaV2EnterpriseBuilder<'_, NoUrlProvided, NoWebsiteKeyProvided, T>
+impl<T> Default for RecaptchaV2EnterpriseBuilder<'_, UrlMissing, WebsiteKeyMissing, T>
 where
     T: serde::Serialize,
 {
@@ -102,10 +102,10 @@ where
     pub fn website_url(
         self,
         website_url: &str,
-    ) -> Result<RecaptchaV2EnterpriseBuilder<'a, Url, U, V>> {
+    ) -> Result<RecaptchaV2EnterpriseBuilder<'a, UrlProvided, U, V>> {
         Ok(RecaptchaV2EnterpriseBuilder {
             proxy: self.proxy,
-            website_url: Url(url::Url::parse(website_url)?),
+            website_url: UrlProvided(url::Url::parse(website_url)?),
             website_key: self.website_key,
             enterprise_payload: self.enterprise_payload,
             is_invisible: self.is_invisible,
@@ -121,11 +121,11 @@ where
     pub fn website_key(
         self,
         website_key: impl Into<Cow<'a, str>>,
-    ) -> RecaptchaV2EnterpriseBuilder<'a, T, WebsiteKey<'a>, V> {
+    ) -> RecaptchaV2EnterpriseBuilder<'a, T, WebsiteKeyProvided<'a>, V> {
         RecaptchaV2EnterpriseBuilder {
             proxy: self.proxy,
             website_url: self.website_url,
-            website_key: WebsiteKey(website_key.into()),
+            website_key: WebsiteKeyProvided(website_key.into()),
             enterprise_payload: self.enterprise_payload,
             is_invisible: self.is_invisible,
             user_agent: self.user_agent,

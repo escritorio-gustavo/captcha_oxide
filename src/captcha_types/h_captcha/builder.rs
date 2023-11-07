@@ -3,7 +3,7 @@ use std::borrow::Cow;
 use crate::{
     prelude::*,
     proxy::Proxy,
-    type_state::{NoUrlProvided, NoWebsiteKeyProvided, Url, WebsiteKey},
+    type_state::{UrlMissing, UrlProvided, WebsiteKeyMissing, WebsiteKeyProvided},
 };
 
 use super::task::{HCaptcha, HCaptchaTypes};
@@ -22,7 +22,7 @@ where
     enterprise_payload: Option<V>,
 }
 
-impl<'a, T> HCaptchaBuilder<'a, Url, WebsiteKey<'a>, T>
+impl<'a, T> HCaptchaBuilder<'a, UrlProvided, WebsiteKeyProvided<'a>, T>
 where
     T: serde::Serialize,
 {
@@ -40,22 +40,22 @@ where
     }
 }
 
-impl<T> HCaptchaBuilder<'_, NoUrlProvided, NoWebsiteKeyProvided, T>
+impl<T> HCaptchaBuilder<'_, UrlMissing, WebsiteKeyMissing, T>
 where
     T: serde::Serialize,
 {
     pub const fn new() -> Self {
         HCaptchaBuilder {
             proxy: None,
-            website_url: NoUrlProvided,
-            website_key: NoWebsiteKeyProvided,
+            website_url: UrlMissing,
+            website_key: WebsiteKeyMissing,
             is_invisible: false,
             enterprise_payload: None,
         }
     }
 }
 
-impl<T> Default for HCaptchaBuilder<'_, NoUrlProvided, NoWebsiteKeyProvided, T>
+impl<T> Default for HCaptchaBuilder<'_, UrlMissing, WebsiteKeyMissing, T>
 where
     T: serde::Serialize,
 {
@@ -78,10 +78,10 @@ where
     ///
     /// # Errors
     /// This function will error if the provided url is invalid
-    pub fn website_url(self, website_url: &str) -> Result<HCaptchaBuilder<'a, Url, U, V>> {
+    pub fn website_url(self, website_url: &str) -> Result<HCaptchaBuilder<'a, UrlProvided, U, V>> {
         Ok(HCaptchaBuilder {
             proxy: self.proxy,
-            website_url: Url(url::Url::parse(website_url)?),
+            website_url: UrlProvided(url::Url::parse(website_url)?),
             website_key: self.website_key,
             is_invisible: self.is_invisible,
             enterprise_payload: self.enterprise_payload,
@@ -94,11 +94,11 @@ where
     pub fn website_key(
         self,
         website_key: impl Into<Cow<'a, str>>,
-    ) -> HCaptchaBuilder<'a, T, WebsiteKey<'a>, V> {
+    ) -> HCaptchaBuilder<'a, T, WebsiteKeyProvided<'a>, V> {
         HCaptchaBuilder {
             proxy: self.proxy,
             website_url: self.website_url,
-            website_key: WebsiteKey(website_key.into()),
+            website_key: WebsiteKeyProvided(website_key.into()),
             is_invisible: self.is_invisible,
             enterprise_payload: self.enterprise_payload,
         }

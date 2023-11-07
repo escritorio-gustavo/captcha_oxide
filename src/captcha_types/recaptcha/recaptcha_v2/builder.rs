@@ -5,7 +5,7 @@ use itertools::Itertools;
 use crate::{
     prelude::*,
     proxy::Proxy,
-    type_state::{NoUrlProvided, NoWebsiteKeyProvided, Url, WebsiteKey},
+    type_state::{UrlMissing, UrlProvided, WebsiteKeyMissing, WebsiteKeyProvided},
 };
 
 use super::task::{RecaptchaV2, RecaptchaV2Types};
@@ -24,7 +24,7 @@ pub struct RecaptchaV2Builder<'a, T, U> {
     api_domain: Option<Cow<'a, str>>,
 }
 
-impl<'a> RecaptchaV2Builder<'a, Url, WebsiteKey<'a>> {
+impl<'a> RecaptchaV2Builder<'a, UrlProvided, WebsiteKeyProvided<'a>> {
     pub fn build(self) -> RecaptchaV2<'a> {
         let cookies = self
             .cookies
@@ -51,12 +51,12 @@ impl<'a> RecaptchaV2Builder<'a, Url, WebsiteKey<'a>> {
     }
 }
 
-impl RecaptchaV2Builder<'_, NoUrlProvided, NoWebsiteKeyProvided> {
+impl RecaptchaV2Builder<'_, UrlMissing, WebsiteKeyMissing> {
     pub const fn new() -> Self {
         RecaptchaV2Builder {
             proxy: None,
-            website_url: NoUrlProvided,
-            website_key: NoWebsiteKeyProvided,
+            website_url: UrlMissing,
+            website_key: WebsiteKeyMissing,
             recaptcha_data_s_value: None,
             is_invisible: false,
             user_agent: None,
@@ -66,7 +66,7 @@ impl RecaptchaV2Builder<'_, NoUrlProvided, NoWebsiteKeyProvided> {
     }
 }
 
-impl Default for RecaptchaV2Builder<'_, NoUrlProvided, NoWebsiteKeyProvided> {
+impl Default for RecaptchaV2Builder<'_, UrlMissing, WebsiteKeyMissing> {
     fn default() -> Self {
         Self::new()
     }
@@ -83,10 +83,10 @@ impl<'a, T, U> RecaptchaV2Builder<'a, T, U> {
     ///
     /// # Errors
     /// This function will error if the provided url is invalid
-    pub fn website_url(self, website_url: &str) -> Result<RecaptchaV2Builder<'a, Url, U>> {
+    pub fn website_url(self, website_url: &str) -> Result<RecaptchaV2Builder<'a, UrlProvided, U>> {
         Ok(RecaptchaV2Builder {
             proxy: self.proxy,
-            website_url: Url(url::Url::parse(website_url)?),
+            website_url: UrlProvided(url::Url::parse(website_url)?),
             website_key: self.website_key,
             recaptcha_data_s_value: self.recaptcha_data_s_value,
             is_invisible: self.is_invisible,
@@ -102,11 +102,11 @@ impl<'a, T, U> RecaptchaV2Builder<'a, T, U> {
     pub fn website_key(
         self,
         website_key: impl Into<Cow<'a, str>>,
-    ) -> RecaptchaV2Builder<'a, T, WebsiteKey<'a>> {
+    ) -> RecaptchaV2Builder<'a, T, WebsiteKeyProvided<'a>> {
         RecaptchaV2Builder {
             proxy: self.proxy,
             website_url: self.website_url,
-            website_key: WebsiteKey(website_key.into()),
+            website_key: WebsiteKeyProvided(website_key.into()),
             recaptcha_data_s_value: self.recaptcha_data_s_value,
             is_invisible: self.is_invisible,
             user_agent: self.user_agent,

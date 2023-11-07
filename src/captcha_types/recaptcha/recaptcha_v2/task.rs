@@ -7,7 +7,7 @@ use crate::{
         CaptchaTask,
     },
     proxy::Proxy,
-    type_state::{NoUrlProvided, NoWebsiteKeyProvided},
+    type_state::{UrlMissing, WebsiteKeyMissing},
 };
 
 #[derive(serde::Serialize)]
@@ -63,7 +63,7 @@ pub enum RecaptchaV2Types<'a> {
 
 impl<'a> CaptchaTask for RecaptchaV2<'a> {
     type Solution = ReCaptchaSolution<'a>;
-    type Builder = RecaptchaV2Builder<'a, NoUrlProvided, NoWebsiteKeyProvided>;
+    type Builder = RecaptchaV2Builder<'a, UrlMissing, WebsiteKeyMissing>;
 
     fn get_timeout(&self) -> std::time::Duration {
         std::time::Duration::from_secs(20)

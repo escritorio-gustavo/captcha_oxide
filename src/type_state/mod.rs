@@ -1,10 +1,10 @@
 use std::borrow::Cow;
 
-pub struct NoUrlProvided;
-pub struct Url(pub url::Url);
+pub struct UrlMissing;
+pub struct UrlProvided(pub url::Url);
 
-pub struct NoWebsiteKeyProvided;
-pub struct WebsiteKey<'a>(pub Cow<'a, str>);
+pub struct WebsiteKeyMissing;
+pub struct WebsiteKeyProvided<'a>(pub Cow<'a, str>);
 
-pub struct NoMinScoreProvided;
-pub struct MinScore(pub f32);
+pub struct MinScoreMissing;
+pub struct MinScoreProvided(pub f32);
