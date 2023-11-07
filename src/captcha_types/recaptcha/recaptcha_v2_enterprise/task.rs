@@ -23,10 +23,19 @@ use crate::{
 /// If you need to use this struct but there is no `enterprise_payload`
 /// to be sent, you should invoke the builder using the following syntax:
 /// ```
+/// use captcha_oxide::{
+///     Error,
+///     CaptchaTask,
+///     captcha_types::recaptcha::RecaptchaV2Enterprise
+/// };
+///
+/// # fn main() -> Result<(), Error> {
 /// let captcha = <RecaptchaV2Enterprise>::builder()
-///     .website_url(url::Url::from_str("http://someurl.com"))
+///     .website_url("http://someurl.com")?
 ///     .website_key("SOME_KEY")
 ///     .build();
+/// # Ok(())
+/// # }
 /// ```
 ///
 /// The angle brackets (`<>`) around [`RecaptchaV2Enterprise`] allow the
