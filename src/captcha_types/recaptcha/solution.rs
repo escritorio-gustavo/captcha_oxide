@@ -1,8 +1,8 @@
 use std::borrow::Cow;
 
-use crate::captcha_types::Solution;
+use crate::captcha_types::CaptchaSolution;
 
-#[derive(serde::Deserialize, Debug, Solution)]
+#[derive(serde::Deserialize, Debug, CaptchaSolution)]
 #[serde(rename_all = "camelCase")]
 pub struct ReCaptchaSolution<'a> {
     #[serde(default = "Default::default")]

@@ -1,7 +1,7 @@
-use crate::captcha_types::Solution;
+use crate::captcha_types::CaptchaSolution;
 use std::borrow::Cow;
 
-#[derive(serde::Deserialize, Solution)]
+#[derive(serde::Deserialize, CaptchaSolution)]
 #[serde(rename_all = "camelCase")]
 pub struct HCaptchaSolution<'a> {
     #[serde(default = "Default::default")]

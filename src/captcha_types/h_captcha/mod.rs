@@ -8,12 +8,12 @@ pub use task::*;
 mod test {
     use std::env;
 
-    use crate::{captcha_types::h_captcha::HCaptcha, CaptchaTask, Solver};
+    use crate::{captcha_types::h_captcha::HCaptcha, CaptchaSolver, CaptchaTask};
 
     #[tokio::test]
     async fn h_captcha() -> Result<(), crate::Error> {
         dotenv::dotenv().unwrap();
-        let solver = Solver::new(env::var("API_KEY").unwrap());
+        let solver = CaptchaSolver::new(env::var("API_KEY").unwrap());
 
         let captcha = <HCaptcha>::builder()
             .website_url("https://2captcha.com/demo/hcaptcha")?

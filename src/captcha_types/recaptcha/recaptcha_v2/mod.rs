@@ -8,7 +8,7 @@ mod test {
     use dotenv::dotenv;
     use std::env;
 
-    use crate::{captcha_types::recaptcha::RecaptchaV2, CaptchaTask, Error, Solver};
+    use crate::{captcha_types::recaptcha::RecaptchaV2, CaptchaSolver, CaptchaTask, Error};
 
     #[tokio::test]
     async fn recaptcha_v2() -> Result<(), Error> {
@@ -19,7 +19,7 @@ mod test {
             .website_key("6Ld2sf4SAAAAAKSgzs0Q13IZhY02Pyo31S2jgOB5")
             .build();
 
-        let solver = Solver::new(env::var("API_KEY").unwrap());
+        let solver = CaptchaSolver::new(env::var("API_KEY").unwrap());
 
         let solution = solver
             .solve(data)

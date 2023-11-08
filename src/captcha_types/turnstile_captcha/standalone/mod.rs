@@ -8,14 +8,15 @@ mod test {
     use std::env;
 
     use crate::{
-        captcha_types::turnstile_captcha::TurnstileStandaloneCaptcha, CaptchaTask, Error, Solver,
+        captcha_types::turnstile_captcha::TurnstileStandaloneCaptcha, CaptchaSolver, CaptchaTask,
+        Error,
     };
 
     #[tokio::test]
     async fn turnstile_standalone_captcha() -> Result<(), Error> {
         dotenv::dotenv().unwrap();
 
-        let solver = Solver::new(env::var("API_KEY").unwrap());
+        let solver = CaptchaSolver::new(env::var("API_KEY").unwrap());
 
         let captcha = TurnstileStandaloneCaptcha::builder()
             .website_url("https://2captcha.com/demo/cloudflare-turnstile")?

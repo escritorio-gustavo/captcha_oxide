@@ -24,7 +24,7 @@ pub fn from_option(
     .into()
 }
 
-#[proc_macro_derive(Solution)]
+#[proc_macro_derive(CaptchaSolution)]
 pub fn derive_solution(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let ast = parse_macro_input!(input as DeriveInput);
 
@@ -32,7 +32,7 @@ pub fn derive_solution(input: proc_macro::TokenStream) -> proc_macro::TokenStrea
     let (impl_generics, type_generics, where_clause) = ast.generics.split_for_impl();
 
     quote! {
-        impl #impl_generics Solution for #ident #type_generics #where_clause {
+        impl #impl_generics CaptchaSolution for #ident #type_generics #where_clause {
             fn get_task_id(&self) -> u64 {
                 self.task_id
             }

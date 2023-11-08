@@ -1,4 +1,4 @@
-use super::{language_pool::LanguagePool, Solver};
+use super::{language_pool::LanguagePool, CaptchaSolver};
 use url::Url;
 
 pub struct NoApiKeyProvided;
@@ -27,8 +27,8 @@ impl Default for SolverBuilder<NoApiKeyProvided> {
 }
 
 impl SolverBuilder<ApiKey> {
-    pub fn build(self) -> Solver {
-        Solver {
+    pub fn build(self) -> CaptchaSolver {
+        CaptchaSolver {
             api_key: self.api_key.0,
             language_pool: self.language_pool,
             callback_url: self.callback_url,

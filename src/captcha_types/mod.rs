@@ -7,10 +7,10 @@ pub mod normal_captcha;
 pub mod recaptcha;
 pub mod turnstile_captcha;
 
-pub use catptcha_oxide_derive::Solution;
+pub use catptcha_oxide_derive::CaptchaSolution;
 
 pub trait CaptchaTask: serde::Serialize {
-    type Solution: for<'de> serde::Deserialize<'de> + Solution;
+    type Solution: for<'de> serde::Deserialize<'de> + CaptchaSolution;
     type Builder: Default;
 
     /// Allows for building the request data for the 2captcha API
@@ -24,7 +24,7 @@ pub trait CaptchaTask: serde::Serialize {
     fn get_timeout(&self) -> std::time::Duration;
 }
 
-pub trait Solution {
+pub trait CaptchaSolution {
     fn get_task_id(&self) -> u64;
     fn set_task_id(&mut self, task_id: u64);
 }

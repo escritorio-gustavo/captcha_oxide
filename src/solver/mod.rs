@@ -9,7 +9,7 @@ use reqwest::Client;
 use url::Url;
 
 use crate::{
-    captcha_types::{CaptchaTask, Solution},
+    captcha_types::{CaptchaSolution, CaptchaTask},
     prelude::*,
     SOFT_ID,
 };
@@ -34,13 +34,13 @@ pub use builder::SolverBuilder;
 pub(crate) use error::SolveError;
 
 #[derive(Default, Debug)]
-pub struct Solver {
+pub struct CaptchaSolver {
     api_key: Box<str>,
     language_pool: LanguagePool,
     callback_url: Option<Url>,
 }
 
-impl Solver {
+impl CaptchaSolver {
     /// Returns a [`Solver`] instance with the given api key
     pub fn new(api_key: impl Into<Box<str>>) -> Self {
         Self {
@@ -122,7 +122,11 @@ impl Solver {
     }
 
     /// Allows you to report to 2captcha on wether or not the solution was valid
-    pub async fn report(&self, solution: &impl Solution, status: SolutionStatus) -> Result<()> {
+    pub async fn report(
+        &self,
+        solution: &impl CaptchaSolution,
+        status: SolutionStatus,
+    ) -> Result<()> {
         let task_id = solution.get_task_id();
         let json = TaskRequest {
             client_key: &self.api_key,
