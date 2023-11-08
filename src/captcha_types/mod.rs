@@ -5,6 +5,7 @@ pub mod geetest;
 pub mod h_captcha;
 pub mod normal_captcha;
 pub mod recaptcha;
+pub mod turnstile_captcha;
 
 pub use catptcha_oxide_derive::Solution;
 
