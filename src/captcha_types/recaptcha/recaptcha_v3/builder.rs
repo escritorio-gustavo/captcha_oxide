@@ -22,16 +22,16 @@ pub struct RecaptchaV3Builder<'a, T, U, V> {
     api_domain: Option<Cow<'a, str>>,
 }
 
-impl<'a> RecaptchaV3Builder<'a, UrlProvided, WebsiteKeyProvided<'a>, MinScoreProvided> {
-    pub fn build(self) -> RecaptchaV3<'a> {
-        RecaptchaV3 {
-            website_url: self.website_url.0,
+impl<'a> RecaptchaV3Builder<'a, UrlProvided<'a>, WebsiteKeyProvided<'a>, MinScoreProvided> {
+    pub fn build(self) -> Result<RecaptchaV3<'a>> {
+        Ok(RecaptchaV3 {
+            website_url: url::Url::parse(self.website_url.0)?,
             website_key: self.website_key.0,
             min_score: self.min_score.0,
             page_action: self.page_action,
             is_enterprise: self.is_enterprise,
             api_domain: self.api_domain,
-        }
+        })
     }
 }
 
@@ -59,18 +59,15 @@ impl<'a, T, U, V> RecaptchaV3Builder<'a, T, U, V> {
     ///
     /// # Errors
     /// This function will error if the provided url is invalid
-    pub fn website_url(
-        self,
-        website_url: &str,
-    ) -> Result<RecaptchaV3Builder<'a, UrlProvided, U, V>> {
-        Ok(RecaptchaV3Builder {
-            website_url: UrlProvided(url::Url::parse(website_url)?),
+    pub fn website_url(self, website_url: &str) -> RecaptchaV3Builder<'a, UrlProvided, U, V> {
+        RecaptchaV3Builder {
+            website_url: UrlProvided(website_url),
             website_key: self.website_key,
             min_score: self.min_score,
             page_action: self.page_action,
             is_enterprise: self.is_enterprise,
             api_domain: self.api_domain,
-        })
+        }
     }
 
     /// Can be found inside hte data-sitekey property of the reCAPTCHA

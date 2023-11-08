@@ -20,17 +20,17 @@ pub struct GeeTestV3Builder<'a, T, U, V> {
     proxy: Option<Proxy<'a>>,
 }
 
-impl<'a> GeeTestV3Builder<'a, UrlProvided, GtProvided<'a>, ChallengeProvided<'a>> {
-    pub fn build(self) -> GeeTestV3<'a> {
-        GeeTestV3 {
+impl<'a> GeeTestV3Builder<'a, UrlProvided<'a>, GtProvided<'a>, ChallengeProvided<'a>> {
+    pub fn build(self) -> Result<GeeTestV3<'a>> {
+        Ok(GeeTestV3 {
             task_type: self.proxy.into(),
-            website_url: self.website_url.0,
+            website_url: url::Url::parse(self.website_url.0)?,
             gt: self.gt.0,
             challenge: self.challenge.0,
             geetest_api_server_subdomain: self.geetest_api_server_subdomain,
             user_agent: self.user_agent,
             version: 3,
-        }
+        })
     }
 }
 
@@ -54,15 +54,15 @@ impl<'a> Default for GeeTestV3Builder<'a, UrlMissing, GtMissing, ChallengeMissin
 }
 
 impl<'a, T, U, V> GeeTestV3Builder<'a, T, U, V> {
-    pub fn website_url(self, website_url: &str) -> Result<GeeTestV3Builder<'a, UrlProvided, U, V>> {
-        Ok(GeeTestV3Builder {
-            website_url: UrlProvided(url::Url::parse(website_url)?),
+    pub fn website_url(self, website_url: &str) -> GeeTestV3Builder<'a, UrlProvided, U, V> {
+        GeeTestV3Builder {
+            website_url: UrlProvided(website_url),
             gt: self.gt,
             challenge: self.challenge,
             geetest_api_server_subdomain: self.geetest_api_server_subdomain,
             user_agent: self.user_agent,
             proxy: self.proxy,
-        })
+        }
     }
 
     pub fn gt(self, gt: impl Into<Cow<'a, str>>) -> GeeTestV3Builder<'a, T, GtProvided<'a>, V> {

@@ -15,14 +15,14 @@ pub struct TurnstileStandaloneCaptchaBuilder<'a, T, U> {
     proxy: Option<Proxy<'a>>,
 }
 
-impl<'a> TurnstileStandaloneCaptchaBuilder<'a, UrlProvided, WebsiteKeyProvided<'a>> {
-    pub fn build(self) -> TurnstileStandaloneCaptcha<'a> {
-        TurnstileStandaloneCaptcha {
+impl<'a> TurnstileStandaloneCaptchaBuilder<'a, UrlProvided<'a>, WebsiteKeyProvided<'a>> {
+    pub fn build(self) -> Result<TurnstileStandaloneCaptcha<'a>> {
+        Ok(TurnstileStandaloneCaptcha {
             task_type: self.proxy.into(),
-            website_url: self.website_url.0,
+            website_url: url::Url::parse(self.website_url.0)?,
             website_key: self.website_key.0,
             user_agent: self.user_agent,
-        }
+        })
     }
 }
 
@@ -47,13 +47,13 @@ impl<'a, T, U> TurnstileStandaloneCaptchaBuilder<'a, T, U> {
     pub fn website_url(
         self,
         website_url: &str,
-    ) -> Result<TurnstileStandaloneCaptchaBuilder<'a, UrlProvided, U>> {
-        Ok(TurnstileStandaloneCaptchaBuilder {
-            website_url: UrlProvided(url::Url::parse(website_url)?),
+    ) -> TurnstileStandaloneCaptchaBuilder<'a, UrlProvided, U> {
+        TurnstileStandaloneCaptchaBuilder {
+            website_url: UrlProvided(website_url),
             website_key: self.website_key,
             user_agent: self.user_agent,
             proxy: self.proxy,
-        })
+        }
     }
 
     pub fn website_key(

@@ -48,7 +48,7 @@ where
     }
 }
 
-impl<'a, T> ArkoseLabsCaptchaBuilder<'a, UrlProvided, WebsitePublicKeyProvided<'a>, T>
+impl<'a, T> ArkoseLabsCaptchaBuilder<'a, UrlProvided<'a>, WebsitePublicKeyProvided<'a>, T>
 where
     T: serde::Serialize,
 {
@@ -56,7 +56,7 @@ where
         Ok(ArkoseLabsCaptcha {
             _x: std::marker::PhantomData,
             task_type: self.proxy.into(),
-            website_url: self.website_url.0,
+            website_url: url::Url::parse(self.website_url.0)?,
             website_public_key: self.website_public_key.0,
             funcaptcha_api_jssubdomain: self.funcaptcha_api_jssubdomain,
             data: self
@@ -73,18 +73,15 @@ impl<'a, T, U, V> ArkoseLabsCaptchaBuilder<'a, T, U, V>
 where
     V: serde::Serialize,
 {
-    pub fn website_url(
-        self,
-        website_url: &str,
-    ) -> Result<ArkoseLabsCaptchaBuilder<'a, UrlProvided, U, V>> {
-        Ok(ArkoseLabsCaptchaBuilder {
-            website_url: UrlProvided(url::Url::parse(website_url)?),
+    pub fn website_url(self, website_url: &str) -> ArkoseLabsCaptchaBuilder<'a, UrlProvided, U, V> {
+        ArkoseLabsCaptchaBuilder {
+            website_url: UrlProvided(website_url),
             website_public_key: self.website_public_key,
             funcaptcha_api_jssubdomain: self.funcaptcha_api_jssubdomain,
             data: self.data,
             user_agent: self.user_agent,
             proxy: self.proxy,
-        })
+        }
     }
 
     pub fn website_public_key(

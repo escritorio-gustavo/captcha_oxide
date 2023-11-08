@@ -24,16 +24,16 @@ pub struct RecaptchaV2Builder<'a, T, U> {
     api_domain: Option<Cow<'a, str>>,
 }
 
-impl<'a> RecaptchaV2Builder<'a, UrlProvided, WebsiteKeyProvided<'a>> {
-    pub fn build(self) -> RecaptchaV2<'a> {
+impl<'a> RecaptchaV2Builder<'a, UrlProvided<'a>, WebsiteKeyProvided<'a>> {
+    pub fn build(self) -> Result<RecaptchaV2<'a>> {
         let cookies = self
             .cookies
             .iter()
             .map(|x| format!("{}={}", x.0, x.1))
             .join(";");
-        RecaptchaV2 {
+        Ok(RecaptchaV2 {
             task_type: self.proxy.into(),
-            website_url: self.website_url.0,
+            website_url: url::Url::parse(self.website_url.0)?,
             website_key: self.website_key.0,
             recaptcha_data_s_value: self.recaptcha_data_s_value,
             is_invisible: self.is_invisible,
@@ -44,7 +44,7 @@ impl<'a> RecaptchaV2Builder<'a, UrlProvided, WebsiteKeyProvided<'a>> {
                 None
             },
             api_domain: self.api_domain,
-        }
+        })
     }
 }
 
@@ -80,17 +80,17 @@ impl<'a, T, U> RecaptchaV2Builder<'a, T, U> {
     ///
     /// # Errors
     /// This function will error if the provided url is invalid
-    pub fn website_url(self, website_url: &str) -> Result<RecaptchaV2Builder<'a, UrlProvided, U>> {
-        Ok(RecaptchaV2Builder {
+    pub fn website_url(self, website_url: &str) -> RecaptchaV2Builder<'a, UrlProvided, U> {
+        RecaptchaV2Builder {
             proxy: self.proxy,
-            website_url: UrlProvided(url::Url::parse(website_url)?),
+            website_url: UrlProvided(website_url),
             website_key: self.website_key,
             recaptcha_data_s_value: self.recaptcha_data_s_value,
             is_invisible: self.is_invisible,
             user_agent: self.user_agent,
             cookies: self.cookies,
             api_domain: self.api_domain,
-        })
+        }
     }
 
     /// Can be found inside hte data-sitekey property of the reCAPTCHA

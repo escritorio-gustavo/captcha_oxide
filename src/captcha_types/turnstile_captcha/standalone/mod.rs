@@ -19,9 +19,9 @@ mod test {
         let solver = CaptchaSolver::new(env::var("API_KEY").unwrap());
 
         let captcha = TurnstileStandaloneCaptcha::builder()
-            .website_url("https://2captcha.com/demo/cloudflare-turnstile")?
+            .website_url("https://2captcha.com/demo/cloudflare-turnstile")
             .website_key("0x4AAAAAAAC3DHQFLr1GavRN")
-            .build();
+            .build()?;
 
         let solution = solver
             .solve(captcha)

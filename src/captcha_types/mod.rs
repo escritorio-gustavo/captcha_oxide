@@ -1,6 +1,7 @@
 mod empty_data;
 
 pub mod arkose_labs_captcha;
+pub mod capy_captcha;
 pub mod geetest;
 pub mod h_captcha;
 pub mod normal_captcha;

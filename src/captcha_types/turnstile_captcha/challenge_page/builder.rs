@@ -27,7 +27,7 @@ pub struct TurnstileChallengePageCaptchaBuilder<'a, T, U, V, W, X, Y> {
 impl<'a>
     TurnstileChallengePageCaptchaBuilder<
         'a,
-        UrlProvided,
+        UrlProvided<'a>,
         WebsiteKeyProvided<'a>,
         UserAgentProvided<'a>,
         ActionProvided<'a>,
@@ -35,16 +35,16 @@ impl<'a>
         PageDataProvided<'a>,
     >
 {
-    pub fn build(self) -> TurnstileChallengePageCaptcha<'a> {
-        TurnstileChallengePageCaptcha {
+    pub fn build(self) -> Result<TurnstileChallengePageCaptcha<'a>> {
+        Ok(TurnstileChallengePageCaptcha {
             task_type: self.proxy.into(),
-            website_url: self.website_url.0,
+            website_url: url::Url::parse(self.website_url.0)?,
             website_key: self.website_key.0,
             user_agent: self.user_agent.0,
             action: self.action.0,
             data: self.data.0,
             page_data: self.page_data.0,
-        }
+        })
     }
 }
 
@@ -92,16 +92,16 @@ impl<'a, T, U, V, W, X, Y> TurnstileChallengePageCaptchaBuilder<'a, T, U, V, W, 
     pub fn website_url(
         self,
         website_url: &str,
-    ) -> Result<TurnstileChallengePageCaptchaBuilder<'a, UrlProvided, U, V, W, X, Y>> {
-        Ok(TurnstileChallengePageCaptchaBuilder {
-            website_url: UrlProvided(url::Url::parse(website_url)?),
+    ) -> TurnstileChallengePageCaptchaBuilder<'a, UrlProvided, U, V, W, X, Y> {
+        TurnstileChallengePageCaptchaBuilder {
+            website_url: UrlProvided(website_url),
             website_key: self.website_key,
             user_agent: self.user_agent,
             action: self.action,
             data: self.data,
             page_data: self.page_data,
             proxy: self.proxy,
-        })
+        }
     }
 
     pub fn website_key(

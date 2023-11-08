@@ -16,9 +16,9 @@ mod test {
         let solver = CaptchaSolver::new(env::var("API_KEY").unwrap());
 
         let captcha = <HCaptcha>::builder()
-            .website_url("https://2captcha.com/demo/hcaptcha")?
+            .website_url("https://2captcha.com/demo/hcaptcha")
             .website_key("f7de0da3-3303-44e8-ab48-fa32ff8ccc7b")
-            .build();
+            .build()?;
 
         let solution = solver
             .solve(captcha)

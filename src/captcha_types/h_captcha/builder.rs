@@ -22,18 +22,18 @@ where
     enterprise_payload: Option<V>,
 }
 
-impl<'a, T> HCaptchaBuilder<'a, UrlProvided, WebsiteKeyProvided<'a>, T>
+impl<'a, T> HCaptchaBuilder<'a, UrlProvided<'a>, WebsiteKeyProvided<'a>, T>
 where
     T: serde::Serialize,
 {
-    pub fn build(self) -> HCaptcha<'a, T> {
-        HCaptcha {
+    pub fn build(self) -> Result<HCaptcha<'a, T>> {
+        Ok(HCaptcha {
             task_type: self.proxy.into(),
-            website_url: self.website_url.0,
+            website_url: url::Url::parse(self.website_url.0)?,
             website_key: self.website_key.0,
             is_invisible: self.is_invisible,
             enterprise_payload: self.enterprise_payload,
-        }
+        })
     }
 }
 
@@ -75,14 +75,14 @@ where
     ///
     /// # Errors
     /// This function will error if the provided url is invalid
-    pub fn website_url(self, website_url: &str) -> Result<HCaptchaBuilder<'a, UrlProvided, U, V>> {
-        Ok(HCaptchaBuilder {
+    pub fn website_url(self, website_url: &str) -> HCaptchaBuilder<'a, UrlProvided, U, V> {
+        HCaptchaBuilder {
             proxy: self.proxy,
-            website_url: UrlProvided(url::Url::parse(website_url)?),
+            website_url: UrlProvided(website_url),
             website_key: self.website_key,
             is_invisible: self.is_invisible,
             enterprise_payload: self.enterprise_payload,
-        })
+        }
     }
 
     /// Can be found inside hte data-sitekey property of the reCAPTCHA

@@ -15,9 +15,9 @@ mod test {
         dotenv().unwrap();
 
         let data = RecaptchaV2::builder()
-            .website_url("https://patrickhlauke.github.io/recaptcha/")?
+            .website_url("https://patrickhlauke.github.io/recaptcha/")
             .website_key("6Ld2sf4SAAAAAKSgzs0Q13IZhY02Pyo31S2jgOB5")
-            .build();
+            .build()?;
 
         let solver = CaptchaSolver::new(env::var("API_KEY").unwrap());
 

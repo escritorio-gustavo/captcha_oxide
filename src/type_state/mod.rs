@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 
 pub struct UrlMissing;
-pub struct UrlProvided(pub url::Url);
+pub struct UrlProvided<'a>(pub &'a str);
 
 pub struct WebsiteKeyMissing;
 pub struct WebsiteKeyProvided<'a>(pub Cow<'a, str>);

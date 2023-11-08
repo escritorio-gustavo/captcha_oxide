@@ -27,20 +27,20 @@ where
     api_domain: Option<Cow<'a, str>>,
 }
 
-impl<'a, T> RecaptchaV2EnterpriseBuilder<'a, UrlProvided, WebsiteKeyProvided<'a>, T>
+impl<'a, T> RecaptchaV2EnterpriseBuilder<'a, UrlProvided<'a>, WebsiteKeyProvided<'a>, T>
 where
     T: serde::Serialize,
 {
-    pub fn build(self) -> RecaptchaV2Enterprise<'a, T> {
+    pub fn build(self) -> Result<RecaptchaV2Enterprise<'a, T>> {
         let cookies = self
             .cookies
             .iter()
             .map(|x| format!("{}={}", x.0, x.1))
             .join(";");
 
-        RecaptchaV2Enterprise {
+        Ok(RecaptchaV2Enterprise {
             task_type: self.proxy.into(),
-            website_url: self.website_url.0,
+            website_url: url::Url::parse(self.website_url.0)?,
             website_key: self.website_key.0,
             enterprise_payload: self.enterprise_payload,
             is_invisible: self.is_invisible,
@@ -51,7 +51,7 @@ where
                 None
             },
             api_domain: self.api_domain,
-        }
+        })
     }
 }
 
@@ -99,17 +99,17 @@ where
     pub fn website_url(
         self,
         website_url: &str,
-    ) -> Result<RecaptchaV2EnterpriseBuilder<'a, UrlProvided, U, V>> {
-        Ok(RecaptchaV2EnterpriseBuilder {
+    ) -> RecaptchaV2EnterpriseBuilder<'a, UrlProvided, U, V> {
+        RecaptchaV2EnterpriseBuilder {
             proxy: self.proxy,
-            website_url: UrlProvided(url::Url::parse(website_url)?),
+            website_url: UrlProvided(website_url),
             website_key: self.website_key,
             enterprise_payload: self.enterprise_payload,
             is_invisible: self.is_invisible,
             user_agent: self.user_agent,
             cookies: self.cookies,
             api_domain: self.api_domain,
-        })
+        }
     }
 
     /// Can be found inside hte data-sitekey property of the reCAPTCHA

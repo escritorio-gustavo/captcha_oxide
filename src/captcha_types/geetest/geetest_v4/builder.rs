@@ -29,7 +29,7 @@ where
 impl<'a, T>
     GeeTestV4Builder<
         'a,
-        UrlProvided,
+        UrlProvided<'a>,
         GtProvided<'a>,
         ChallengeProvided<'a>,
         CaptchaIdProvided<'a>,
@@ -38,10 +38,10 @@ impl<'a, T>
 where
     T: serde::Serialize,
 {
-    pub fn build(self) -> GeeTestV4<'a, T> {
-        GeeTestV4 {
+    pub fn build(self) -> Result<GeeTestV4<'a, T>> {
+        Ok(GeeTestV4 {
             task_type: self.proxy.into(),
-            website_url: self.website_url.0,
+            website_url: url::Url::parse(self.website_url.0)?,
             gt: self.gt.0,
             challenge: self.challenge.0,
             geetest_api_server_subdomain: self.geetest_api_server_subdomain,
@@ -51,7 +51,7 @@ where
                 data: self.init_parameters_data,
             },
             version: 4,
-        }
+        })
     }
 }
 
@@ -87,12 +87,9 @@ impl<'a, T, U, V, W, X> GeeTestV4Builder<'a, T, U, V, W, X>
 where
     X: serde::Serialize,
 {
-    pub fn website_url(
-        self,
-        website_url: &str,
-    ) -> Result<GeeTestV4Builder<'a, UrlProvided, U, V, W, X>> {
-        Ok(GeeTestV4Builder {
-            website_url: UrlProvided(url::Url::parse(website_url)?),
+    pub fn website_url(self, website_url: &str) -> GeeTestV4Builder<'a, UrlProvided, U, V, W, X> {
+        GeeTestV4Builder {
+            website_url: UrlProvided(website_url),
             gt: self.gt,
             challenge: self.challenge,
             captcha_id: self.captcha_id,
@@ -100,7 +97,7 @@ where
             user_agent: self.user_agent,
             init_parameters_data: self.init_parameters_data,
             proxy: self.proxy,
-        })
+        }
     }
 
     pub fn gt(
