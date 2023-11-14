@@ -100,16 +100,19 @@ impl<'a, T> NormalCaptchaBuilder<'a, T> {
         self
     }
 
-    pub fn comment(mut self, comment: Option<Cow<'a, str>>) -> NormalCaptchaBuilder<'a, T> {
-        self.comment = comment;
+    pub fn comment(
+        mut self,
+        comment: Option<impl Into<Cow<'a, str>>>,
+    ) -> NormalCaptchaBuilder<'a, T> {
+        self.comment = comment.map(Into::into);
         self
     }
 
     pub fn img_instructions(
         mut self,
-        img_instructions: Option<Cow<'a, str>>,
+        img_instructions: Option<impl Into<Cow<'a, str>>>,
     ) -> NormalCaptchaBuilder<'a, T> {
-        self.img_instructions = img_instructions;
+        self.img_instructions = img_instructions.map(Into::into);
         self
     }
 }
