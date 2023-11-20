@@ -15,6 +15,7 @@ use crate::{
 use super::{builder::GeeTestV4Builder, solution::GeeTestV4Solution};
 
 #[proxy_task(with_proxy = "GeeTestTask", proxyless = "GeeTestTaskProxyless")]
+#[serde(rename_all = "camelCase")]
 pub struct GeeTestV4<'a, T = Empty>
 where
     T: serde::Serialize,

@@ -2,7 +2,7 @@ extern crate proc_macro;
 
 use darling::{ast::NestedMeta, FromMeta};
 use quote::quote;
-use syn::{parse::Parser, parse_macro_input, parse_quote, ItemStruct};
+use syn::{parse::Parser, parse_macro_input, ItemStruct};
 
 #[proc_macro_attribute]
 pub fn captcha_solution(
@@ -13,13 +13,6 @@ pub fn captcha_solution(
 
     let ident = &ast.ident;
     let (impl_generics, type_generics, where_clause) = ast.generics.split_for_impl();
-
-    ast.attrs.splice(
-        0..0,
-        vec![parse_quote! {#[derive(Debug, serde::Deserialize)]}],
-    );
-    ast.attrs
-        .push(parse_quote! {#[serde(rename_all = "camelCase")]});
 
     match ast.fields {
         syn::Fields::Named(ref mut fields) => fields.named.push(
@@ -42,6 +35,7 @@ pub fn captcha_solution(
     }
 
     quote! {
+        #[derive(Debug, serde::Deserialize)]
         #ast
 
         impl #impl_generics crate::captcha_types::CaptchaSolution for #ident #type_generics #where_clause {
@@ -88,14 +82,6 @@ pub fn proxy_task(
         }
     };
 
-    ast.attrs.splice(
-        0..0,
-        vec![
-            parse_quote! {#[derive(Debug, serde::Serialize)]},
-            parse_quote! {#[serde(rename_all = "camelCase")]},
-        ],
-    );
-
     if lifetime.is_none() {
         return quote! {
             compile_error!("This attribute requires the struct to have a lifetime param");
@@ -124,6 +110,7 @@ pub fn proxy_task(
     }
 
     quote! {
+        #[derive(Debug, serde::Serialize)]
         #ast
 
         mod task_type {

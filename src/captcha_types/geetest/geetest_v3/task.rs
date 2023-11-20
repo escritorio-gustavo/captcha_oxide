@@ -12,6 +12,7 @@ use crate::{
 use super::{builder::GeeTestV3Builder, solution::GeeTestV3Solution};
 
 #[proxy_task(with_proxy = "GeeTestTask", proxyless = "GeeTestTaskProxyless")]
+#[serde(rename_all = "camelCase")]
 pub struct GeeTestV3<'a> {
     #[serde(rename = "websiteURL")]
     pub(super) website_url: Url,

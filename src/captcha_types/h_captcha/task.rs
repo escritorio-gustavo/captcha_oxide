@@ -12,6 +12,7 @@ use crate::{
 };
 
 #[proxy_task(with_proxy = "HCaptchaTask", proxyless = "HCaptchaTaskProxyless")]
+#[serde(rename_all = "camelCase")]
 /// Represents the data required by the 2captcha API to solve a
 /// HCaptcha challenge
 ///

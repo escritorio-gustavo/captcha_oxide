@@ -11,6 +11,7 @@ use crate::{
 };
 
 #[proxy_task(with_proxy = "RecaptchaV2Task", proxyless = "RecaptchaV2TaskProxyless")]
+#[serde(rename_all = "camelCase")]
 /// Represents the data required by the 2captcha API to solve a reCaptcha V2
 /// challenge
 ///

@@ -3,6 +3,7 @@ use std::borrow::Cow;
 use catptcha_oxide_derive::captcha_solution;
 
 #[captcha_solution]
+#[serde(rename_all = "camelCase")]
 pub struct GeeTestV4Solution<'a> {
     pub captcha_id: Cow<'a, str>,
     pub lot_number: Cow<'a, str>,

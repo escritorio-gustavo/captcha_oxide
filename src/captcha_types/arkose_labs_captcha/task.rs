@@ -12,6 +12,7 @@ use crate::{
 use super::{builder::ArkoseLabsCaptchaBuilder, solution::ArkoseLabsCaptchaSolution};
 
 #[proxy_task(with_proxy = "FunCaptchaTask", proxyless = "FunCaptchaTaskProxyless")]
+#[serde(rename_all = "camelCase")]
 pub struct ArkoseLabsCaptcha<'a, T = Empty>
 where
     T: serde::Serialize,

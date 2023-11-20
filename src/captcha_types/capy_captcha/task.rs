@@ -11,6 +11,7 @@ use crate::{
 use super::{builder::CapyCaptchaBuilder, solution::CapyCaptchaSolution};
 
 #[proxy_task(with_proxy = "CapyTask", proxyless = "CapyTaskProxyless")]
+#[serde(rename_all = "camelCase")]
 pub struct CapyCaptcha<'a> {
     pub(super) website_url: Url,
     pub(super) website_key: Cow<'a, str>,

@@ -41,6 +41,6 @@ impl<'a> CaptchaTask for KeyCaptcha<'a> {
     >;
 
     fn get_timeout(&self) -> std::time::Duration {
-        todo!()
+        std::time::Duration::from_secs(20)
     }
 }

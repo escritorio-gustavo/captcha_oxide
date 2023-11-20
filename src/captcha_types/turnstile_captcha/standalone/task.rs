@@ -12,6 +12,7 @@ use crate::{
 use super::builder::TurnstileStandaloneCaptchaBuilder;
 
 #[proxy_task(with_proxy = "TurnstileTask", proxyless = "TurnstileTaskProxyless")]
+#[serde(rename_all = "camelCase")]
 pub struct TurnstileStandaloneCaptcha<'a> {
     #[serde(rename = "websiteURL")]
     pub(super) website_url: Url,

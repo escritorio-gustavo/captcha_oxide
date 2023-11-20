@@ -18,6 +18,7 @@ use crate::{
     with_proxy = "RecaptchaV2EnterpriseTask",
     proxyless = "RecaptchaV2EnterpriseTaskProxyless"
 )]
+#[serde(rename_all = "camelCase")]
 /// Represents the data required by the 2captcha API to solve a
 /// reCaptcha V2 Enterprise challenge
 ///

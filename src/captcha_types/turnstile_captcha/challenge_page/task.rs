@@ -15,6 +15,7 @@ use super::{
 };
 
 #[proxy_task(with_proxy = "TurnstileTask", proxyless = "TurnstileTaskProxyless")]
+#[serde(rename_all = "camelCase")]
 pub struct TurnstileChallengePageCaptcha<'a> {
     #[serde(rename = "websiteURL")]
     pub(super) website_url: Url,

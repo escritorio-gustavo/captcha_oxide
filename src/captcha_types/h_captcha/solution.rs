@@ -2,6 +2,7 @@ use catptcha_oxide_derive::captcha_solution;
 use std::borrow::Cow;
 
 #[captcha_solution]
+#[serde(rename_all = "camelCase")]
 pub struct HCaptchaSolution<'a> {
     pub token: Cow<'a, str>,
     pub resp_key: Cow<'a, str>,
