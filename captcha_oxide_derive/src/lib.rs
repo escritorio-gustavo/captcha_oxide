@@ -109,7 +109,7 @@ pub fn proxy_task(
                 .parse2(
                     quote! {
                         #[serde(flatten)]
-                        pub(super) task_type: TaskType<#lifetime>
+                        pub(super) task_type: task_type::TaskType<#lifetime>
                     }
                     .into(),
                 )
@@ -126,19 +126,22 @@ pub fn proxy_task(
     quote! {
         #ast
 
-        #[derive(serde::Serialize, Debug)]
-        #[serde(tag = "type")]
-        pub enum TaskType<'a> {
-            #[serde(rename = #proxyless)]
-            ProxyLess,
+        mod task_type {
 
-            #[serde(rename = #with_proxy)]
-            WithProxy(crate::proxy::Proxy<'a>),
-        }
+            #[derive(serde::Serialize, Debug)]
+            #[serde(tag = "type")]
+            pub enum TaskType<'a> {
+                #[serde(rename = #proxyless)]
+                ProxyLess,
 
-        impl<'a> From<Option<crate::proxy::Proxy<'a>>> for TaskType<'a> {
-            fn from(value: Option<crate::proxy::Proxy<'a>>) -> Self {
-                value.map_or(Self::ProxyLess, Self::WithProxy)
+                #[serde(rename = #with_proxy)]
+                WithProxy(crate::proxy::Proxy<'a>),
+            }
+
+            impl<'a> From<Option<crate::proxy::Proxy<'a>>> for TaskType<'a> {
+                fn from(value: Option<crate::proxy::Proxy<'a>>) -> Self {
+                    value.map_or(Self::ProxyLess, Self::WithProxy)
+                }
             }
         }
     }
