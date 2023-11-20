@@ -41,7 +41,7 @@ pub struct CaptchaSolver {
 }
 
 impl CaptchaSolver {
-    /// Returns a [`Solver`] instance with the given api key
+    /// Returns a [`CaptchaSolver`] instance with the given api key
     pub fn new(api_key: impl Into<Box<str>>) -> Self {
         Self {
             api_key: api_key.into(),

@@ -1,14 +1,12 @@
 use std::borrow::Cow;
 
+use catptcha_oxide_derive::proxy_task;
 use url::Url;
 
 use crate::{
     captcha_types::{
         empty_data::Empty,
-        geetest::{
-            type_state::{CaptchaIdMissing, ChallengeMissing, GtMissing},
-            GeetestTypes,
-        },
+        geetest::type_state::{CaptchaIdMissing, ChallengeMissing, GtMissing},
     },
     type_state::UrlMissing,
     CaptchaTask,
@@ -16,15 +14,11 @@ use crate::{
 
 use super::{builder::GeeTestV4Builder, solution::GeeTestV4Solution};
 
-#[derive(serde::Serialize)]
-#[serde(rename_all = "camelCase")]
+#[proxy_task(with_proxy = "GeeTestTask", proxyless = "GeeTestTaskProxyless")]
 pub struct GeeTestV4<'a, T = Empty>
 where
     T: serde::Serialize,
 {
-    #[serde(flatten)]
-    pub(super) task_type: GeetestTypes<'a>,
-
     #[serde(rename = "websiteURL")]
     pub(super) website_url: Url,
     pub(super) gt: Cow<'a, str>,
@@ -39,7 +33,7 @@ where
     pub(super) version: u8,
 }
 
-#[derive(serde::Serialize)]
+#[derive(Debug, serde::Serialize)]
 pub struct InitParameters<'a, T> {
     pub(super) captcha_id: Cow<'a, str>,
 

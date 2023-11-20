@@ -1,3 +1,4 @@
+use catptcha_oxide_derive::proxy_task;
 use std::borrow::Cow;
 use url::Url;
 
@@ -6,12 +7,10 @@ use crate::{
         recaptcha::{recaptcha_v2::builder::RecaptchaV2Builder, solution::ReCaptchaSolution},
         CaptchaTask,
     },
-    proxy::Proxy,
     type_state::{UrlMissing, WebsiteKeyMissing},
 };
 
-#[derive(serde::Serialize)]
-#[serde(rename_all = "camelCase")]
+#[proxy_task(with_proxy = "RecaptchaV2Task", proxyless = "RecaptchaV2TaskProxyless")]
 /// Represents the data required by the 2captcha API to solve a reCaptcha V2
 /// challenge
 ///
@@ -29,9 +28,6 @@ use crate::{
 /// # }
 /// ```
 pub struct RecaptchaV2<'a> {
-    #[serde(flatten)]
-    pub(super) task_type: RecaptchaV2Types<'a>,
-
     #[serde(rename = "websiteURL")]
     pub(super) website_url: Url,
     pub(super) website_key: Cow<'a, str>,
@@ -49,17 +45,6 @@ pub struct RecaptchaV2<'a> {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(super) api_domain: Option<Cow<'a, str>>,
-}
-
-#[derive(serde::Serialize)]
-#[serde(tag = "type")]
-#[catptcha_oxide_derive::from_option]
-pub enum RecaptchaV2Types<'a> {
-    #[serde(rename = "RecaptchaV2TaskProxyless")]
-    ProxyLess,
-
-    #[serde(rename = "RecaptchaV2Task")]
-    WithProxy(Proxy<'a>),
 }
 
 impl<'a> CaptchaTask for RecaptchaV2<'a> {

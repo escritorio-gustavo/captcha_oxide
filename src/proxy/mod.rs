@@ -5,7 +5,7 @@ pub use self::{address::Address, proxy_type::ProxyType};
 pub mod address;
 pub mod proxy_type;
 
-#[derive(serde::Serialize, serde::Deserialize)]
+#[derive(serde::Serialize, serde::Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Proxy<'a> {
     pub proxy_type: ProxyType,

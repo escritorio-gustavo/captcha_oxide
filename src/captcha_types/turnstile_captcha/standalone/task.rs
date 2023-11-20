@@ -1,21 +1,18 @@
 use std::borrow::Cow;
 
+use catptcha_oxide_derive::proxy_task;
 use url::Url;
 
 use crate::{
-    captcha_types::turnstile_captcha::{solution::TurnstileCaptchaSolution, TurnstileCaptchaTypes},
+    captcha_types::turnstile_captcha::solution::TurnstileCaptchaSolution,
     type_state::{UrlMissing, WebsiteKeyMissing},
     CaptchaTask,
 };
 
 use super::builder::TurnstileStandaloneCaptchaBuilder;
 
-#[derive(serde::Serialize)]
-#[serde(rename_all = "camelCase")]
+#[proxy_task(with_proxy = "TurnstileTask", proxyless = "TurnstileTaskProxyless")]
 pub struct TurnstileStandaloneCaptcha<'a> {
-    #[serde(flatten)]
-    pub(super) task_type: TurnstileCaptchaTypes<'a>,
-
     #[serde(rename = "websiteURL")]
     pub(super) website_url: Url,
     pub(super) website_key: Cow<'a, str>,

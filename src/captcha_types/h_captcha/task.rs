@@ -1,3 +1,4 @@
+use catptcha_oxide_derive::proxy_task;
 use std::borrow::Cow;
 use url::Url;
 
@@ -7,12 +8,10 @@ use crate::{
         h_captcha::{builder::HCaptchaBuilder, solution::HCaptchaSolution},
         CaptchaTask,
     },
-    proxy::Proxy,
     type_state::{UrlMissing, WebsiteKeyMissing},
 };
 
-#[derive(serde::Serialize)]
-#[serde(rename_all = "camelCase")]
+#[proxy_task(with_proxy = "HCaptchaTask", proxyless = "HCaptchaTaskProxyless")]
 /// Represents the data required by the 2captcha API to solve a
 /// HCaptcha challenge
 ///
@@ -39,9 +38,6 @@ pub struct HCaptcha<'a, T = Empty>
 where
     T: serde::Serialize,
 {
-    #[serde(flatten)]
-    pub(super) task_type: HCaptchaTypes<'a>,
-
     #[serde(rename = "websiteURL")]
     pub(super) website_url: Url,
     pub(super) website_key: Cow<'a, str>,
@@ -49,17 +45,6 @@ where
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(super) enterprise_payload: Option<T>,
-}
-
-#[derive(serde::Serialize)]
-#[serde(tag = "type")]
-#[catptcha_oxide_derive::from_option]
-pub enum HCaptchaTypes<'a> {
-    #[serde(rename = "HCaptchaTaskProxyless")]
-    ProxyLess,
-
-    #[serde(rename = "HCaptchaTask")]
-    WithProxy(Proxy<'a>),
 }
 
 impl<'a, T> CaptchaTask for HCaptcha<'a, T>

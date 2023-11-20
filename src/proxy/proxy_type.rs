@@ -1,4 +1,4 @@
-#[derive(serde::Deserialize, serde::Serialize)]
+#[derive(serde::Deserialize, serde::Serialize, Debug)]
 #[serde(rename_all = "lowercase")]
 pub enum ProxyType {
     Http,

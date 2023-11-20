@@ -8,8 +8,6 @@ pub mod normal_captcha;
 pub mod recaptcha;
 pub mod turnstile_captcha;
 
-pub use catptcha_oxide_derive::CaptchaSolution;
-
 pub trait CaptchaTask: serde::Serialize {
     type Solution: for<'de> serde::Deserialize<'de> + CaptchaSolution;
     type Builder: Default;

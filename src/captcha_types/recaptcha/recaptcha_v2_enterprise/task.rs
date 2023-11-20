@@ -1,3 +1,4 @@
+use catptcha_oxide_derive::proxy_task;
 use std::borrow::Cow;
 use url::Url;
 
@@ -10,12 +11,13 @@ use crate::{
         },
         CaptchaTask,
     },
-    proxy::Proxy,
     type_state::{UrlMissing, WebsiteKeyMissing},
 };
 
-#[derive(serde::Serialize)]
-#[serde(rename_all = "camelCase")]
+#[proxy_task(
+    with_proxy = "RecaptchaV2EnterpriseTask",
+    proxyless = "RecaptchaV2EnterpriseTaskProxyless"
+)]
 /// Represents the data required by the 2captcha API to solve a
 /// reCaptcha V2 Enterprise challenge
 ///
@@ -45,9 +47,6 @@ pub struct RecaptchaV2Enterprise<'a, T = Empty>
 where
     T: serde::Serialize,
 {
-    #[serde(flatten)]
-    pub(super) task_type: RecaptchaV2EnterpriseTypes<'a>,
-
     #[serde(rename = "websiteURL")]
     pub(super) website_url: Url,
     pub(super) website_key: Cow<'a, str>,
@@ -65,17 +64,6 @@ where
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(super) api_domain: Option<Cow<'a, str>>,
-}
-
-#[derive(serde::Serialize)]
-#[serde(tag = "type")]
-#[catptcha_oxide_derive::from_option]
-pub enum RecaptchaV2EnterpriseTypes<'a> {
-    #[serde(rename = "RecaptchaV2EnterpriseTaskProxyless")]
-    ProxyLess,
-
-    #[serde(rename = "RecaptchaV2EnterpriseTask")]
-    WithProxy(Proxy<'a>),
 }
 
 impl<'a, T> CaptchaTask for RecaptchaV2Enterprise<'a, T>

@@ -20,7 +20,7 @@ thiserror = "1"
 tokio = { version = "1", features = ["full"] }
 url = { version = "2", features = ["serde"] }
 lazy_static = "1"
-catptcha_oxide_derive = { version = "2", path = "captcha_oxide_derive" }
+catptcha_oxide_derive = { version = "3", path = "captcha_oxide_derive" }
 serde_repr = "0.1"
 
 [dev-dependencies]

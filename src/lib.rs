@@ -8,7 +8,7 @@
 //! use captcha_oxide::{
 //!     RecaptchaV3,
 //!     CaptchaTask,
-//!     Solver,
+//!     CaptchaSolver,
 //! };
 //!
 //! # #[tokio::main]
@@ -16,10 +16,10 @@
 //! let solver = CaptchaSolver::new("YOUR_API_KEY");
 //!
 //! let args = RecaptchaV3::builder()
-//!     .website_url(Url::parse("https://some.url/")?)
+//!     .website_url("https://some.url/")
 //!     .website_key("SOME_SITE_KEY")
 //!     .min_score(0.3)
-//!     .build();
+//!     .build()?;
 //!
 //! let solution = solver
 //!     .solve(args)

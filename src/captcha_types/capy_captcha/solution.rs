@@ -1,13 +1,9 @@
 use std::borrow::Cow;
 
-use crate::CaptchaSolution;
+use catptcha_oxide_derive::captcha_solution;
 
-#[derive(serde::Deserialize, CaptchaSolution)]
-
+#[captcha_solution]
 pub struct CapyCaptchaSolution<'a> {
-    #[serde(default = "Default::default")]
-    task_id: u64,
-
     #[serde(rename = "captchakey")]
     pub captcha_key: Cow<'a, str>,
 
