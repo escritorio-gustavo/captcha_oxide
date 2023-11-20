@@ -5,6 +5,7 @@ pub mod capy_captcha;
 pub mod geetest;
 pub mod h_captcha;
 pub mod key_captcha;
+pub mod lemin_captcha;
 pub mod normal_captcha;
 pub mod recaptcha;
 pub mod turnstile_captcha;

@@ -1,8 +1,8 @@
 [package]
 name = "catptcha_oxide_derive"
 license = "MIT OR Apache-2.0"
-description = "Derive macro for the Solution trait. May include more macros in the future"
-version = "3.1.1"
+description = "Useful proc macros for captcha_oxide"
+version = "3.1.2"
 edition = "2021"
 
 [lib]
