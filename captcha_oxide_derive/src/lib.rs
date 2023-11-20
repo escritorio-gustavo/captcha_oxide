@@ -35,7 +35,7 @@ pub fn captcha_solution(
         ),
         _ => {
             return quote! {
-                compile_error!("This attribute can only be used in structs with named fields")
+                compile_error!("This attribute can only be used in structs with named fields");
             }
             .into()
         }
@@ -98,7 +98,7 @@ pub fn proxy_task(
 
     if lifetime.is_none() {
         return quote! {
-            compile_error!("This attribute requires the struct to have a lifetime param")
+            compile_error!("This attribute requires the struct to have a lifetime param");
         }
         .into();
     }
@@ -117,7 +117,7 @@ pub fn proxy_task(
         ),
         _ => {
             return quote! {
-                compile_error!("This attribute can only be used in structs with named fields")
+                compile_error!("This attribute can only be used in structs with named fields");
             }
             .into()
         }
