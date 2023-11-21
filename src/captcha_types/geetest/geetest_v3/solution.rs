@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-use catptcha_oxide_derive::captcha_solution;
+use captcha_oxide_derive::captcha_solution;
 
 #[captcha_solution]
 #[serde(rename_all = "camelCase")]

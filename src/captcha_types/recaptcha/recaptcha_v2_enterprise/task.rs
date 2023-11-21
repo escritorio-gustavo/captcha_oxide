@@ -1,4 +1,4 @@
-use catptcha_oxide_derive::proxy_task;
+use captcha_oxide_derive::proxy_task;
 use std::borrow::Cow;
 use url::Url;
 

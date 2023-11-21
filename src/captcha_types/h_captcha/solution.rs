@@ -1,4 +1,4 @@
-use catptcha_oxide_derive::captcha_solution;
+use captcha_oxide_derive::captcha_solution;
 use std::borrow::Cow;
 
 #[captcha_solution]

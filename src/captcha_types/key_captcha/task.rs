@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-use catptcha_oxide_derive::proxy_task;
+use captcha_oxide_derive::proxy_task;
 use url::Url;
 
 use crate::{type_state::UrlMissing, CaptchaTask};
