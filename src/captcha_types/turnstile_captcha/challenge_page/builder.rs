@@ -133,6 +133,7 @@ impl<'a, T, U, V, W, X, Y> TurnstileChallengePageCaptchaBuilder<'a, T, U, V, W, 
             proxy: self.proxy,
         }
     }
+
     pub fn action(
         self,
         action: impl Into<Cow<'a, str>>,
@@ -147,6 +148,7 @@ impl<'a, T, U, V, W, X, Y> TurnstileChallengePageCaptchaBuilder<'a, T, U, V, W, 
             proxy: self.proxy,
         }
     }
+
     pub fn data(
         self,
         data: impl Into<Cow<'a, str>>,
@@ -161,6 +163,7 @@ impl<'a, T, U, V, W, X, Y> TurnstileChallengePageCaptchaBuilder<'a, T, U, V, W, 
             proxy: self.proxy,
         }
     }
+
     pub fn page_data(
         self,
         page_data: impl Into<Cow<'a, str>>,
