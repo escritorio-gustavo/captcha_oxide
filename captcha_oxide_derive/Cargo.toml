@@ -1,5 +1,5 @@
 [package]
-name = "catptcha_oxide_derive"
+name = "captcha_oxide_derive"
 license = "MIT OR Apache-2.0"
 description = "Useful proc macros for captcha_oxide"
 version = "3.1.2"
