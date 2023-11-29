@@ -5,6 +5,7 @@ use url::Url;
 #[proxy_task(with_proxy = "MtCaptchaTask", proxyless = "MtCaptchaTaskProxyless")]
 #[derive(CaptchaTask)]
 #[task(timeout = 20)]
+#[serde(rename_all = "camelCase")]
 pub struct MtCaptcha<'a> {
     #[serde(rename = "websiteURL")]
     pub(super) website_url: Url,
