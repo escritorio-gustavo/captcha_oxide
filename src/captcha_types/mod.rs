@@ -3,6 +3,7 @@ mod empty_data;
 pub mod amazon_captcha;
 pub mod arkose_labs_captcha;
 pub mod capy_captcha;
+pub mod cyber_siara_captcha;
 pub mod geetest;
 pub mod h_captcha;
 pub mod key_captcha;
@@ -10,6 +11,8 @@ pub mod lemin_captcha;
 pub mod normal_captcha;
 pub mod recaptcha;
 pub mod turnstile_captcha;
+
+pub(crate) use captcha_oxide_derive::CaptchaTask;
 
 pub trait CaptchaTask: serde::Serialize {
     type Solution: for<'de> serde::Deserialize<'de> + CaptchaSolution;
