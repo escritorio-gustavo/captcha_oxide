@@ -16,10 +16,12 @@ pub mod recaptcha;
 pub mod text_captcha;
 pub mod turnstile_captcha;
 
+use std::fmt::Debug;
+
 pub(crate) use captcha_oxide_derive::CaptchaTask;
 
 pub trait CaptchaTask: serde::Serialize {
-    type Solution: for<'de> serde::Deserialize<'de> + CaptchaSolution;
+    type Solution: CaptchaSolution;
     type Builder: Default;
 
     /// Allows for building the request data for the 2captcha API
@@ -33,7 +35,7 @@ pub trait CaptchaTask: serde::Serialize {
     fn get_timeout(&self) -> std::time::Duration;
 }
 
-pub trait CaptchaSolution {
+pub trait CaptchaSolution: for<'de> serde::Deserialize<'de> + Debug {
     fn get_task_id(&self) -> u64;
     fn set_task_id(&mut self, task_id: u64);
 }
