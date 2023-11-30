@@ -178,7 +178,7 @@ fn derive_captcha_task2(
     let build_return_type = if fallible {
         quote! { crate::prelude::Result<#ident<'a>> }
     } else {
-        quote! { #builder_ident<'a> }
+        quote! { #ident<'a> }
     };
 
     let (mandatory_fields, mandatory_field_idents, mandatory_field_types, mandatory_field_build) =
