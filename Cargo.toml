@@ -17,7 +17,7 @@ reqwest = { version = "0.11", features = ["json"] }
 serde = { version = "1", features = ["std", "derive"] }
 serde_json = "1"
 thiserror = "1"
-tokio = { version = "1", features = ["full"] }
+tokio = { version = "1", features = ["macros"] }
 url = { version = "2", features = ["serde"] }
 lazy_static = "1"
 captcha_oxide_derive = { version = "3", path = "captcha_oxide_derive" }
