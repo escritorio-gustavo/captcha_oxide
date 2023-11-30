@@ -13,6 +13,7 @@ pub mod lemin_captcha;
 pub mod mt_captcha;
 pub mod normal_captcha;
 pub mod recaptcha;
+pub mod rotate_captcha;
 pub mod text_captcha;
 pub mod turnstile_captcha;
 

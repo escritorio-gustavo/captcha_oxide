@@ -149,6 +149,8 @@ pub fn derive_captcha_task(input: proc_macro::TokenStream) -> proc_macro::TokenS
 #[deluxe(attributes(task))]
 struct TaskAttribute {
     timeout: u64,
+    #[deluxe(default = true)]
+    solution_has_lifetime: bool,
 }
 
 fn derive_captcha_task2(
@@ -163,7 +165,16 @@ fn derive_captcha_task2(
     let solution_ident = format_ident!("{}Solution", ident);
     let fields = parse_task_fields(data.fields, data.struct_token.span)?.named;
 
-    let TaskAttribute { timeout } = deluxe::extract_attributes(&mut ast)?;
+    let TaskAttribute {
+        timeout,
+        solution_has_lifetime,
+    } = deluxe::extract_attributes(&mut ast)?;
+
+    let solution_lifetime = if solution_has_lifetime {
+        Some(quote! { <'a >})
+    } else {
+        None
+    };
 
     let fallible = fields
         .iter()
@@ -325,7 +336,7 @@ fn derive_captcha_task2(
 
         use type_state::*;
         impl<'a #(, #type_params)*> crate::captcha_types::CaptchaTask for #ident<'a #(, #type_params)*> #where_clause {
-            type Solution = super::solution::#solution_ident<'a>;
+            type Solution = super::solution::#solution_ident #solution_lifetime;
             type Builder = builder::#builder_ident<#lifetime #(#type_params,)* #(#missing_type_idents),*>;
 
             fn get_timeout(&self) -> std::time::Duration {
