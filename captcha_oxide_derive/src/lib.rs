@@ -22,13 +22,10 @@ pub fn captcha_solution(
     match ast.fields {
         syn::Fields::Named(ref mut fields) => fields.named.push(
             syn::Field::parse_named
-                .parse2(
-                    quote! {
-                        #[serde(default = "Default::default")]
-                        task_id: u64
-                    }
-                    .into(),
-                )
+                .parse2(quote! {
+                    #[serde(default = "Default::default")]
+                    task_id: u64
+                })
                 .unwrap(),
         ),
         _ => {
