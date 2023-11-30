@@ -170,7 +170,7 @@ fn derive_captcha_task2(
 
     let fallible = fields
         .iter()
-        .any(|x| x.ident.as_ref().unwrap().to_string() == "website_url");
+        .any(|x| x.ident.as_ref().unwrap().to_string().ends_with("_url"));
 
     let build_return = if fallible {
         quote! { Ok(captcha) }
@@ -189,6 +189,11 @@ fn derive_captcha_task2(
 
     let (optional_fields, optional_field_idents, optional_field_types, optional_field_build) =
         generate_optional_fields(fields.clone());
+
+    let lifetime = optional_fields
+        .iter()
+        .find(|x| x.ty.to_token_stream().to_string().contains("'a"))
+        .map(|_| quote! { 'a, });
 
     let missing_type_decls = mandatory_fields
         .iter()
@@ -272,12 +277,12 @@ fn derive_captcha_task2(
         mod builder {
             use super::{*, type_state::*};
 
-            pub struct #builder_ident<'a, #(#type_params,)* #(#generics),*> #where_clause {
+            pub struct #builder_ident<#lifetime #(#type_params,)* #(#generics),*> #where_clause {
                 #(#mandatory_field_idents: #generics,)*
                 #(#optional_fields,)*
             }
 
-            impl<'a, #(#type_params),*> #builder_ident<'a, #(#type_params,)* #(#satisfied_type_idents #satisfied_type_lifetimes),*> #where_clause {
+            impl<'a, #(#type_params),*> #builder_ident<#lifetime #(#type_params,)* #(#satisfied_type_idents #satisfied_type_lifetimes),*> #where_clause {
                 pub fn build(self) -> #build_return_type {
                     let captcha = #ident {
                         #(#mandatory_field_build)*
@@ -288,7 +293,7 @@ fn derive_captcha_task2(
                 }
             }
 
-            impl<'a, #(#type_params),*> #builder_ident<'a, #(#type_params,)* #(#missing_type_idents),*> #where_clause {
+            impl<#lifetime #(#type_params),*> #builder_ident<#lifetime #(#type_params,)* #(#missing_type_idents),*> #where_clause {
                 pub const fn new() -> Self {
                     Self {
                         #(#mandatory_field_idents: #missing_type_idents,)*
@@ -297,15 +302,15 @@ fn derive_captcha_task2(
                 }
             }
 
-            impl<'a, #(#type_params),*> Default for #builder_ident<'a, #(#type_params,)* #(#missing_type_idents),*> #where_clause {
+            impl<#lifetime #(#type_params),*> Default for #builder_ident<#lifetime #(#type_params,)* #(#missing_type_idents),*> #where_clause {
                 fn default() -> Self {
                     Self::new()
                 }
             }
 
-            impl<'a, #(#type_params,)* #(#generics),*> #builder_ident<'a, #(#type_params,)* #(#generics),*> #where_clause {
+            impl<'a, #(#type_params,)* #(#generics),*> #builder_ident<#lifetime #(#type_params,)* #(#generics),*> #where_clause {
                 #(
-                    pub fn #mandatory_field_idents(self, #mandatory_field_idents: #mandatory_field_types) -> #builder_ident<'a, #(#mandatory_setter_return),*> {
+                    pub fn #mandatory_field_idents(self, #mandatory_field_idents: #mandatory_field_types) -> #builder_ident<#lifetime #(#mandatory_setter_return),*> {
                         #builder_ident {
                             #(#mandatory_self,)*
                         }
@@ -324,7 +329,7 @@ fn derive_captcha_task2(
         use type_state::*;
         impl<'a #(, #type_params)*> crate::captcha_types::CaptchaTask for #ident<'a #(, #type_params)*> #where_clause {
             type Solution = super::solution::#solution_ident<'a>;
-            type Builder = builder::#builder_ident<'a, #(#type_params,)* #(#missing_type_idents),*>;
+            type Builder = builder::#builder_ident<#lifetime #(#type_params,)* #(#missing_type_idents),*>;
 
             fn get_timeout(&self) -> std::time::Duration {
                 std::time::Duration::from_secs(#timeout)
@@ -454,7 +459,7 @@ fn generate_mandatory_fields(
         .map(|x| {
             let ident_str = x.to_string();
 
-            if ident_str == "website_url" {
+            if ident_str.ends_with("_url") {
                 quote! { #x: url::Url::parse(self.#x.0)?, }
             } else {
                 quote! { #x: self.#x.0, }
