@@ -7,6 +7,7 @@ pub mod coordinates_captcha;
 pub mod cut_captcha;
 pub mod cyber_siara_captcha;
 pub mod data_dome_captcha;
+pub mod draw_aroud_captcha;
 pub mod geetest;
 pub mod h_captcha;
 pub mod key_captcha;
