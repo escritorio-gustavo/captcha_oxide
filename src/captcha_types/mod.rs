@@ -2,6 +2,7 @@ mod empty_data;
 
 pub mod amazon_captcha;
 pub mod arkose_labs_captcha;
+pub mod audio_captcha;
 pub mod bounding_box_captcha;
 pub mod capy_captcha;
 pub mod coordinates_captcha;
