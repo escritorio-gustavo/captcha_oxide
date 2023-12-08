@@ -10,8 +10,8 @@ This is a rust library for solving captcha puzzles with the 2Captcha API
 
 ```rust
 use captcha_oxide::{
-  Solver,
-  RecaptchaV3,
+  CaptchaSolver,
+  catcha_types::recaptcha::RecaptchaV3,
   Error,
   CaptchaTask
 };
@@ -20,12 +20,12 @@ use url::Url;
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
-  let solver = Solver::new("YOUR TWOCAPTCHA API KEY");
+  let solver = CaptchaSolver::new("YOUR TWOCAPTCHA API KEY");
 
   let args = RecaptchaV3::builder()
-    .website_url(Url::parse("https://someurl.com")?)
+    .website_url("https://someurl.com")
     .website_key("SITE_KEY")
-    .build();
+    .build()?;
 
   let solution = solver
     .solve(args)

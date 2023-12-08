@@ -6,7 +6,7 @@
 //! ```
 //! use url::Url;
 //! use captcha_oxide::{
-//!     RecaptchaV3,
+//!     captcha_types::recaptcha::RecaptchaV3,
 //!     CaptchaTask,
 //!     CaptchaSolver,
 //! };
