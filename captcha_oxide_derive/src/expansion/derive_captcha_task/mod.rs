@@ -156,15 +156,5 @@ pub fn derive_captcha_task_expansion(
                 std::time::Duration::from_secs(#timeout)
             }
         }
-
-        // pub mod testing {
-        pub struct Test;
-
-        impl Test {
-            pub fn foo() -> usize {
-                42
-            }
-        }
-        // }
     })
 }
