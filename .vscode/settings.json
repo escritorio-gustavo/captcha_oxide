@@ -1,5 +1,5 @@
 {
   "rust-analyzer.server.extraEnv": {
-    "RUST_BACKTRACE": "0"
+    "RUST_BACKTRACE": "1"
   }
 }
