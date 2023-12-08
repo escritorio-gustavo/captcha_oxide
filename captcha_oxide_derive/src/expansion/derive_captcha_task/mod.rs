@@ -132,7 +132,6 @@ pub fn derive_captcha_task_expansion(
 
             #(#type_state_decls)*
         }
-        use type_state::*;
 
         mod builder {
             use super::*;
@@ -146,8 +145,7 @@ pub fn derive_captcha_task_expansion(
             #impl_methods
         }
 
-        use builder::*;
-
+        use type_state::*;
         impl #impl_generics #crate_path::CaptchaTask for #ident #ty_generics #where_clause {
             type Solution = #solution;
             type Builder = #path;
