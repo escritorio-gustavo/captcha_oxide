@@ -165,6 +165,7 @@ fn create_methods(
         let ident = x.field.ident.as_ref().unwrap();
         let field_attr = classified_fields.required[i].clone();
         let ty = field_attr.impl_into_type;
+        let doc_attr = &classified_fields.required[i].field.attrs;
         let mut ty_generics = vec![lifetime.as_ref().map(ToTokens::to_token_stream)]
             .into_iter()
             .flatten()
@@ -210,6 +211,7 @@ fn create_methods(
         });
 
         quote! {
+            #(#doc_attr)*
             pub fn #ident(self, #ident: #ty) -> #builder_ident<#(#ty_generics),*> {
                 #builder_ident {
                     #(#required_set,)*
@@ -222,8 +224,10 @@ fn create_methods(
     let optional_methods = classified_fields.optional.iter().map(|x| {
         let ident = x.field.ident.as_ref().unwrap();
         let ty = &x.impl_into_type;
+        let doc_attr = &x.field.attrs;
 
         quote! {
+            #(#doc_attr)*
             pub fn #ident(mut self, #ident: #ty) -> Self {
                 self.#ident = #ident.map(Into::into);
                 self

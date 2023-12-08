@@ -49,7 +49,15 @@ pub(crate) fn parse_field_data(mut field: Field) -> deluxe::Result<Option<FieldA
         Some(ref x) => Some(x.clone()),
         None => field.ident,
     };
-    field.attrs = vec![];
+    field.attrs = field
+        .attrs
+        .iter()
+        .filter(|x| match x.meta {
+            syn::Meta::NameValue(ref x) => x.path.is_ident("doc"),
+            _ => false,
+        })
+        .cloned()
+        .collect();
     field.ty = builder_type.clone();
     field.vis = Visibility::Inherited;
 

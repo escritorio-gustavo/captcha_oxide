@@ -1,2 +1,2 @@
 #[derive(serde::Serialize)]
-pub struct Empty;
+pub enum Empty {}
