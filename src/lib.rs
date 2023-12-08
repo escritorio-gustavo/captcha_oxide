@@ -33,10 +33,10 @@
 //! ```
 
 mod prelude;
-mod type_state;
 pub(crate) const SOFT_ID: u16 = 4143;
 
 pub mod captcha_types;
+pub mod cookie;
 pub mod error;
 pub mod proxy;
 pub mod solver;

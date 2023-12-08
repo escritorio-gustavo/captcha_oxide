@@ -3,7 +3,7 @@ use std::borrow::Cow;
 use crate::CaptchaTask;
 
 #[derive(serde::Serialize, CaptchaTask)]
-#[task(timeout = 5)]
+#[task(timeout = 5, solution = super::solution::AudioCaptchaSolution<'a>, crate = crate)]
 #[serde(rename_all = "camelCase", tag = "type", rename = "AudioTask")]
 pub struct AudioCaptcha<'a> {
     pub(super) body: Cow<'a, str>,

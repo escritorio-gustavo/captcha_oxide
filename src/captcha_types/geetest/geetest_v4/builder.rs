@@ -1,16 +1,7 @@
 use std::borrow::Cow;
 
-use crate::{
-    captcha_types::geetest::type_state::{
-        CaptchaIdMissing, CaptchaIdProvided, ChallengeMissing, ChallengeProvided, GtMissing,
-        GtProvided,
-    },
-    prelude::*,
-    proxy::Proxy,
-    type_state::{UrlMissing, UrlProvided},
-};
-
-use super::{GeeTestV4, InitParameters};
+use super::{type_state::*, GeeTestV4, InitParameters};
+use crate::{prelude::*, proxy::Proxy};
 
 pub struct GeeTestV4Builder<'a, T, U, V, W, X>
 where

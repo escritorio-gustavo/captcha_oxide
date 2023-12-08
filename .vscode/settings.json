@@ -1,3 +1,5 @@
 {
-  // "rust-analyzer.linkedProjects": [".\\captcha_oxide_derive\\Cargo.toml"]
+  "rust-analyzer.server.extraEnv": {
+    "RUST_BACKTRACE": "0"
+  }
 }

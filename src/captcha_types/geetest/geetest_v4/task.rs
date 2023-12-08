@@ -4,17 +4,14 @@ use captcha_oxide_derive::proxy_task;
 use url::Url;
 
 use crate::{
-    captcha_types::{
-        empty_data::Empty,
-        geetest::type_state::{CaptchaIdMissing, ChallengeMissing, GtMissing},
-    },
-    type_state::UrlMissing,
+    captcha_types::{empty_data::Empty, geetest::geetest_v4::type_state::*},
     CaptchaTask,
 };
 
 use super::{builder::GeeTestV4Builder, solution::GeeTestV4Solution};
 
 #[proxy_task(with_proxy = "GeeTestTask", proxyless = "GeeTestTaskProxyless")]
+#[derive(serde::Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GeeTestV4<'a, T = Empty>
 where
@@ -31,6 +28,7 @@ where
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(super) user_agent: Option<Cow<'a, str>>,
     pub(super) init_parameters: InitParameters<'a, T>,
+
     pub(super) version: u8,
 }
 
