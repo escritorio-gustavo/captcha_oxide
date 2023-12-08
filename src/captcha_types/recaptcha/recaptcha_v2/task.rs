@@ -18,9 +18,9 @@ use crate::captcha_types::CaptchaTask;
 ///
 /// # fn main() -> Result<(), Error> {
 /// let captcha = RecaptchaV2::builder()
-///     .website_url(Url::parse("http://someurl.com")?)
+///     .website_url("http://someurl.com")
 ///     .website_key("SOME_KEY")
-///     .build();
+///     .build()?;
 /// # Ok(())
 /// # }
 /// ```
@@ -40,7 +40,7 @@ pub struct RecaptchaV2<'a> {
     pub(super) user_agent: Option<Cow<'a, str>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    // #[task(builder_type = Option<crate::cookie::Cookies<'a>>, parse_with = { infallible({ path = crate::cookie::Cookies::stringify, parse_ref }) })]
+    #[task(builder_type = Option<crate::cookie::Cookies<'a>>, parse_with = { infallible({ path = crate::cookie::Cookies::stringify, parse_ref }) })]
     pub(super) cookies: Option<Cow<'a, str>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]

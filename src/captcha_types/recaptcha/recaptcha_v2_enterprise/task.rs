@@ -27,9 +27,9 @@ use crate::captcha_types::{empty_data::Empty, CaptchaTask};
 ///
 /// # fn main() -> Result<(), Error> {
 /// let captcha = <RecaptchaV2Enterprise>::builder()
-///     .website_url("http://someurl.com")?
+///     .website_url("http://someurl.com")
 ///     .website_key("SOME_KEY")
-///     .build();
+///     .build()?;
 /// # Ok(())
 /// # }
 /// ```
