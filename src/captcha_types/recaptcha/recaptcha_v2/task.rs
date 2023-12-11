@@ -6,7 +6,7 @@ use crate::CaptchaTask;
 
 #[proxy_task(with_proxy = "RecaptchaV2Task", proxyless = "RecaptchaV2TaskProxyless", crate = crate)]
 #[derive(serde::Serialize, CaptchaTask)]
-#[task(timeout = 20, solution = super::super::solution::ReCaptchaSolution<'a>, crate = crate)]
+#[task(timeout = 20, solution = super::super::solution::RecaptchaSolution<'a>, crate = crate)]
 #[serde(rename_all = "camelCase")]
 /// Represents the data required by the 2captcha API to solve a reCaptcha V2
 /// challenge

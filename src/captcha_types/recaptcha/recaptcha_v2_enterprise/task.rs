@@ -10,7 +10,7 @@ use crate::{captcha_types::empty_data::Empty, CaptchaTask};
     crate = crate,
 )]
 #[derive(serde::Serialize, CaptchaTask)]
-#[task(timeout = 20, solution = super::super::solution::ReCaptchaSolution<'a>, crate = crate)]
+#[task(timeout = 20, solution = super::super::solution::RecaptchaSolution<'a>, crate = crate)]
 #[serde(rename_all = "camelCase")]
 /// Represents the data required by the 2captcha API to solve a
 /// reCaptcha V2 Enterprise challenge

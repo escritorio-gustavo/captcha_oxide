@@ -4,7 +4,7 @@ use url::Url;
 use crate::CaptchaTask;
 
 #[derive(serde::Serialize, CaptchaTask)]
-#[task(timeout = 20, solution = super::super::solution::ReCaptchaSolution<'a>, crate = crate)]
+#[task(timeout = 20, solution = super::super::solution::RecaptchaSolution<'a>, crate = crate)]
 #[serde(
     rename_all = "camelCase",
     tag = "type",
