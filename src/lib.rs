@@ -24,7 +24,7 @@
 //! let solution = solver
 //!     .solve(args)
 //!     .await?
-//!     .expect("Only None if pingback is set")
+//!     .expect("Only `None` if pingback is set")
 //!     .g_recaptcha_response;
 //!
 //! assert!(!solution.is_empty());

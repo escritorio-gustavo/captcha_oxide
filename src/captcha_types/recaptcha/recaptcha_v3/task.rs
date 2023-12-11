@@ -15,15 +15,19 @@ use crate::CaptchaTask;
 ///
 /// # Example
 /// ```
-/// use captcha_oxide::{Error, captcha_types::{CaptchaTask, RecaptchaV3}};
+/// use captcha_oxide::{
+///     CaptchaTask,
+///     Error,
+///     captcha_types::recaptcha::RecaptchaV3,
+/// };
 /// use url::Url;
 ///
 /// # fn main() -> Result<(), Error> {
 /// let captcha = RecaptchaV3::builder()
-///     .website_url(Url::parse("http://someurl.com")?)
+///     .website_url("http://someurl.com")
 ///     .website_key("SOME_KEY")
 ///     .min_score(0.3)
-///     .build();
+///     .build()?;
 /// # Ok(())
 /// # }
 /// ```

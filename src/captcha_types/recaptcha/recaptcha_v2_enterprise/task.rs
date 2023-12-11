@@ -15,9 +15,7 @@ use crate::{captcha_types::empty_data::Empty, CaptchaTask};
 /// Represents the data required by the 2captcha API to solve a
 /// reCaptcha V2 Enterprise challenge
 ///
-/// # Note
-/// If you need to use this struct but there is no `enterprise_payload`
-/// to be sent, you should invoke the builder using the following syntax:
+/// # Example
 /// ```
 /// use captcha_oxide::{
 ///     Error,
@@ -36,7 +34,8 @@ use crate::{captcha_types::empty_data::Empty, CaptchaTask};
 ///
 /// The angle brackets (`<>`) around [`RecaptchaV2Enterprise`] allow the
 /// use of the default type provided to the generic argument, so you don't
-/// need to create a serializable unit struct
+/// need to create a serializable unit struct if you don't plan to use the
+/// `ènterprise_payload` field
 pub struct RecaptchaV2Enterprise<'a, T = Empty>
 where
     T: serde::Serialize,

@@ -13,7 +13,11 @@ use crate::CaptchaTask;
 ///
 /// # Example
 /// ```
-/// use captcha_oxide::{Error, captcha_types::{CaptchaTask, RecaptchaV2}};
+/// use captcha_oxide::{
+///     Error,
+///     CaptchaTask,
+///     captcha_types::recaptcha::RecaptchaV2,
+/// };
 /// use url::Url;
 ///
 /// # fn main() -> Result<(), Error> {
