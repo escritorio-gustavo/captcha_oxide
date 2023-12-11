@@ -11,6 +11,7 @@ pub mod cyber_siara_captcha;
 pub mod data_dome_captcha;
 pub mod draw_aroud_captcha;
 pub mod geetest;
+pub mod grid_captcha;
 pub mod h_captcha;
 pub mod key_captcha;
 pub mod lemin_captcha;
