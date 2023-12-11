@@ -2,7 +2,7 @@ use captcha_oxide_derive::proxy_task;
 use std::borrow::Cow;
 use url::Url;
 
-use crate::captcha_types::CaptchaTask;
+use crate::CaptchaTask;
 
 #[proxy_task(with_proxy = "RecaptchaV2Task", proxyless = "RecaptchaV2TaskProxyless", crate = crate)]
 #[derive(serde::Serialize, CaptchaTask)]

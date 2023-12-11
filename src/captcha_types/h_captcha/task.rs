@@ -2,7 +2,7 @@ use captcha_oxide_derive::proxy_task;
 use std::borrow::Cow;
 use url::Url;
 
-use crate::captcha_types::{empty_data::Empty, CaptchaTask};
+use crate::{captcha_types::empty_data::Empty, CaptchaTask};
 
 /// Represents the data required by the 2captcha API to solve a
 /// HCaptcha challenge
@@ -35,6 +35,7 @@ where
     #[serde(rename = "websiteURL")]
     #[task(builder_type = &'a str, parse_with = { fallible({ path = url::Url::parse }) })]
     pub(super) website_url: Url,
+
     pub(super) website_key: Cow<'a, str>,
 
     #[serde(skip_serializing_if = "Option::is_none")]

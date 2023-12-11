@@ -1,7 +1,7 @@
 use url::Url;
 
 use super::language_pool::LanguagePool;
-use crate::captcha_types::CaptchaTask;
+use crate::CaptchaTask;
 
 #[derive(Debug, serde::Serialize)]
 #[serde(rename_all = "camelCase")]
