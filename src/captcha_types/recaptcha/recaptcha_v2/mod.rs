@@ -24,6 +24,7 @@ mod test {
             .solve(data)
             .await?
             .expect("This can't be None since callback_url was not provided")
+            .solution
             .g_recaptcha_response;
 
         assert!(!solution.is_empty());

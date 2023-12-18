@@ -1,8 +1,6 @@
 use std::borrow::Cow;
 
-use captcha_oxide_derive::captcha_solution;
-
-#[captcha_solution]
+#[derive(serde::Deserialize, Debug)]
 pub struct LeminCaptchaSolution<'a> {
     pub answer: Cow<'a, str>,
 

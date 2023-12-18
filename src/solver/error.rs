@@ -1,8 +1,4 @@
-use super::{
-    create_task::CreateTaskResponse,
-    get_balance::GetBalanceResponse,
-    task_result::{TaskResult, TaskResultResponse},
-};
+use super::{requests::create_task::CreateTaskResponse, requests::get_balance::GetBalanceResponse};
 
 /// Represents all the errors that can be returned by the 2captcha API
 #[derive(thiserror::Error, Debug)]
@@ -97,19 +93,6 @@ impl From<CreateTaskResponse> for Result<u64, SolveError> {
         match val {
             CreateTaskResponse::TaskCreated { task_id } => Ok(task_id),
             CreateTaskResponse::Error { error_code, .. } => {
-                let error_code = error_code.as_ref();
-
-                Err(error_code.into())
-            }
-        }
-    }
-}
-
-impl<T> From<TaskResultResponse<T>> for Result<TaskResult<T>, SolveError> {
-    fn from(val: TaskResultResponse<T>) -> Self {
-        match val {
-            TaskResultResponse::Success(result) => Ok(result),
-            TaskResultResponse::Error { error_code } => {
                 let error_code = error_code.as_ref();
 
                 Err(error_code.into())

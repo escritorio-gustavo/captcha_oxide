@@ -1,5 +1,3 @@
-use captcha_oxide_derive::captcha_solution;
-
 #[derive(Debug, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct BoundingBox {
@@ -9,7 +7,7 @@ pub struct BoundingBox {
     pub y_max: u16,
 }
 
-#[captcha_solution]
+#[derive(serde::Deserialize, Debug)]
 pub struct BoundingBoxCaptchaSolution {
     pub bounding_boxes: Box<[Box<[BoundingBox]>]>,
 }

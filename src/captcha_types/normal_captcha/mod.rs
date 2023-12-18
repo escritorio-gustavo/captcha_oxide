@@ -24,6 +24,7 @@ mod test {
             .solve(captcha)
             .await?
             .expect("Should never be `None`, since there's no `callback_url`")
+            .solution
             .text;
 
         assert_eq!(solution, "w68hp");

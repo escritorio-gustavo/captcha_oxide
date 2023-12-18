@@ -2,7 +2,7 @@
 name = "captcha_oxide_derive"
 license = "MIT OR Apache-2.0"
 description = "Useful proc macros for captcha_oxide"
-version = "4.0.0"
+version = "5.0.0"
 edition = "2021"
 
 [lib]

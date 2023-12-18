@@ -45,7 +45,7 @@ impl<T> SolverBuilder<T> {
         }
     }
 
-    pub fn language_pool(mut self, language_pool: LanguagePool) -> SolverBuilder<T> {
+    pub fn language_pool(mut self, language_pool: LanguagePool) -> Self {
         self.language_pool = language_pool;
         self
     }

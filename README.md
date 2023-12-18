@@ -31,6 +31,7 @@ async fn main() -> Result<(), Error> {
     .solve(args)
     .await?
     .unwrap()
+    .solution
     .g_recaptcha_response;
 
   assert!(!solution.is_empty());

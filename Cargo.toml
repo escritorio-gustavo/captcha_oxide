@@ -1,6 +1,6 @@
 [package]
 name = "captcha_oxide"
-version = "4.1.0"
+version = "5.0.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 readme = "README.md"
@@ -20,8 +20,9 @@ thiserror = "1"
 tokio = { version = "1", features = ["macros"] }
 url = { version = "2", features = ["serde"] }
 lazy_static = "1"
-captcha_oxide_derive = { version = "4.0.0", path = "captcha_oxide_derive" }
+captcha_oxide_derive = { version = "5.0.0", path = "captcha_oxide_derive" }
 serde_repr = "0.1"
+chrono = { version = "0.4.31", features = ["serde"] }
 
 [dev-dependencies]
 dotenv = "0.15.0"

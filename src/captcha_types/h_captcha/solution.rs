@@ -1,7 +1,6 @@
-use captcha_oxide_derive::captcha_solution;
 use std::borrow::Cow;
 
-#[captcha_solution]
+#[derive(serde::Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct HCaptchaSolution<'a> {
     pub token: Cow<'a, str>,

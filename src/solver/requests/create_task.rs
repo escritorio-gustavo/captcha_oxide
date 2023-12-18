@@ -1,11 +1,10 @@
 use url::Url;
 
-use super::language_pool::LanguagePool;
-use crate::CaptchaTask;
+use crate::{solver::language_pool::LanguagePool, CaptchaTask};
 
 #[derive(Debug, serde::Serialize)]
 #[serde(rename_all = "camelCase")]
-pub(super) struct CreateTaskRequest<'a, T>
+pub(crate) struct CreateTaskRequest<'a, T>
 where
     T: CaptchaTask,
 {
@@ -20,7 +19,7 @@ where
 
 #[derive(serde::Deserialize)]
 #[serde(untagged)]
-pub(super) enum CreateTaskResponse {
+pub(crate) enum CreateTaskResponse {
     #[serde(rename_all = "camelCase")]
     TaskCreated { task_id: u64 },
 

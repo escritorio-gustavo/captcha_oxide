@@ -27,7 +27,7 @@ use std::fmt::Debug;
 pub(crate) use captcha_oxide_derive::CaptchaTask;
 
 pub trait CaptchaTask: serde::Serialize {
-    type Solution: CaptchaSolution;
+    type Solution: for<'de> serde::Deserialize<'de> + Debug;
     type Builder: Default;
 
     /// Allows for building the request data for the 2captcha API
@@ -39,9 +39,4 @@ pub trait CaptchaTask: serde::Serialize {
     /// The amount of time that should be waited after creating a task to check
     /// if it is ready
     fn get_timeout(&self) -> std::time::Duration;
-}
-
-pub trait CaptchaSolution: for<'de> serde::Deserialize<'de> + Debug {
-    fn get_task_id(&self) -> u64;
-    fn set_task_id(&mut self, task_id: u64);
 }

@@ -25,6 +25,7 @@
 //!     .solve(args)
 //!     .await?
 //!     .expect("Only `None` if pingback is set")
+//!     .solution
 //!     .g_recaptcha_response;
 //!
 //! assert!(!solution.is_empty());
@@ -39,9 +40,9 @@ pub mod captcha_types;
 pub mod cookie;
 pub mod error;
 pub mod proxy;
+pub mod solution;
 pub mod solver;
 
-pub use captcha_types::CaptchaSolution;
 pub use captcha_types::CaptchaTask;
 pub use error::Error;
 pub use solver::CaptchaSolver;

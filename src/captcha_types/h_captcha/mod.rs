@@ -24,6 +24,7 @@ mod test {
             .solve(captcha)
             .await?
             .expect("This cannot return `None`, because `Solver` was not given a `callback_url`")
+            .solution
             .token;
 
         assert!(!solution.is_empty());

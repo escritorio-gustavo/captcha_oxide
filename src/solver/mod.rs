@@ -1,39 +1,30 @@
+mod builder;
+mod error;
+mod requests;
+
+pub mod language_pool;
+
+pub use builder::SolverBuilder;
+pub(crate) use error::SolveError;
+
 use lazy_static::lazy_static;
+use reqwest::Client;
+use url::Url;
+
+use crate::{captcha_types::CaptchaTask, prelude::*, solution::CaptchaSolution, SOFT_ID};
+
+use self::{
+    builder::NoApiKeyProvided,
+    language_pool::LanguagePool,
+    requests::create_task::{CreateTaskRequest, CreateTaskResponse},
+    requests::get_balance::{GetBalanceRequest, GetBalanceResponse},
+    requests::get_task_result::{GetTaskResultError, GetTaskResultRequest, GetTaskResultResponse},
+};
 
 lazy_static! {
     static ref API_URL: Url = Url::parse("https://api.2captcha.com").unwrap();
     static ref CLIENT: Client = Client::new();
 }
-
-use reqwest::Client;
-use url::Url;
-
-use crate::{
-    captcha_types::{CaptchaSolution, CaptchaTask},
-    prelude::*,
-    SOFT_ID,
-};
-
-use self::{
-    builder::NoApiKeyProvided,
-    create_task::{CreateTaskRequest, CreateTaskResponse},
-    get_balance::{GetBalanceRequest, GetBalanceResponse},
-    language_pool::LanguagePool,
-    task_request::TaskRequest,
-    task_result::{TaskResult, TaskResultResponse},
-};
-
-mod builder;
-mod error;
-mod get_balance;
-mod task_request;
-
-pub mod create_task;
-pub mod language_pool;
-pub mod task_result;
-
-pub use builder::SolverBuilder;
-pub(crate) use error::SolveError;
 
 #[derive(Default, Debug)]
 pub struct CaptchaSolver {
@@ -64,10 +55,10 @@ impl CaptchaSolver {
     /// an error.
     ///
     /// # Option
-    /// This method will only ever return [`Ok(None)`] if you provide a `callback_url`
-    /// to the [`Solver`] struct, otherwise a successful request will always return
+    /// This method will only ever return [`Ok(None)`] if you provide a [`CaptchaSolver::callback_url`]
+    /// to the [`CaptchaSolver`] struct, otherwise a successful request will always return
     /// [`Ok(Some(CaptchaSolution))`]
-    pub async fn solve<T>(&self, task: T) -> Result<Option<T::Solution>>
+    pub async fn solve<'a, T>(&self, task: T) -> Result<Option<CaptchaSolution<'a, T::Solution>>>
     where
         T: CaptchaTask,
     {
@@ -97,25 +88,31 @@ impl CaptchaSolver {
         tokio::time::sleep(task.get_timeout()).await;
 
         let task_result_url = API_URL.join("/getTaskResult")?;
-        let task_result_request = TaskRequest {
+        let task_result_request = GetTaskResultRequest {
             client_key: &self.api_key,
             task_id,
         };
 
         loop {
-            let task_result = Into::<std::result::Result<_, _>>::into(
-                CLIENT
-                    .post(task_result_url.as_str())
-                    .header("Content-Type", "application/json")
-                    .json(&task_result_request)
-                    .send()
-                    .await?
-                    .json::<TaskResultResponse<T::Solution>>()
-                    .await?,
-            )?;
+            let json = CLIENT
+                .post(task_result_url.as_str())
+                .header("Content-Type", "application/json")
+                .json(&task_result_request)
+                .send()
+                .await?
+                .text()
+                .await?;
 
-            if let TaskResult::Ready { mut solution, .. } = task_result {
-                solution.set_task_id(task_id);
+            if json.contains("errorCode") {
+                let error = serde_json::from_str::<GetTaskResultError>(&json)?;
+                let error: SolveError = error.error_code.as_ref().into();
+                return Err(error.into());
+            }
+
+            let task_result: GetTaskResultResponse<'_, _> = serde_json::from_str(&json)?;
+
+            if let GetTaskResultResponse::Ready(mut solution) = task_result {
+                solution.task_id = task_id;
                 return Ok(Some(solution));
             }
 
@@ -124,15 +121,17 @@ impl CaptchaSolver {
     }
 
     /// Allows you to report to 2captcha on wether or not the solution was valid
-    pub async fn report(
+    pub async fn report<'a, T>(
         &self,
-        solution: &impl CaptchaSolution,
+        solution: CaptchaSolution<'a, T>,
         status: SolutionStatus,
-    ) -> Result<()> {
-        let task_id = solution.get_task_id();
-        let json = TaskRequest {
+    ) -> Result<()>
+    where
+        T: CaptchaTask,
+    {
+        let json = GetTaskResultRequest {
             client_key: &self.api_key,
-            task_id,
+            task_id: solution.task_id,
         };
 
         CLIENT

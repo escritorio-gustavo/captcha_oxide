@@ -16,13 +16,13 @@ impl ToTokenStream for syn::Result<proc_macro2::TokenStream> {
     }
 }
 
-#[proc_macro_attribute]
-pub fn captcha_solution(
-    _: proc_macro::TokenStream,
-    item: proc_macro::TokenStream,
-) -> proc_macro::TokenStream {
-    expansion::captcha_solution::captcha_solution_expansion(item.into()).resolve()
-}
+// #[proc_macro_attribute]
+// pub fn captcha_solution(
+//     _: proc_macro::TokenStream,
+//     item: proc_macro::TokenStream,
+// ) -> proc_macro::TokenStream {
+//     expansion::captcha_solution::captcha_solution_expansion(item.into()).resolve()
+// }
 
 #[proc_macro_attribute]
 pub fn proxy_task(

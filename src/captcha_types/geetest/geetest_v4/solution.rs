@@ -1,8 +1,6 @@
 use std::borrow::Cow;
 
-use captcha_oxide_derive::captcha_solution;
-
-#[captcha_solution]
+#[derive(serde::Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct GeeTestV4Solution<'a> {
     pub captcha_id: Cow<'a, str>,

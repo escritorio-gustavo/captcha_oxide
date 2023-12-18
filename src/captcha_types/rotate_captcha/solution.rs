@@ -1,6 +1,4 @@
-use captcha_oxide_derive::captcha_solution;
-
-#[captcha_solution]
+#[derive(serde::Deserialize, Debug)]
 pub struct RotateCaptchaSolution {
     pub rotate: u16,
 }
