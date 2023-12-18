@@ -1,5 +1,6 @@
 use super::{
     create_task::CreateTaskResponse,
+    get_balance::GetBalanceResponse,
     task_result::{TaskResult, TaskResultResponse},
 };
 
@@ -64,6 +65,33 @@ pub enum SolveError {
     BadImageInstructions,
 }
 
+impl From<&str> for SolveError {
+    fn from(value: &str) -> Self {
+        match value {
+            "ERROR_KEY_DOES_NOT_EXIST" => SolveError::InvalidApiKey,
+            "ERROR_NO_SLOT_AVAILABLE" => SolveError::NoSlotAvailable,
+            "ERROR_ZERO_CAPTCHA_FILESIZE" => SolveError::ImageTooSmall,
+            "ERROR_TOO_BIG_CAPTCHA_FILESIZE" => SolveError::ImageTooBig,
+            "ERROR_ZERO_BALANCE" => SolveError::ZeroBalance,
+            "ERROR_IP_NOT_ALLOWED" => SolveError::IpNotAllowed,
+            "ERROR_CAPTCHA_UNSOLVABLE" => SolveError::UnsolvableCaptcha,
+            "ERROR_BAD_DUPLICATES" => SolveError::BadDuplicates,
+            "ERROR_NO_SUCH_METHOD" => SolveError::NoSuchMethod,
+            "ERROR_IMAGE_TYPE_NOT_SUPPORTED" => SolveError::UnsupportedImageType,
+            "ERROR_NO_SUCH_CAPCHA_ID" => SolveError::CaptchaIdNotFound,
+            "ERROR_IP_BLOCKED" => SolveError::IpBlocked,
+            "ERROR_TASK_ABSENT" => SolveError::TaskNotProvided,
+            "ERROR_TASK_NOT_SUPPORTED" => SolveError::TaskNotSupported,
+            "ERROR_RECAPTCHA_INVALID_SITEKEY" => SolveError::InvalidSiteKey,
+            "ERROR_ACCOUNT_SUSPENDED" => SolveError::AccountSuspended,
+            "ERROR_BAD_PROXY" => SolveError::BadProxy,
+            "ERROR_BAD_PARAMETERS" => SolveError::BadParameters,
+            "ERROR_BAD_IMGINSTRUCTIONS" => SolveError::BadImageInstructions,
+            x => unreachable!("Unreachable 2captcha error: {}", x),
+        }
+    }
+}
+
 impl From<CreateTaskResponse> for Result<u64, SolveError> {
     fn from(val: CreateTaskResponse) -> Self {
         match val {
@@ -71,28 +99,7 @@ impl From<CreateTaskResponse> for Result<u64, SolveError> {
             CreateTaskResponse::Error { error_code, .. } => {
                 let error_code = error_code.as_ref();
 
-                Err(match error_code {
-                    "ERROR_KEY_DOES_NOT_EXIST" => SolveError::InvalidApiKey,
-                    "ERROR_NO_SLOT_AVAILABLE" => SolveError::NoSlotAvailable,
-                    "ERROR_ZERO_CAPTCHA_FILESIZE" => SolveError::ImageTooSmall,
-                    "ERROR_TOO_BIG_CAPTCHA_FILESIZE" => SolveError::ImageTooBig,
-                    "ERROR_ZERO_BALANCE" => SolveError::ZeroBalance,
-                    "ERROR_IP_NOT_ALLOWED" => SolveError::IpNotAllowed,
-                    "ERROR_CAPTCHA_UNSOLVABLE" => SolveError::UnsolvableCaptcha,
-                    "ERROR_BAD_DUPLICATES" => SolveError::BadDuplicates,
-                    "ERROR_NO_SUCH_METHOD" => SolveError::NoSuchMethod,
-                    "ERROR_IMAGE_TYPE_NOT_SUPPORTED" => SolveError::UnsupportedImageType,
-                    "ERROR_NO_SUCH_CAPCHA_ID" => SolveError::CaptchaIdNotFound,
-                    "ERROR_IP_BLOCKED" => SolveError::IpBlocked,
-                    "ERROR_TASK_ABSENT" => SolveError::TaskNotProvided,
-                    "ERROR_TASK_NOT_SUPPORTED" => SolveError::TaskNotSupported,
-                    "ERROR_RECAPTCHA_INVALID_SITEKEY" => SolveError::InvalidSiteKey,
-                    "ERROR_ACCOUNT_SUSPENDED" => SolveError::AccountSuspended,
-                    "ERROR_BAD_PROXY" => SolveError::BadProxy,
-                    "ERROR_BAD_PARAMETERS" => SolveError::BadParameters,
-                    "ERROR_BAD_IMGINSTRUCTIONS" => SolveError::BadImageInstructions,
-                    x => unreachable!("Unreachable 2captcha error: {}", x),
-                })
+                Err(error_code.into())
             }
         }
     }
@@ -105,29 +112,17 @@ impl<T> From<TaskResultResponse<T>> for Result<TaskResult<T>, SolveError> {
             TaskResultResponse::Error { error_code } => {
                 let error_code = error_code.as_ref();
 
-                Err(match error_code {
-                    "ERROR_KEY_DOES_NOT_EXIST" => SolveError::InvalidApiKey,
-                    "ERROR_NO_SLOT_AVAILABLE" => SolveError::NoSlotAvailable,
-                    "ERROR_ZERO_CAPTCHA_FILESIZE" => SolveError::ImageTooSmall,
-                    "ERROR_TOO_BIG_CAPTCHA_FILESIZE" => SolveError::ImageTooBig,
-                    "ERROR_ZERO_BALANCE" => SolveError::ZeroBalance,
-                    "ERROR_IP_NOT_ALLOWED" => SolveError::IpNotAllowed,
-                    "ERROR_CAPTCHA_UNSOLVABLE" => SolveError::UnsolvableCaptcha,
-                    "ERROR_BAD_DUPLICATES" => SolveError::BadDuplicates,
-                    "ERROR_NO_SUCH_METHOD" => SolveError::NoSuchMethod,
-                    "ERROR_IMAGE_TYPE_NOT_SUPPORTED" => SolveError::UnsupportedImageType,
-                    "ERROR_NO_SUCH_CAPCHA_ID" => SolveError::CaptchaIdNotFound,
-                    "ERROR_IP_BLOCKED" => SolveError::IpBlocked,
-                    "ERROR_TASK_ABSENT" => SolveError::TaskNotProvided,
-                    "ERROR_TASK_NOT_SUPPORTED" => SolveError::TaskNotSupported,
-                    "ERROR_RECAPTCHA_INVALID_SITEKEY" => SolveError::InvalidSiteKey,
-                    "ERROR_ACCOUNT_SUSPENDED" => SolveError::AccountSuspended,
-                    "ERROR_BAD_PROXY" => SolveError::BadProxy,
-                    "ERROR_BAD_PARAMETERS" => SolveError::BadParameters,
-                    "ERROR_BAD_IMGINSTRUCTIONS" => SolveError::BadImageInstructions,
-                    x => unreachable!("Unreachable 2captcha error: {}", x),
-                })
+                Err(error_code.into())
             }
+        }
+    }
+}
+
+impl From<GetBalanceResponse> for Result<f32, SolveError> {
+    fn from(value: GetBalanceResponse) -> Self {
+        match value {
+            GetBalanceResponse::TaskCreated { balance } => Ok(balance),
+            GetBalanceResponse::Error { error_code } => Err(error_code.as_ref().into()),
         }
     }
 }

@@ -17,6 +17,7 @@ use crate::{
 use self::{
     builder::NoApiKeyProvided,
     create_task::{CreateTaskRequest, CreateTaskResponse},
+    get_balance::{GetBalanceRequest, GetBalanceResponse},
     language_pool::LanguagePool,
     task_request::TaskRequest,
     task_result::{TaskResult, TaskResultResponse},
@@ -24,6 +25,7 @@ use self::{
 
 mod builder;
 mod error;
+mod get_balance;
 mod task_request;
 
 pub mod create_task;
@@ -140,6 +142,25 @@ impl CaptchaSolver {
             .await?;
 
         Ok(())
+    }
+
+    /// Returns your account balance
+    pub async fn get_balance(&self) -> Result<f32> {
+        let request = GetBalanceRequest {
+            client_key: self.api_key.as_ref(),
+        };
+
+        let balance = Into::<std::result::Result<_, _>>::into(
+            CLIENT
+                .post(API_URL.join("/getBalance")?)
+                .json(&request)
+                .send()
+                .await?
+                .json::<GetBalanceResponse>()
+                .await?,
+        )?;
+
+        Ok(balance)
     }
 }
 
