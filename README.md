@@ -6,6 +6,12 @@
 
 This is a rust library for solving captcha puzzles with the 2Captcha API
 
+This library is now feature complete and stable, so unless there is a breaking
+change on the 2captcha API, there will no longer be any breaking changes in the library starting with version 5.0.0!
+
+Contributions are very welcome, especially documentation and examples, feel free
+to submit a PR.
+
 ## Usage
 
 ```rust
