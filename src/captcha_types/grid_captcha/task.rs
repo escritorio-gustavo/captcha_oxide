@@ -6,7 +6,7 @@ use super::type_state::*;
 
 /// This method can be used to bypass tasks where a grid is applied to an
 /// image and you need to click on grid tiles, like reCAPTCHA or hCaptcha images.
-/// 
+///
 /// # Example
 /// ```
 /// use captcha_oxide::{
