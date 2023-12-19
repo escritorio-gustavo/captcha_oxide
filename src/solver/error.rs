@@ -54,6 +54,9 @@ pub enum SolveError {
     #[error("Unable to establish connection through the proxy")]
     BadProxy,
 
+    #[error("Could not connect to proxy")]
+    ProxyConnectionFailed,
+
     #[error("The required captcha parameters in your request are missing or incorrect")]
     BadParameters,
 
@@ -81,6 +84,9 @@ impl From<&str> for SolveError {
             "ERROR_RECAPTCHA_INVALID_SITEKEY" => SolveError::InvalidSiteKey,
             "ERROR_ACCOUNT_SUSPENDED" => SolveError::AccountSuspended,
             "ERROR_BAD_PROXY" => SolveError::BadProxy,
+            "ERROR_PROXY_CONNECTION_FAILED" | "ERR_PROXY_CONNECTION_FAILED" => {
+                SolveError::ProxyConnectionFailed
+            }
             "ERROR_BAD_PARAMETERS" => SolveError::BadParameters,
             "ERROR_BAD_IMGINSTRUCTIONS" => SolveError::BadImageInstructions,
             x => unreachable!("Unreachable 2captcha error: {}", x),

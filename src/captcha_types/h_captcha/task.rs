@@ -23,7 +23,7 @@ use crate::{captcha_types::empty_data::Empty, CaptchaTask};
 /// The angle brackets (`<>`) around [`HCaptcha`] allow the use of the
 /// default type provided to the generic argument, so you don't need to
 /// create a serializable unit struct if you don't plan to use the
-/// `enterprise_payload` field
+/// [`HCaptcha::enterprise_payload`] field
 #[proxy_task(with_proxy = "HCaptchaTask", proxyless = "HCaptchaTaskProxyless", crate = crate)]
 #[derive(serde::Serialize, CaptchaTask)]
 #[task(timeout = 20, solution = super::solution::HCaptchaSolution<'a>, crate = crate)]
@@ -32,6 +32,9 @@ pub struct HCaptcha<'a, T = Empty>
 where
     T: serde::Serialize,
 {
+    /// The full URL of target web page where the captcha is loaded.
+    /// We do not open the page, so it is not a problem if it is available
+    /// only for authenticated users
     #[serde(rename = "websiteURL")]
     #[task(builder_type = &'a str, parse_with = { fallible({ path = url::Url::parse }) })]
     pub(super) website_url: Url,

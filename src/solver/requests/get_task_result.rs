@@ -18,6 +18,7 @@ pub(crate) struct GetTaskResultRequest<'a> {
 // Response (error)
 
 #[derive(serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub(crate) struct GetTaskResultError<'a> {
     pub error_code: Cow<'a, str>,
 }

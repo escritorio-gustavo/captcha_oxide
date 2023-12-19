@@ -78,6 +78,9 @@ impl<'a, T, U, V, W, X> GeeTestV4Builder<'a, T, U, V, W, X>
 where
     X: serde::Serialize,
 {
+    /// The full URL of target web page where the captcha is loaded.
+    /// We do not open the page, so it is not a problem if it is available
+    /// only for authenticated users
     pub fn website_url(self, website_url: &str) -> GeeTestV4Builder<'a, UrlProvided, U, V, W, X> {
         GeeTestV4Builder {
             website_url: UrlProvided(website_url),
@@ -91,6 +94,7 @@ where
         }
     }
 
+    /// GeeTest `gt` value.
     pub fn gt(
         self,
         gt: impl Into<Cow<'a, str>>,
@@ -107,6 +111,7 @@ where
         }
     }
 
+    /// GeeTest `challenge` value.
     pub fn challenge(
         self,
         challenge: impl Into<Cow<'a, str>>,
@@ -123,6 +128,7 @@ where
         }
     }
 
+    /// Value to be combined with `init_parameters`
     pub fn captcha_id(
         self,
         captcha_id: impl Into<Cow<'a, str>>,
@@ -139,6 +145,10 @@ where
         }
     }
 
+    /// Custom GeeTest API domain, for example: `api-na.geetest.com`.
+    /// Can be defined inside `initGeetest` call. Also you can check
+    /// the domain used to load the scripts, the default domain is
+    /// `api.geetest.com`.
     pub fn geetest_api_server_subdomain(
         mut self,
         geetest_api_server_domain: Option<impl Into<Cow<'a, str>>>,
@@ -147,16 +157,20 @@ where
         self
     }
 
+    /// User-Agent your browser will be used to load the captcha.
+    /// Use only modern browsers' User-Agents
     pub fn user_agent(mut self, user_agent: Option<impl Into<Cow<'a, str>>>) -> Self {
         self.user_agent = user_agent.map(Into::into);
         self
     }
 
+    /// Captcha parameters passed to `initGeetest` together with `captcha_id`
     pub fn init_parameters_data(mut self, init_parameters_data: Option<X>) -> Self {
         self.init_parameters_data = init_parameters_data;
         self
     }
 
+    /// Proxy connection data
     pub fn proxy(mut self, proxy: Option<Proxy<'a>>) -> Self {
         self.proxy = proxy;
         self

@@ -1,7 +1,7 @@
 mod builder;
-mod error;
 mod requests;
 
+pub mod error;
 pub mod language_pool;
 
 pub use builder::SolverBuilder;

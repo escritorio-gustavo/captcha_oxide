@@ -65,6 +65,8 @@ impl Default for GridCaptchaBuilder<BodyMissing, CommentMissing, ImgInstructions
 }
 
 impl<'a, T, U, V> GridCaptchaBuilder<T, U, V> {
+    /// Image encoded into Base64 format. Data-URI format
+    /// (containing `data:content/type` prefix) is also supported
     pub fn body(self, body: impl Into<Cow<'a, str>>) -> GridCaptchaBuilder<BodyProvided<'a>, U, V> {
         GridCaptchaBuilder {
             body: BodyProvided(body.into()),
@@ -75,16 +77,19 @@ impl<'a, T, U, V> GridCaptchaBuilder<T, U, V> {
         }
     }
 
+    /// Number of grid rows
     pub fn rows(mut self, rows: Option<u8>) -> Self {
         self.rows = rows.map(Into::into);
         self
     }
 
+    /// Number of grid columns
     pub fn columns(mut self, columns: Option<u8>) -> Self {
         self.columns = columns.map(Into::into);
         self
     }
 
+    /// A comment will be shown to the workers to help them solve the captcha properly
     pub fn comment(
         self,
         comment: impl Into<Cow<'a, str>>,
@@ -98,6 +103,8 @@ impl<'a, T, U, V> GridCaptchaBuilder<T, U, V> {
         }
     }
 
+    /// An optional image with instruction that will be shown to workers.
+    /// The image must be encoded into Base64 format. Max file size: 100 kB.
     pub fn img_instructions(
         self,
         img_instructions: impl Into<Cow<'a, str>>,
