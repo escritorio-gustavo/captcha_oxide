@@ -42,7 +42,7 @@ impl CaptchaSolver {
         }
     }
 
-    /// Returns an instance of the [`SolverBuilder`], which ensures a [`Solver`]
+    /// Returns an instance of the [`SolverBuilder`], which ensures a [`CaptchaSolver`]
     /// is built with an API key and provides methods to change its settings
     pub const fn builder() -> SolverBuilder<NoApiKeyProvided> {
         SolverBuilder::<NoApiKeyProvided>::new()
