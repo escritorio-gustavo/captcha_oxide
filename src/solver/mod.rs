@@ -125,10 +125,7 @@ impl CaptchaSolver {
         &self,
         solution: CaptchaSolution<'a, T>,
         status: SolutionStatus,
-    ) -> Result<()>
-    where
-        T: CaptchaTask,
-    {
+    ) -> Result<()> {
         let json = GetTaskResultRequest {
             client_key: &self.api_key,
             task_id: solution.task_id,
